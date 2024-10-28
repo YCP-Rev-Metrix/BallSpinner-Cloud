@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <PackageId>RevMetrix.Common.Api</PackageId>
+		<Title>RevMetrix Common API Dependancy</Title>
+		<Description>POCO items for Client</Description>
+		<PackageDescription>POCO items for Client</PackageDescription>
+        <Version>1.0.15</Version>
+        <Authors>RevMetrix</Authors>
+        <Company>RevMetrix</Company>
+        <Nullable>enable</Nullable>
+	    <IsPackable>true</IsPackable>
+    </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="System.Memory.Data" Version="7.0.0" />
+	</ItemGroup>
+</Project>

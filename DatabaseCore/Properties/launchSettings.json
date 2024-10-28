@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": "",
+      "environmentVariables": {
+        "SERVER_CONNECTION_STRING": "Server=143.110.146.58,1433;User Id=SA;Password=BigPass@Word!;TrustServerCertificate=True;",
+        "SERVERDB_CONNECTION_STRING": "Server=143.110.146.58,1433;Database=revmetrix-db;User Id=SA;Password=BigPass@Word!;TrustServerCertificate=True;",
+        "LOCAL_CONNECTION_STRING": "Data Source=localhost;Integrated Security=True;TrustServerCertificate=True;",
+        "LOCALDB_CONNECTION_STRING": "Data Source=localhost;Database=revmetrix-db;Integrated Security=True;TrustServerCertificate=True;"
+      }
+    }
+  }
+}

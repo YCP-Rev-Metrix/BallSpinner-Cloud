@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+    server:
+        container_name: revmetrix-api
+        image: revmetrixproject/revmetrix-api
+        environment:
+            DOCKERIZED: Dockerized
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8080:80"
+        networks:
+            - web-network
+
+    sql-server:
+        container_name: sql_server
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        environment:
+          SA_PASSWORD: BigPass@Word!
+          ACCEPT_EULA: Y
+        volumes:
+            - sql-data:/var/opt/mssql
+            - ./sql-scripts:/scripts
+        networks:
+            - web-network
+            
+networks:
+  web-network:
+
+volumes:
+  sql-data:

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	<TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<PackageId>RevMetrix.Client.Api</PackageId>
+	<Title>RevMetrix Client API</Title>
+	<Description>Simple API client for RevMetrix</Description>
+	  <PackageDescription>Simple API client for RevMetrix</PackageDescription>
+	<Version>1.0.15</Version>
+	<Authors>RevMetrix</Authors>
+	<Company>RevMetrix</Company>
+	<IsPackable>true</IsPackable>
+	<Pack>true</Pack>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Logs\**" />
+    <EmbeddedResource Remove="Logs\**" />
+    <None Remove="Logs\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+</Project>
