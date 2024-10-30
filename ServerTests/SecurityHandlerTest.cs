@@ -44,7 +44,7 @@ public class SecurityHandlerTest
     [Trait("Category", "Security Critical Test")]
     [MemberData(nameof(PasswordTestData))]
     [Theory]
-    public void SaltHashLengthTest(string password)
+    public void SaltHashLengthTest(string? password)
     {
         (byte[] hash, byte[] salt) = SecurityHandler.SaltHashPassword(password);
 
@@ -59,7 +59,7 @@ public class SecurityHandlerTest
     [Trait("Category", "Security Critical Test")]
     [MemberData(nameof(PasswordTestData))]
     [Theory]
-    public void PasswordHashEqualTest(string password)
+    public void PasswordHashEqualTest(string? password)
     {
         (byte[] hash, byte[] salt) = SecurityHandler.SaltHashPassword(password);
 

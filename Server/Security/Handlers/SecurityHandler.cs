@@ -12,7 +12,7 @@ public class SecurityHandler
     /// <summary>
     /// Secure random number generator
     /// </summary>
-    private readonly RandomNumberGenerator RandomNumberGenerator = RandomNumberGenerator.Create();
+    private readonly RandomNumberGenerator _randomNumberGenerator = RandomNumberGenerator.Create();
 
     /// <summary>
     /// Key used to sign JWTs
@@ -38,7 +38,7 @@ public class SecurityHandler
     public byte[] GenerateRandomBytes(int length)
     {
         byte[] randomBytes = new byte[length];
-        RandomNumberGenerator.GetBytes(randomBytes);
+        _randomNumberGenerator.GetBytes(randomBytes);
         return randomBytes;
     }
 
@@ -55,7 +55,7 @@ public class SecurityHandler
     /// </summary>
     /// <param name="password">Plaintext password to salt and hash</param>
     /// <returns>The hashed password as well as the used salt</returns>
-    public (byte[] hashed, byte[] salt) SaltHashPassword(string password)
+    public (byte[] hashed, byte[] salt) SaltHashPassword(string? password)
     {
         byte[] salt = GenerateRandomBytes(16);
         byte[] hashed = SaltHashPassword(password, salt);
@@ -68,7 +68,7 @@ public class SecurityHandler
     /// <param name="password">Plaintext password to hash</param>
     /// <param name="salt">Salt used previously on this password</param>
     /// <returns>The hashed password</returns>
-    public byte[] SaltHashPassword(string password, byte[] salt)
+    public byte[] SaltHashPassword(string? password, byte[] salt)
     {
         byte[] passwordbytes = Encoding.ASCII.GetBytes(password);
         var s = new MemoryStream();

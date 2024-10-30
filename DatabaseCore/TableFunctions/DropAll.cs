@@ -15,7 +15,7 @@ public partial class RevMetrixDB
         // As well as the order of Dropping the table 
 
         // Get Rid of The Key Constraints for Shot
-        string noConstraint = "Use [revmetrix-db] ALTER TABLE [Shot] NOCHECK CONSTRAINT all";
+        string noConstraint = "Use [revmetrix-bs] ALTER TABLE [Shot] NOCHECK CONSTRAINT all";
         using var command1 = new SqlCommand(noConstraint, connection);
         _ = command1.ExecuteNonQuery();
 

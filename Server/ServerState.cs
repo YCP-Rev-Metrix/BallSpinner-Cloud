@@ -1,5 +1,4 @@
-﻿using DatabaseCore;
-using DatabaseCore.DatabaseComponents;
+﻿using DatabaseCore.DatabaseComponents;
 using Server.Security.Handlers;
 using Server.Security.Stores;
 

@@ -4,7 +4,7 @@ namespace Server.Security.Stores;
 
 public class DatabaseUserStore : AbstractUserStore
 {
-    public override async Task<bool> CreateUser(string firstname, string lastname, string username, string password, string email, string phone_number, string[]? roles = null)
+    public override async Task<bool> CreateUser(string? firstname, string? lastname, string? username, string? password, string? email, string? phone_number, string[]? roles = null)
     {
         (byte[] hashed, byte[] salt) = ServerState.SecurityHandler.SaltHashPassword(password);
         string stringRoles = "";
@@ -23,7 +23,7 @@ public class DatabaseUserStore : AbstractUserStore
         return (success, success ? roles.Split(",") : null);
     }
 
-    public override async Task<(bool success, string[]? roles)> VerifyUser(string username, string password)
+    public override async Task<(bool success, string[]? roles)> VerifyUser(string? username, string? password)
     {
         (bool success, byte[] salt, string roles, byte[] hashedPassword) result = await ServerState.UserDatabase.GetUserValidData(username);
         if (result.success)
@@ -82,32 +82,6 @@ public class DatabaseUserStore : AbstractUserStore
     public override async Task<bool> InsertBall(float weight, string? color)
     {
         return await ServerState.UserDatabase.Insertball(weight, color);
-    }
-
-    public override async Task<bool> StartSession(//int user_id,
-                                                    int? leauge_id, int? tournament_id, int? practice_id, DateTime time, string location, int total_games, int total_frames)
-    {
-        return await ServerState.UserDatabase.Startsession(//int user_id,
-                                                           leauge_id, tournament_id, practice_id, time, location, total_games, total_frames);
-    }
-
-    public override async Task<bool> StartPractice(int event_id)
-    {
-        return await ServerState.UserDatabase.Startpractice(event_id);
-    }
-
-    public override async Task<bool> StartEvent(int user_id, string event_type)
-    {
-        return await ServerState.UserDatabase.Startevent(user_id, event_type);
-    }
-
-    public override async Task<bool> StartGame(int session_id, int score)
-    {
-        return await ServerState.UserDatabase.Startgame(session_id, score);
-    }
-    public override async Task<bool> StartFrame(int game_id, int shot_number, int score)
-    {
-        return await ServerState.UserDatabase.Startframe(game_id, shot_number, score);
     }
 }
 

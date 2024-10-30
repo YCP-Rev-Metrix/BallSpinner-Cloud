@@ -6,7 +6,9 @@ using System.Numerics;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class 
+    RevMetrixDB
+
 {
     private void GameTable(Database temp)
     {

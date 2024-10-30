@@ -14,5 +14,5 @@ public class DatabaseTokenStore : AbstractTokenStore
 
     public override async Task RemoveRelatedRefreshTokens(string username) => await ServerState.UserDatabase.RemoveRelatedRefreshTokens(username);
 
-    public override async Task<bool> StoreRefreshToken(byte[] token, string username, DateTime expiration) => await ServerState.UserDatabase.AddRefreshToken(token, username, expiration);
+    public override async Task<bool> StoreRefreshToken(byte[] token, string? username, DateTime expiration) => await ServerState.UserDatabase.AddRefreshToken(token, username, expiration);
 }

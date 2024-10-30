@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Server;
 using Server.Middleware;
 
-internal class Program
+namespace Server;
+
+internal abstract class Program
 {
     private static void Main(string[] args)
     {
@@ -31,33 +32,33 @@ internal class Program
         _ = builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAll",
-                builder => builder.WithOrigins(
-                    "https://api.revmetrix.io", 
-                    "https://docs.revmetrix.io", 
-                    "https://research.revmetrix.io", 
-                    "https://github.com", 
-                    "https://localhost:7238", 
-                    "https://localhost:8081", 
-                    "http://localhost:8081")
-                .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+                policyBuilder => policyBuilder.WithOrigins(
+                        "https://api.revmetrix.io", 
+                        "https://docs.revmetrix.io", 
+                        "https://research.revmetrix.io", 
+                        "https://github.com", 
+                        "https://localhost:7238", 
+                        "https://localhost:8081", 
+                        "http://localhost:8081")
+                    .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
         });
 
         // Allows use of JWTs
         _ = builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
+            .AddJwtBearer(options =>
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateIssuerSigningKey = true,
-                ValidateLifetime = true,
-                ValidIssuer = Config.AuthIssuer,
-                ValidAudience = Config.AuthAudience,
-                IssuerSigningKey = ServerState.SecurityHandler.AuthorizationSigningTokenKey,
-                ClockSkew = TimeSpan.FromMinutes(5)
-            };
-        });
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = Config.AuthIssuer,
+                    ValidAudience = Config.AuthAudience,
+                    IssuerSigningKey = ServerState.SecurityHandler.AuthorizationSigningTokenKey,
+                    ClockSkew = TimeSpan.FromMinutes(5)
+                };
+            });
 
         WebApplication app = builder.Build();
 

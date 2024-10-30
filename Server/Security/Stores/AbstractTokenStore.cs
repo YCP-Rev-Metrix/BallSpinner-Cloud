@@ -10,19 +10,19 @@ namespace Server.Security.Stores;
 /// </summary>
 public abstract class AbstractTokenStore
 {
-    private readonly TimeSpan DefaultAuthorizationExpiration;
-    private readonly TimeSpan DefaultRefreshExpiration;
-    private readonly TimeSpan ClockSkew;
+    private readonly TimeSpan _defaultAuthorizationExpiration;
+    private readonly TimeSpan _defaultRefreshExpiration;
+    private readonly TimeSpan _clockSkew;
 
     public AbstractTokenStore(TimeSpan defaultAuthoriationExpiration, TimeSpan defaultRefreshExpiration, TimeSpan clockSkew)
     {
-        DefaultAuthorizationExpiration = defaultAuthoriationExpiration;
-        DefaultRefreshExpiration = defaultRefreshExpiration;
-        ClockSkew = clockSkew;
+        _defaultAuthorizationExpiration = defaultAuthoriationExpiration;
+        _defaultRefreshExpiration = defaultRefreshExpiration;
+        _clockSkew = clockSkew;
     }
 
-    public string GenerateAuthorizationToken(string username, string[]? roles) => GenerateAuthorizationToken(username, roles, DefaultAuthorizationExpiration);
-    public string GenerateAuthorizationToken(string username, string[]? roles, TimeSpan expiration)
+    public string GenerateAuthorizationToken(string? username, string[]? roles) => GenerateAuthorizationToken(username, roles, _defaultAuthorizationExpiration);
+    public string GenerateAuthorizationToken(string? username, string[]? roles, TimeSpan expiration)
     {
         var claims = new List<Claim>
         {
@@ -37,7 +37,7 @@ public abstract class AbstractTokenStore
             foreach (string role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
-            };
+            }
         }
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -57,8 +57,8 @@ public abstract class AbstractTokenStore
         return tokenHandler.WriteToken(token);
     }
 
-    public async Task<byte[]> GenerateRefreshToken(string username) => await GenerateRefreshToken(username, DefaultRefreshExpiration);
-    public async Task<byte[]> GenerateRefreshToken(string username, TimeSpan expiration)
+    public async Task<byte[]> GenerateRefreshToken(string? username) => await GenerateRefreshToken(username, _defaultRefreshExpiration);
+    public async Task<byte[]> GenerateRefreshToken(string? username, TimeSpan expiration)
     {
         byte[] token = ServerState.SecurityHandler.GenerateRefreshToken();
 
@@ -69,7 +69,7 @@ public abstract class AbstractTokenStore
         return token;
     }
 
-    public async Task<(string authorizationToken, byte[] refreshToken)> GenerateTokenSet(string username, string[] roles) => (GenerateAuthorizationToken(username, roles), await GenerateRefreshToken(username));
+    public async Task<(string authorizationToken, byte[] refreshToken)> GenerateTokenSet(string? username, string[] roles) => (GenerateAuthorizationToken(username, roles), await GenerateRefreshToken(username));
 
     public async Task<(bool verified, string? username)> RemoveAndVerifyRefreshToken(byte[] token)
     {
@@ -77,7 +77,7 @@ public abstract class AbstractTokenStore
 
         if (exists)
         {
-            if (expiration >= DateTime.UtcNow.Add(ClockSkew))
+            if (expiration >= DateTime.UtcNow.Add(_clockSkew))
             {
                 return (true, username);
             }
@@ -90,7 +90,7 @@ public abstract class AbstractTokenStore
 
     public abstract Task RemoveRelatedRefreshTokens(string username);
 
-    public abstract Task<bool> StoreRefreshToken(byte[] token, string username, DateTime expiration);
+    public abstract Task<bool> StoreRefreshToken(byte[] token, string? username, DateTime expiration);
 
     public abstract void BlacklistAuthorizationToken(string jwt);
     public abstract bool IsAuthorizationBlacklisted(string jwt);
