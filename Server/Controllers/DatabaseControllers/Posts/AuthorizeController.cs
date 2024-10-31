@@ -1,6 +1,7 @@
 ﻿using Common.Logging;
 using Common.POCOs;
 using Microsoft.AspNetCore.Mvc;
+using RevMetrix.BallSpinner.BackEnd.Common.POCOs;
 using Server.Controllers.APIControllers;
 
 namespace Server.Controllers.DatabaseControllers.Posts;
@@ -10,6 +11,7 @@ namespace Server.Controllers.DatabaseControllers.Posts;
 [Route("api/posts")]
 public class AuthorizeController : AbstractFeaturedController
 {
+    
     /// <summary>
     /// Authorizes a requests provided credentials agains the user database
     /// </summary>
@@ -19,7 +21,7 @@ public class AuthorizeController : AbstractFeaturedController
     /// <see cref="StatusCodes.Status403Forbidden"/>
     /// </returns>
     /// 
-    [HttpPost("Authorize")]
+    [HttpPost("no")]
     [ProducesResponseType(typeof(DualToken), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -43,4 +45,6 @@ public class AuthorizeController : AbstractFeaturedController
         // If credentials are invalid, return a 403 Forbid response
         return Forbid();
     }
+    
+    
 }
