@@ -33,7 +33,7 @@ public class UserIdentification: Poco
         [EmailAddress]
         public string? Email { get; set; }
 
-        [Phone]
+        [MaxLength(10)]
         public string? PhoneNumber { get; set; }
 
 }
