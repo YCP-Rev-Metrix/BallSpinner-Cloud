@@ -3,7 +3,7 @@
 /// <summary>
 /// Defines a POCO representing two tokens, one string, and the other a byte[]
 /// </summary>
-public class DualToken : POCO
+public class DualToken : Poco
 {
     /// <summary>
     /// Typically an authorization (JWT) token

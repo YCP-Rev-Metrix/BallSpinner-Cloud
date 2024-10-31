@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+using Common.Logging;
 using Common.POCOs;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -8,7 +8,7 @@ namespace Server.Controllers.DatabaseControllers.Posts;
 [ApiController]
 [Tags("Posts")]
 [Route("api/posts")]
-public class AuthorizeController : AbstractFeaturedController
+public class CreateArsenalController : AbstractFeaturedController
 {
     /// <summary>
     /// Authorizes a requests provided credentials agains the user database
@@ -19,18 +19,18 @@ public class AuthorizeController : AbstractFeaturedController
     /// <see cref="StatusCodes.Status403Forbidden"/>
     /// </returns>
     /// 
-    [HttpPost("Authorize")]
+    [HttpPost("CreateArsenal")]
     [ProducesResponseType(typeof(DualToken), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-    public async Task<IActionResult> Authorize([FromBody] Credentials credentials)
+    
+    public async Task<IActionResult> CreateArsenal([FromBody] int userid, int ballid)
     {
-        LogWriter.LogInfo("Authorize called");
+        LogWriter.LogInfo("CreateArsenal called");
 
         // Validate user credential
-        (bool success, string[]? roles) = await ServerState.UserStore.VerifyUser(credentials.Username, credentials.Password);
+        /*(bool success, string[]? roles) = await ServerState.UserStore.VerifyUser(credentials.Username, credentials.Password);
         if (success) 
         {
             // Generate a token set (auth & refresh) from the user's information
@@ -38,7 +38,7 @@ public class AuthorizeController : AbstractFeaturedController
 
             // Return the tokens as a response
             return Ok(new DualToken(authorizationToken, refreshToken));
-        }
+        }*/
 
         // If credentials are invalid, return a 403 Forbid response
         return Forbid();

@@ -3,7 +3,7 @@
 /// <summary>
 /// Defines a POCO representing a datetime object
 /// </summary>
-public class DateTimePoco : POCO
+public class DateTimePoco : Poco
 {
     /// <summary>
     /// Creates a new instance of <see cref="DateTimePoco"/> representing the current UTC date & time

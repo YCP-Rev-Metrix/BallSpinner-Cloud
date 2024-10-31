@@ -3,7 +3,7 @@
 /// <summary>
 /// Defines a POCO representing a salted and hashed password
 /// </summary>
-public class HashAndSalt : POCO
+public class HashAndSalt : Poco
 {
     public byte[] Hash { set; get; }
     public byte[] Salt { set; get; }

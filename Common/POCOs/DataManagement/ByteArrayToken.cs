@@ -3,7 +3,7 @@
 /// <summary>
 /// Defines a POCO that is a byte[] representing a Token
 /// </summary>
-public class ByteArrayToken : POCO
+public class ByteArrayToken : Poco
 {
     public ByteArrayToken(byte[] token) => Token = token;
 

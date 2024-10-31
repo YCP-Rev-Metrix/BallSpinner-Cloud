@@ -4,7 +4,7 @@ namespace RevMetrix.BallSpinner.BackEnd.Common.POCOs;
 ///<Summary>
 /// Placeholder (fill in this section later)
 ///</Summary>
-public class SensorFrequencies: POCO
+public class SensorFrequencies: Poco
 {
     // TODO create Poco
 

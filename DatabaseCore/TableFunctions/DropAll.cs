@@ -6,6 +6,7 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDB
 {
+    //TODO: Refactor to reflect on BallSpinner Database
     public async Task Kill()
     {
         using var connection = new SqlConnection(ConnectionString);
@@ -15,7 +16,7 @@ public partial class RevMetrixDB
         // As well as the order of Dropping the table 
 
         // Get Rid of The Key Constraints for Shot
-        string noConstraint = "Use [revmetrix-bs] ALTER TABLE [Shot] NOCHECK CONSTRAINT all";
+        string noConstraint = "EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL' ";
         using var command1 = new SqlCommand(noConstraint, connection);
         _ = command1.ExecuteNonQuery();
 

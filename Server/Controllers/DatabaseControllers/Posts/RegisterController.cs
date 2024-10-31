@@ -30,7 +30,7 @@ public class RegisterController : AbstractFeaturedController
     /// <see cref="StatusCodes.Status409Conflict"/>
     /// </returns>
     
-    [HttpPost("register")]
+    [HttpPost("Register")]
     [ProducesResponseType(typeof(DualToken), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

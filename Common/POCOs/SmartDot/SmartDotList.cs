@@ -4,8 +4,7 @@ namespace RevMetrix.BallSpinner.BackEnd.Common.POCOs;
 ///<Summary>
 /// Placeholder (fill in this section later)
 ///</Summary>
-public class BallList: POCO
+public class SmartDotList: Poco
 {
     // TODO create Poco
-
 }

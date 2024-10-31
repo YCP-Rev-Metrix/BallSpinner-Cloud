@@ -1,9 +1,4 @@
-﻿using Common.Logging;
-using Common.POCOs;
-using Microsoft.Data.SqlClient;
 using Microsoft.SqlServer.Management.Smo;
-using System.Data;
-using System.Numerics;
 
 namespace DatabaseCore.DatabaseComponents;
 
@@ -23,15 +18,20 @@ public partial class RevMetrixDB
         // call each function to create the respective tables
         UserTable(temp);
         RefreshTokenTable(temp);
-        EventTable(temp);
-        LeagueTable(temp); 
-        TournamentTable(temp);
-        PracticeTable(temp);
-        SessionTable(temp);
-        GameTable(temp);
-        FrameTable(temp);
-        VideoTable(temp);
         BallTable(temp);
-        ShotTable(temp);
+        ArsenalTable(temp);
+        //SmartDotListTable(temp);
+        SmartDotTable(temp);
+        BallSpinnerTable(temp);
+        //BallSpinnerList(temp);
+        //SimulatedShotListTable(temp);
+        //SimulatedShotTable(temp);
+        //BallSpinnerSensorsTable(temp);
+        BS_SensorsTable(temp);
+        //SmartDotSensors(temp);
+        SDSensorTable(temp);
+        SampleQueueIDTable(temp);
+        //SensorSampleTable(temp);
+
     }
 }

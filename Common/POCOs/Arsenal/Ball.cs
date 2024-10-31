@@ -2,7 +2,7 @@
 using System.Numerics;
 
 namespace Common.POCOs;
-public class Ball : POCO
+public class Ball : Poco
 {
     public Ball(float weight, string? color)
     {

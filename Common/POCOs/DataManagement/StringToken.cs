@@ -3,7 +3,7 @@
 /// <summary>
 /// Defines a POCO representing a single string-based token
 /// </summary>
-public class StringToken : POCO
+public class StringToken : Poco
 {
     public StringToken(string token) => Token = token;
 
