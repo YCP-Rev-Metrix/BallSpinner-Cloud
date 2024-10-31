@@ -58,7 +58,7 @@ public class AuthAndRegisterController : AbstractFeaturedController
                                                               userIdentification.Email,
                                                               userIdentification.PhoneNumber,
                                                               new string[] { "user" });
-
-        return result ? await Authorize(new Credentials(userIdentification.Username,userIdentification.Password)) : Conflict();
+//? await Authorize(new Credentials(userIdentification.Username,userIdentification.Password)) : Conflict()
+        return Ok(result);
     }
 }
