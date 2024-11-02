@@ -15,7 +15,7 @@ public class AuthAndRegisterController : AbstractFeaturedController
     /// <summary>
     /// Authorizes a requests provided credentials agains the user database
     /// </summary>
-    /// <param name="userIdentification">The user's information, only username and password must be set for authorization</param>
+    /// <param name="credentials">The user's credentials, only username and password must be set for authorization</param>
     /// <returns><see cref="StatusCodes.Status200OK"/>(<see cref="DualToken"/>) | <see cref="StatusCodes.Status403Forbidden"/></returns>
     [HttpPost("Authorize")]
     [ProducesResponseType(typeof(DualToken), StatusCodes.Status200OK)]
