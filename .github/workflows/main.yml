@@ -22,7 +22,7 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USER }}/ballspinner-api:latest
   deploy:
     needs: build
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Deploy Cloud to Digial Ocean Droplet
