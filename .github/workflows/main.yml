@@ -30,7 +30,7 @@ jobs:
         with:
           host: ${{SECRETS.SERVER_HOST}}
           key: ${{SECRETS.SSH_DROPLET_PRIVKEY}}
-          username: ${{SECRETS>SERVER_USER}}
+          username: ${{SECRETS.SERVER_USER}}
 
           script: |
             cd /root/ballSpinnerAPI
