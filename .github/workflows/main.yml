@@ -20,3 +20,18 @@ jobs:
 
       - name: Docker Push
         run: docker push ${{ secrets.DOCKER_USER }}/ballspinner-api:latest
+  deploy:
+    needs: build
+    runs-on: ubuntu:latest
+
+    steps:
+      - name: Deploy Cloud to Digial Ocean Droplet
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{SECRETS.SERVER_HOST}}
+          key: ${{SECRETS.SSH_DROPLET_PRIVKEY}}
+          username: ${{SECRETS>SERVER_USER}}
+
+          script: |
+            cd /root/ballSpinnerAPI
+            ./redeploy.sh
