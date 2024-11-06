@@ -110,7 +110,7 @@ public partial class RevMetrixBSTest
 
     public void CreateDefaultUser()
     {
-        (byte[] hashed_pass, byte[] salt_pass) = SaltHashPassword("your_password");
+        (byte[] hashed_pass, byte[] salt_pass) = SaltHashPassword("string");
 
         string sql = "INSERT INTO [User] (firstname, lastname, username, salt, roles, password, email, phone) " +
                      "VALUES (@FirstName, @LastName, @Username, @Salt, @Roles, @Password, @Email, @Phone)";
