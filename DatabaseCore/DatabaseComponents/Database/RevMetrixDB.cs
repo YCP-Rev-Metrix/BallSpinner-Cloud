@@ -11,3 +11,7 @@ public partial class RevMetrixDB : AbstractDatabase
 {
     public RevMetrixDB() : base("revmetrix-bs") { }
 } 
+public partial class RevMetrixBSTest : AbstractDatabase
+{
+    public RevMetrixBSTest() : base("revmetrix-test") { }
+} 

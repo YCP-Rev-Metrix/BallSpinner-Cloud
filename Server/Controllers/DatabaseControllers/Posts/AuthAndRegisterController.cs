@@ -19,6 +19,9 @@ public class AuthAndRegisterController : AbstractFeaturedController
     /// <returns><see cref="StatusCodes.Status200OK"/>(<see cref="DualToken"/>) | <see cref="StatusCodes.Status403Forbidden"/></returns>
     [HttpPost("Authorize")]
     [ProducesResponseType(typeof(DualToken), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Authorize([FromBody] Credentials credentials)
     {
