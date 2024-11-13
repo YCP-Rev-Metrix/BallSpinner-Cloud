@@ -13,6 +13,7 @@ namespace DatabaseCoreTests
     public class DatabaseCoreTestSetup
     {
         // All database tests must extend this class so the proper setup can occur
+        // Make sure that the test.runsettings file is set for this module to access environmental variables
         public DatabaseCoreTestSetup()
         {
             // NEED SOMETHING HERE TO RUN SCRIPT TO REBUILD TEST DATABASE
