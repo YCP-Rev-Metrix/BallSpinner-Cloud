@@ -17,14 +17,14 @@ public partial class RevMetrixBSTest
         // call each function to create the respective tables
         UserTable(temp);
         RefreshTokenTable(temp);
-        //BallTable(temp);
-        //ArsenalTable(temp);
+        BallTable(temp);
+        ArsenalTable(temp);
         //SmartDotListTable(temp);
         //SmartDotTable(temp);
         //BallSpinnerTable(temp);
         //BallSpinnerList(temp);
-        //SimulatedShotListTable(temp);
-        //SimulatedShotTable(temp);
+        SimulatedShotTable(temp);
+        SimulatedShotListTable(temp);
         //BallSpinnerSensorsTable(temp);
         //BS_SensorsTable(temp);
         //SmartDotSensors(temp);

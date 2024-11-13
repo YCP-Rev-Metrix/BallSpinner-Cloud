@@ -1,8 +1,5 @@
-﻿using Common.Logging;
-using Common.POCOs;
+﻿
 using Microsoft.SqlServer.Management.Smo;
-using System.Data;
-using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Data.SqlClient;
@@ -15,62 +12,62 @@ public partial class RevMetrixBSTest
 {
     Console.WriteLine("Creating UserTable and User");
     // User Table
-    var UserTable = new Table(temp, "User");
+    var userTable = new Table(temp, "User");
 
-    var id = new Column(UserTable, "id", DataType.BigInt)
+    var id = new Column(userTable, "id", DataType.BigInt)
     {
         IdentityIncrement = 1,
         Nullable = false,
         IdentitySeed = 1,
         Identity = true
     };
-    UserTable.Columns.Add(id);
+    userTable.Columns.Add(id);
 
-    var firstname = new Column(UserTable, "firstname", DataType.VarChar(50))
+    var firstname = new Column(userTable, "firstname", DataType.VarChar(50))
+    {
+        Nullable = true
+    };
+    userTable.Columns.Add(firstname);
+
+    var lastname = new Column(userTable, "lastname", DataType.VarChar(50))
+    {
+        Nullable = true
+    };
+    userTable.Columns.Add(lastname);
+
+    var username = new Column(userTable, "username", DataType.VarChar(50))
     {
         Nullable = false
     };
-    UserTable.Columns.Add(firstname);
+    userTable.Columns.Add(username);
 
-    var lastname = new Column(UserTable, "lastname", DataType.VarChar(50))
+    var password = new Column(userTable, "password", DataType.VarBinary(64))
     {
         Nullable = false
     };
-    UserTable.Columns.Add(lastname);
+    userTable.Columns.Add(password);
 
-    var username = new Column(UserTable, "username", DataType.VarChar(50))
+    var salt = new Column(userTable, "salt", DataType.VarBinary(64))
     {
         Nullable = false
     };
-    UserTable.Columns.Add(username);
+    userTable.Columns.Add(salt);
 
-    var password = new Column(UserTable, "password", DataType.VarBinary(64))
+    var email = new Column(userTable, "email", DataType.VarChar(50));
+    userTable.Columns.Add(email);
+
+    var phone = new Column(userTable, "phone", DataType.VarChar(50));
+    userTable.Columns.Add(phone);
+
+    var roles = new Column(userTable, "roles", DataType.VarChar(50))
     {
         Nullable = false
     };
-    UserTable.Columns.Add(password);
-
-    var salt = new Column(UserTable, "salt", DataType.VarBinary(64))
-    {
-        Nullable = false
-    };
-    UserTable.Columns.Add(salt);
-
-    var email = new Column(UserTable, "email", DataType.VarChar(50));
-    UserTable.Columns.Add(email);
-
-    var phone = new Column(UserTable, "phone", DataType.VarChar(50));
-    UserTable.Columns.Add(phone);
-
-    var roles = new Column(UserTable, "roles", DataType.VarChar(50))
-    {
-        Nullable = false
-    };
-    UserTable.Columns.Add(roles);
+    userTable.Columns.Add(roles);
 
     if (!temp.Tables.Contains("User"))
     {
-        UserTable.Create();
+        userTable.Create();
 
         string sql = "ALTER TABLE [User] ADD CONSTRAINT User_PK PRIMARY KEY (id);";
         temp.ExecuteNonQuery(sql);
@@ -89,13 +86,13 @@ public partial class RevMetrixBSTest
         _randomNumberGenerator.GetBytes(randomBytes);
         return randomBytes;
     }
-    public (byte[] hashed, byte[] salt) SaltHashPassword(string? password)
+    private (byte[] hashed, byte[] salt) SaltHashPassword(string? password)
     {
         byte[] salt = GenerateRandomBytes(16);
         byte[] hashed = SaltHashPassword(password, salt);
         return (hashed, salt);
     }
-    public byte[] SaltHashPassword(string? password, byte[] salt)
+    private byte[] SaltHashPassword(string? password, byte[] salt)
     {
         byte[] passwordbytes = Encoding.ASCII.GetBytes(password);
         var s = new MemoryStream();
@@ -108,9 +105,9 @@ public partial class RevMetrixBSTest
     
     private readonly RandomNumberGenerator _randomNumberGenerator = RandomNumberGenerator.Create();
 
-    public void CreateDefaultUser()
+    private void CreateDefaultUser()
     {
-        (byte[] hashed_pass, byte[] salt_pass) = SaltHashPassword("string");
+        (byte[] hashedPass, byte[] saltPass) = SaltHashPassword("string");
 
         string sql = "INSERT INTO [User] (firstname, lastname, username, salt, roles, password, email, phone) " +
                      "VALUES (@FirstName, @LastName, @Username, @Salt, @Roles, @Password, @Email, @Phone)";
@@ -126,9 +123,9 @@ public partial class RevMetrixBSTest
                 cmd.Parameters.AddWithValue("@FirstName", "string");
                 cmd.Parameters.AddWithValue("@LastName", "string");
                 cmd.Parameters.AddWithValue("@Username", "string");
-                cmd.Parameters.AddWithValue("@Salt", salt_pass);  
+                cmd.Parameters.AddWithValue("@Salt", saltPass);  
                 cmd.Parameters.AddWithValue("@Roles", "user");
-                cmd.Parameters.AddWithValue("@Password", hashed_pass);  
+                cmd.Parameters.AddWithValue("@Password", hashedPass);  
                 cmd.Parameters.AddWithValue("@Email", "string@example.com");
                 cmd.Parameters.AddWithValue("@Phone", "string");
 
