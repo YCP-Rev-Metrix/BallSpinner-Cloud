@@ -7,6 +7,7 @@ internal class Program
         await FakeBsDatabaseAsync();
     }
 
+
     private static async Task FakeBsDatabaseAsync()
     {
         var revMetrixTest = new RevMetrixBSTest();

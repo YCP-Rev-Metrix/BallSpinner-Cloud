@@ -10,6 +10,7 @@ public partial class RevMetrixDB
     {
         // Look into user table, get id that matches with username
         // add row to token table (token, id, expiration)
+        string ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 

@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4B19ED53-B2F7-4CA9-93AA-AEB7FF12C10D}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		TestServer.py = TestServer.py
 	EndProjectSection
 EndProject
 Global
