@@ -1,4 +1,5 @@
 ﻿using Common.Logging;
+using Common.POCOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -27,6 +28,6 @@ public class TestAuthController : AbstractFeaturedController
     public IActionResult TestAuthorize()
     {
         LogWriter.LogInfo("TestAuthorize called");
-        return Ok();
+        return Ok(GetUsername());
     }
 }
