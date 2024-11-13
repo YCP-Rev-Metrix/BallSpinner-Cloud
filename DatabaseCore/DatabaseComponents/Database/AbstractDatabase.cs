@@ -26,7 +26,7 @@ public abstract class AbstractDatabase
         }
         else if (dockerizedEnviron == "Dockerized")
         {
-            ConnectionString = localConnectionString;
+            ConnectionString = serverConnectionString; // Should try to make this localConnectionString in the future, but for now it does not work
         }
 
         // If this is a test enviornment, need to set ServerDB env variable to point to test server
