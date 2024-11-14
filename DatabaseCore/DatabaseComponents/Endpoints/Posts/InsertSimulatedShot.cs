@@ -12,7 +12,7 @@ public partial class RevMetrixDB
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
         string insertQuery;
-        int i;
+
         // Get User Id 
         int userid = await GetUserId(username);
         
