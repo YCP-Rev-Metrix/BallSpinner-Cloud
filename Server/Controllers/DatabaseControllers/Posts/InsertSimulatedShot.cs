@@ -1,4 +1,3 @@
-using Common.Logging;
 using Common.POCOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,16 +8,16 @@ namespace Server.Controllers.DatabaseControllers.Posts;
 [ApiController]
 [Tags("Posts")]
 [Route("api/posts/[controller]")]
-public class InsertSampleDataController : AbstractFeaturedController
+public class InsertSimulatedShotController : AbstractFeaturedController
 {
     [Authorize]
-    [HttpPost(Name = "InsertSampleData")]
+    [HttpPost(Name = "InsertSimulatedShot")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> InsertSampleData([FromBody] SampleData sampleData)
+    public async Task<IActionResult> InsertSimulatedShot([FromBody] SimulatedShot simulatedShot)
     {
-        bool success = await ServerState.UserDatabase.InsertSampleData(sampleData);
+        bool success = await ServerState.UserDatabase.InsertSimulatedShot(simulatedShot);
         if (success)
         {
             return Ok("success");

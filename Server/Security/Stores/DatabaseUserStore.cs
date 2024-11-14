@@ -55,31 +55,6 @@ public class DatabaseUserStore : AbstractUserStore
 
         return true;
     }
-
-    public override async Task<bool> InsertShot(int? shot_id,
-                                            int? session_id,
-                                            int? game_id,
-                                            int? frame_id,
-                                            int? ball_id,
-                                            int? video_id,
-                                            DateTime time,
-                                            int? shot_number,
-                                            int? shot_number_ot,
-                                            int? lane_number,
-                                            int? pocket_hit,
-                                            string? count,
-                                            string? pins,
-                                            float ddx,
-                                            float ddy,
-                                            float ddz,
-                                            float x_position,
-                                            float y_position,
-                                            float z_position)
-    {
-        return await ServerState.UserDatabase.InsertShot(shot_id, session_id, game_id, frame_id, ball_id, video_id, time, shot_number, shot_number_ot, lane_number, pocket_hit, count, pins, ddx, ddy, ddz, x_position, y_position, z_position);
-    }
-
-
     public override async Task<bool> InsertBall(float weight, string? color)
     {
         return await ServerState.UserDatabase.Insertball(weight, color);
@@ -87,6 +62,11 @@ public class DatabaseUserStore : AbstractUserStore
     public override async Task<bool> InsertSampleData(SampleData sampleData)
     {
         return await ServerState.UserDatabase.InsertSampleData(sampleData);
+    }
+
+    public override async Task<bool> InsertSimulatedShot(SimulatedShot simulatedShot)
+    {
+        return await ServerState.UserDatabase.InsertSimulatedShot(simulatedShot);
     }
 
 }
