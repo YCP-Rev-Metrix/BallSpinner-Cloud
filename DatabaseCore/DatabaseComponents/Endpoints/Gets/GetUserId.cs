@@ -22,6 +22,6 @@ public partial class RevMetrixDB
             
         object result = command.ExecuteScalarAsync();
         
-        return (int)(result);
+        return (int)result;
     }
 }

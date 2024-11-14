@@ -17,7 +17,7 @@ public partial class RevMetrixDB
         int userid = await GetUserId(username);
         
         // Create Simulated Shot Entry
-        insertQuery = "INSERT INTO [SimulatedShot] (name, speed, angle, position)" +
+        insertQuery = "INSERT INTO [SimulatedShot] (name, speed, angle, [position])" +
                       "VALUES (@name, @speed, @angle, @position)" +
                       "SELECT SCOPE_IDENTITY()";
         using var insertshot = new SqlCommand(insertQuery, connection);
