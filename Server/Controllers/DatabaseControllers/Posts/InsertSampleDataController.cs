@@ -19,13 +19,14 @@ public class InsertSampleDataController : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> InsertSampleData([FromBody] SensorData data)
     {
-        bool success = await ServerState.UserDatabase.InsertSampleData(data.SensorType, data.Count, data.TimeStamp, data.X, data.Y, data.Z);
-        if (success)
-        {
+        
+        //bool success = await ServerState.UserDatabase.InsertSampleData(data.SensorType, data.Count, data.TimeStamp, data.X, data.Y, data.Z);
+        //if (success)
+        //{
         // Return the tokens as a response
-            return Ok();
-        }
-        return Forbid();
+            return Ok(GetUsername());
+        //}
+        //return Forbid();
     }
 
 }
