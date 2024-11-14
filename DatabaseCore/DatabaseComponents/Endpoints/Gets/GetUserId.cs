@@ -27,6 +27,6 @@ public partial class RevMetrixDB
         }
 
         // If result is null or not an integer, handle accordingly
-        throw new InvalidOperationException("User not found or invalid user ID.");
+        throw new InvalidOperationException($"User not found or invalid user ID.\n Username: {username} \n object: {result}");
     }
 }
