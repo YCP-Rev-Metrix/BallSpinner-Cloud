@@ -2,15 +2,15 @@ namespace Common.POCOs;
 ///<Summary>
 /// Placeholder (fill in this section later)
 ///</Summary>
-public class SensorData: Poco
+public class SampleData: Poco
 {
-    public SensorData() { }
+    public SampleData() { }
 
-    public SensorData(int? sensorType, int? count, float? timestamp, float? x, float? y, float? z)
+    public SampleData(int? sensorType, int? count, float? timestamp, float? x, float? y, float? z)
     {
         SensorType = sensorType;
         Count = count;
-        TimeStamp = timestamp;
+        Timestamp = timestamp;
         X = x;
         Y = y;
         Z = z;
@@ -20,7 +20,7 @@ public class SensorData: Poco
 
     public int? Count { get; set; }
 
-    public float? TimeStamp { get; set; }
+    public float? Timestamp { get; set; }
 
     public float? X { get; set; }
     public float? Y { get; set; }

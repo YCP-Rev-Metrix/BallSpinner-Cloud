@@ -17,14 +17,12 @@ public class InsertSampleDataController : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> InsertSampleData([FromBody] SensorData data)
+    public async Task<IActionResult> InsertSampleData([FromBody] SampleData sampleData)
     {
-        
-        bool success = await ServerState.UserDatabase.InsertSampleData(data.SensorType, data.Count, data.TimeStamp, data.X, data.Y, data.Z);
+        bool success = await ServerState.UserDatabase.InsertSampleData(sampleData);
         if (success)
         {
-            // Return the tokens as a response
-            return Ok(GetUsername());
+            return Ok("success");
         }
         return Forbid();
     }

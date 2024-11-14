@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Common.POCOs;
 
 namespace Server.Security.Stores;
 
@@ -31,6 +32,5 @@ public abstract class AbstractUserStore
     public abstract Task<(bool success, string[]? roles)> GetRoles(string username);
     public abstract Task<(bool success, string[]? roles)> VerifyUser(string? username, string? password);
 
-    public abstract Task<bool> InsertSampleData(int? sensorType, int? count, float? timestamp, float? x, float? y,
-        float? z);
+    public abstract Task<bool> InsertSampleData(SampleData sampleData);
 }

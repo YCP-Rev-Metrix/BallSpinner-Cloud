@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Common.POCOs;
 
 namespace Server.Security.Stores;
 
@@ -83,9 +84,9 @@ public class DatabaseUserStore : AbstractUserStore
     {
         return await ServerState.UserDatabase.Insertball(weight, color);
     }
-    public override async Task<bool> InsertSampleData(int? sensorType, int? count, float? timestamp, float? x, float? y, float? z)
+    public override async Task<bool> InsertSampleData(SampleData sampleData)
     {
-        return await ServerState.UserDatabase.InsertSampleData(sensorType, count, timestamp, x, y, z);
+        return await ServerState.UserDatabase.InsertSampleData(sampleData);
     }
 
 }
