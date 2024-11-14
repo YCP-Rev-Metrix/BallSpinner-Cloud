@@ -1,6 +1,4 @@
-using Common.POCOs;
-
-namespace RevMetrix.BallSpinner.BackEnd.Common.POCOs;
+namespace Common.POCOs;
 ///<Summary>
 /// Placeholder (fill in this section later)
 ///</Summary>

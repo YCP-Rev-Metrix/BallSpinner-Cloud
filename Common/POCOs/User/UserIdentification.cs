@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Common.POCOs;
+namespace Common.POCOs;
 
-namespace RevMetrix.BallSpinner.BackEnd.Common.POCOs;
 ///<Summary>
 /// Placeholder (fill in this section later)
 ///</Summary>

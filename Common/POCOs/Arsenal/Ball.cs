@@ -1,7 +1,4 @@
-﻿using System;
-using System.Numerics;
-
-namespace Common.POCOs;
+﻿namespace Common.POCOs;
 public class Ball : Poco
 {
     public Ball(float weight, string? color)

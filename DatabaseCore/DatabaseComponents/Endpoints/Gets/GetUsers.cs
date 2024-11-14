@@ -2,7 +2,7 @@
 using Common.POCOs;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using RevMetrix.BallSpinner.BackEnd.Common.POCOs;
+using Common.POCOs;
 
 namespace DatabaseCore.DatabaseComponents;
 

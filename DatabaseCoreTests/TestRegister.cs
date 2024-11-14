@@ -1,4 +1,4 @@
-﻿using RevMetrix.BallSpinner.BackEnd.Common.POCOs;
+﻿using Common.POCOs;
 using Server;
 using System;
 using System.Collections.Generic;
