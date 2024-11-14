@@ -30,4 +30,7 @@ public abstract class AbstractUserStore
     public abstract Task<bool> InsertBall(float weight, string? color);
     public abstract Task<(bool success, string[]? roles)> GetRoles(string username);
     public abstract Task<(bool success, string[]? roles)> VerifyUser(string? username, string? password);
+
+    public abstract Task<bool> InsertSampleData(int? sensorType, int? count, float? timestamp, float? x, float? y,
+        float? z);
 }

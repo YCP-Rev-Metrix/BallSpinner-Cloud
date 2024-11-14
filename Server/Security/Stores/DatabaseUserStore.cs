@@ -83,5 +83,10 @@ public class DatabaseUserStore : AbstractUserStore
     {
         return await ServerState.UserDatabase.Insertball(weight, color);
     }
+    public override async Task<bool> InsertSampleData(int? sensorType, int? count, float? timestamp, float? x, float? y, float? z)
+    {
+        return await ServerState.UserDatabase.InsertSampleData(sensorType, count, timestamp, x, y, z);
+    }
+
 }
 
