@@ -20,13 +20,13 @@ public class InsertSampleDataController : AbstractFeaturedController
     public async Task<IActionResult> InsertSampleData([FromBody] SensorData data)
     {
         
-        //bool success = await ServerState.UserDatabase.InsertSampleData(data.SensorType, data.Count, data.TimeStamp, data.X, data.Y, data.Z);
-        //if (success)
-        //{
-        // Return the tokens as a response
+        bool success = await ServerState.UserDatabase.InsertSampleData(data.SensorType, data.Count, data.TimeStamp, data.X, data.Y, data.Z);
+        if (success)
+        {
+            // Return the tokens as a response
             return Ok(GetUsername());
-        //}
-        //return Forbid();
+        }
+        return Forbid();
     }
 
 }
