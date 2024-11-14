@@ -21,7 +21,12 @@ public partial class RevMetrixDB
         command.Parameters.AddWithValue("@Username", username);
             
         object result = command.ExecuteScalarAsync();
-        
-        return (int)result;
+        if (int.TryParse(result.ToString(), out int userId))
+        {
+            return userId;
+        }
+
+        // If result is null or not an integer, handle accordingly
+        throw new InvalidOperationException("User not found or invalid user ID.");
     }
 }
