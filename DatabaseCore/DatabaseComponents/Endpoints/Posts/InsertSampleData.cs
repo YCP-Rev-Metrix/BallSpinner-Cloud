@@ -20,6 +20,7 @@ public partial class RevMetrixDB
         command.Parameters.AddWithValue("@yaxis", y);
         command.Parameters.AddWithValue("@xaxis", x);
         command.Parameters.AddWithValue("@zaxis", z);
+        command.Parameters.AddWithValue("@brightness", "1.22");
         command.Parameters.AddWithValue("@samplenumber", count);
         command.Parameters.AddWithValue("@TimeStamp", timestamp);
         
