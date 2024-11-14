@@ -10,7 +10,7 @@ public partial class RevMetrixDB
         using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync();
         string insertQuery = @"
-            INSERT INTO [SensorData] (sensor_id, yaxis, xaxis, zaxis, brightness, samplenumber, timestamp) 
+            INSERT INTO [SensorData] (sensor_id, yaxis, xaxis, zaxis, brightness, samplenumber, [timestamp]) 
                 VALUES (@sensor_id, @yaxis, @xaxis, @zaxis, @brightness, @samplenumber, @TimeStamp)";
         
         using var command = new SqlCommand(insertQuery, connection);
