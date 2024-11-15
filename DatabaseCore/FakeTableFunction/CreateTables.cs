@@ -27,8 +27,8 @@ public partial class RevMetrixBSTest
         SimulatedShotListTable(temp);
         //BallSpinnerSensorsTable(temp);
         //BS_SensorsTable(temp);
-        //SmartDotSensors(temp);
-        //SDSensorTable(temp);
+        SDSensorTable(temp);
+        //SmartDotSensorsTable(temp);
         //SampleQueueIDTable(temp);
         //SensorSampleTable(temp);
 

@@ -19,39 +19,33 @@ public partial class RevMetrixBSTest
         };
         simulatedShot.Columns.Add(shotid);
     
-        var ballid = new Column(simulatedShot, "ballid", DataType.BigInt)
+        var speed = new Column(simulatedShot, "speed", DataType.Float)
         {
             Nullable = true
         };
-        simulatedShot.Columns.Add(ballid);
+        simulatedShot.Columns.Add(speed);
     
-        var initialSpeed = new Column(simulatedShot, "initial_speed", DataType.Float)
-        {
-            Nullable = true
-        };
-        simulatedShot.Columns.Add(initialSpeed);
-    
-        var shotAngle = new Column(simulatedShot, "shot_angle", DataType.Float)
+        var shotAngle = new Column(simulatedShot, "angle", DataType.Float)
         {
             Nullable = false
         };
         simulatedShot.Columns.Add(shotAngle);
     
-        var shotPosition = new Column(simulatedShot, "shot_position", DataType.Float)
+        var position = new Column(simulatedShot, "position", DataType.Float)
         {
             Nullable = false
         };
-        simulatedShot.Columns.Add(shotPosition);
+        simulatedShot.Columns.Add(position);
     
         var smartDotSensorsId = new Column(simulatedShot, "smartdot_sensorsid", DataType.BigInt)
         {
-            Nullable = false
+            Nullable = true
         };
         simulatedShot.Columns.Add(smartDotSensorsId);
     
         var ballSpinnerSensorsId = new Column(simulatedShot, "ballspinner_sensorsid", DataType.BigInt)
         {
-            Nullable = false
+            Nullable = true
         };
         simulatedShot.Columns.Add(ballSpinnerSensorsId);
     
@@ -60,22 +54,19 @@ public partial class RevMetrixBSTest
             Nullable = true
         };
         simulatedShot.Columns.Add(name);
+        
+        var created = new Column(simulatedShot, "Created", DataType.DateTime)
+        {
+            Nullable = true
+        };
+        simulatedShot.Columns.Add(created);
+        
         if (!temp.Tables.Contains("SimulatedShot"))
         {
             simulatedShot.Create();
             
             simulatedShot = temp.Tables["SimulatedShot"];
-
-            // Foreign key for Ballid
-            var ballIdKey = new ForeignKey(simulatedShot, "SimulatedShot_Ball_FK");
-            var ballIdKeyCol = new ForeignKeyColumn(ballIdKey, "ballid")
-            {
-                ReferencedColumn = "ballid"
-            };
-            ballIdKey.Columns.Add(ballIdKeyCol);
-            ballIdKey.ReferencedTable = "Ball";
-
-            ballIdKey.Create();
+            
             
             string sql = "ALTER TABLE [SimulatedShot] ADD CONSTRAINT SimulatedShot_PK PRIMARY KEY (shotid);";
             temp.ExecuteNonQuery(sql);
@@ -91,8 +82,8 @@ public partial class RevMetrixBSTest
     private void CreateDefaultSimulatedShot()
     {
 
-        string sql = "INSERT INTO [SimulatedShot] (ballid, initial_speed, shot_angle, shot_position, smartdot_sensorsid, ballspinner_sensorsid, name) " +
-                     "VALUES (@Ballid, @Initial_speed, @Shot_angle, @Shot_position, @Smartdot_sensorsid, @Ballspinner_sensorsid, @Name)";
+        string sql = "INSERT INTO [SimulatedShot] (speed, angle, position, smartdot_sensorsid, ballspinner_sensorsid, name, Created) " +
+                     "VALUES (@speed, @angle, @position, @Smartdot_sensorsid, @Ballspinner_sensorsid, @Name, @Created)";
         
         string? serverConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
 
@@ -102,13 +93,13 @@ public partial class RevMetrixBSTest
             using (SqlCommand cmd = new SqlCommand(sql, connection))
             {
                 // Add parameters to the command
-                cmd.Parameters.AddWithValue("@Ballid", "1");
-                cmd.Parameters.AddWithValue("@Initial_speed", 3.2);
-                cmd.Parameters.AddWithValue("@Shot_angle", 1.2);
-                cmd.Parameters.AddWithValue("@Shot_position", 7.4);  
+                cmd.Parameters.AddWithValue("@speed", 3.2);
+                cmd.Parameters.AddWithValue("@angle", 1.2);
+                cmd.Parameters.AddWithValue("@position", 7.4);  
                 cmd.Parameters.AddWithValue("@Smartdot_sensorsid", "1");
                 cmd.Parameters.AddWithValue("@Ballspinner_sensorsid", "1");  
                 cmd.Parameters.AddWithValue("@Name", "BestShot");
+                cmd.Parameters.AddWithValue("@Created", DateTime.Now);
 
                 // Execute the query
                 cmd.ExecuteNonQuery();

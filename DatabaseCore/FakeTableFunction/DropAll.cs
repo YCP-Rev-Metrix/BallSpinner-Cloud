@@ -100,6 +100,7 @@ public partial class RevMetrixBSTest
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "Arsenal-User Constraint Removed");
         }
+        
         /*
          * Remove Simulated Shot List Constraints
          */
@@ -117,16 +118,50 @@ public partial class RevMetrixBSTest
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SimulatedShotList-User Constraint Removed");
         }
+        
         /*
          * Remove Simulated Shot Constraints
          */
-        constraint = "ALTER TABLE [revmetrix-test].dbo.SimulatedShot DROP CONSTRAINT SimulatedShot_Ball_FK";
+        /*constraint = "ALTER TABLE [revmetrix-test].dbo.SimulatedShot DROP CONSTRAINT SimulatedShot_Ball_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SimulatedShotList-User Constraint Removed");
+        }*/
+        
+        /*
+         * Remove SmartDotSensors Constraints
+         */
+        constraint = "ALTER TABLE [revmetrix-test].dbo.SD_Sensor DROP CONSTRAINT SD_Sensor_SimulatedShot_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-SimulatedShot Constraint Removed");
         }
+        /*
+        constraint = "ALTER TABLE [revmetrix-test].dbo.SmartDotSensors DROP CONSTRAINT SmartDotSensors_Gyroscope_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensors-Gyroscope Constraint Removed");
+        }
+        constraint = "ALTER TABLE [revmetrix-test].dbo.SmartDotSensors DROP CONSTRAINT SmartDotSensors_Accelerometer_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensors-Accelerometer Constraint Removed");
+        }
+        constraint = "ALTER TABLE [revmetrix-test].dbo.SmartDotSensors DROP CONSTRAINT SmartDotSensors_Magnetometer_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensors-Magnetometer Constraint Removed");
+        } */
     }
 
     public int CheckTables(SqlTransaction transaction, SqlConnection connection)
