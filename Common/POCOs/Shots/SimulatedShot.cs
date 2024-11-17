@@ -6,7 +6,7 @@ public class SimulatedShot: Poco
 {
     public SimulatedShot() { }
 
-    public SimulatedShot(string? name, float? speed, float? angle, float? position, float? frequency)
+    public SimulatedShot(string? name, double? speed, double? angle, double? position, double? frequency)
     {
         Name = name;
         Speed = speed;
@@ -16,9 +16,9 @@ public class SimulatedShot: Poco
     }
 
     public string? Name { get; set; }
-    public float? Speed { get; set; }
-    public float? Angle { get; set; }
-    public float? Position { get; set; }
-    public float? Frequency { get; set; }
+    public double? Speed { get; set; }
+    public double? Angle { get; set; }
+    public double? Position { get; set; }
+    public double? Frequency { get; set; }
 
 }

@@ -131,7 +131,7 @@ public partial class RevMetrixBSTest
         }*/
         
         /*
-         * Remove SmartDotSensors Constraints
+         * Remove SmartDot Sensor Constraints
          */
         constraint = "ALTER TABLE [revmetrix-test].dbo.SD_Sensor DROP CONSTRAINT SD_Sensor_SimulatedShot_FK";
 
@@ -141,27 +141,15 @@ public partial class RevMetrixBSTest
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-SimulatedShot Constraint Removed");
         }
         /*
-        constraint = "ALTER TABLE [revmetrix-test].dbo.SmartDotSensors DROP CONSTRAINT SmartDotSensors_Gyroscope_FK";
+         * Remove SampleData Constraint
+         */
+        constraint = "ALTER TABLE [revmetrix-test].dbo.SensorData DROP CONSTRAINT SampleData_SDSensor_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
-            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensors-Gyroscope Constraint Removed");
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SampleData-SDSensor Constraint Removed");
         }
-        constraint = "ALTER TABLE [revmetrix-test].dbo.SmartDotSensors DROP CONSTRAINT SmartDotSensors_Accelerometer_FK";
-
-        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
-        {
-            int rows = dropTableCommand.ExecuteNonQuery();
-            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensors-Accelerometer Constraint Removed");
-        }
-        constraint = "ALTER TABLE [revmetrix-test].dbo.SmartDotSensors DROP CONSTRAINT SmartDotSensors_Magnetometer_FK";
-
-        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
-        {
-            int rows = dropTableCommand.ExecuteNonQuery();
-            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensors-Magnetometer Constraint Removed");
-        } */
     }
 
     public int CheckTables(SqlTransaction transaction, SqlConnection connection)

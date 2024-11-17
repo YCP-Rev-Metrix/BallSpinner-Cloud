@@ -15,9 +15,9 @@ public class InsertSimulatedShotController : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> InsertSimulatedShot([FromBody] SimulatedShot simulatedShot)
+    public async Task<IActionResult> InsertSimulatedShot([FromBody] Shot shot)
     {
-        bool success = await ServerState.UserDatabase.InsertSimulatedShot(simulatedShot, GetUsername());
+        bool success = await ServerState.UserDatabase.InsertSimulatedShot(shot, GetUsername());
         if (success)
         {
             return Ok("success");

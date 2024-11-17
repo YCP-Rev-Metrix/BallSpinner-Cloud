@@ -21,19 +21,19 @@ public partial class RevMetrixBSTest
     
         var speed = new Column(simulatedShot, "speed", DataType.Float)
         {
-            Nullable = true
+            Nullable = false
         };
         simulatedShot.Columns.Add(speed);
     
         var shotAngle = new Column(simulatedShot, "angle", DataType.Float)
         {
-            Nullable = false
+            Nullable = true
         };
         simulatedShot.Columns.Add(shotAngle);
     
         var position = new Column(simulatedShot, "position", DataType.Float)
         {
-            Nullable = false
+            Nullable = true
         };
         simulatedShot.Columns.Add(position);
     
@@ -51,7 +51,7 @@ public partial class RevMetrixBSTest
     
         var name = new Column(simulatedShot, "name", DataType.VarChar(30))
         {
-            Nullable = true
+            Nullable = false
         };
         simulatedShot.Columns.Add(name);
         

@@ -1,83 +1,165 @@
 ﻿using Common.Logging;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDB
-{
-    //TODO: Refactor to reflect on BallSpinner Database
-    public async Task Kill()
+{   
+    public Task NukeAsync()
     {
-        using var connection = new SqlConnection(ConnectionString);
-        await connection.OpenAsync();
+        string? ConnectionString = Environment.GetEnvironmentVariable("SERVER_CONNECTION_STRING");
+        // Define your connection string (use your own credentials and server details)
 
-        // This will need to be adjusted to see if constraints are being reset in order.
-        // As well as the order of Dropping the table 
+        using (SqlConnection connection = new SqlConnection(ConnectionString))
+        {
+            try
+            {
+                // Open the connection to the database
+                connection.Open();
 
-        // Get Rid of The Key Constraints for Shot
-        string noConstraint = "EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL' ";
-        using var command1 = new SqlCommand(noConstraint, connection);
-        _ = command1.ExecuteNonQuery();
+                // Start a transaction to ensure atomicity
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    if (CheckTables(transaction, connection) > 0)
+                    {
+                        NoContraint(transaction, connection);
+                    
+                        // Get all table names
+                        string getTablesQuery = @"
+                        SELECT TABLE_NAME 
+                        FROM [revmetrix-test].INFORMATION_SCHEMA.TABLES
+                        WHERE TABLE_TYPE = 'BASE TABLE'";
 
-        // Dropping the Shot Table
-        string dropShot = "DROP TABLE [Shot]";
-        using var command2 = new SqlCommand(dropShot, connection);
-        _ = command2.ExecuteNonQuery();
+                        SqlCommand getTablesCommand = new SqlCommand(getTablesQuery, connection, transaction);
+                        SqlDataAdapter adapter = new SqlDataAdapter(getTablesCommand);
+                        DataTable tables = new DataTable();
+                        adapter.Fill(tables);
 
-        // Dropping the Video Table
-        string dropVideo = "DROP TABLE [Video]";
-        using var command3 = new SqlCommand(dropVideo, connection);
-        _ = command3.ExecuteNonQuery();
+                        // Loop through the table names and drop each one
+                        foreach (DataRow row in tables.Rows)
+                        {
+                            string tableName = row["TABLE_NAME"].ToString();
+                            string dropTableQuery = $"DROP TABLE [{tableName}]";
 
-        // Dropping the Ball Table
-        string dropBall = "DROP TABLE [Ball]";
-        using var command4 = new SqlCommand(dropBall, connection);
-        _ = command4.ExecuteNonQuery();
+                            using (SqlCommand dropTableCommand = new SqlCommand(dropTableQuery, connection, transaction))
+                            {
+                                dropTableCommand.ExecuteNonQuery();
+                                Console.WriteLine($"Dropped table: {tableName}");
+                            }
+                        }
 
-        // Dropping the Frame Table
-        string dropFrame = "DROP TABLE [Frame]";
-        using var command5 = new SqlCommand(dropFrame, connection);
-        _ = command5.ExecuteNonQuery();
+                        // Commit the transaction
+                        transaction.Commit();
+                        Console.WriteLine("All tables have been dropped ");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No tables exist in the database");
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
 
-        // Dropping the Game Table
-        string dropGame = "DROP TABLE [Game]";
-        using var command6 = new SqlCommand(dropGame, connection);
-        _ = command6.ExecuteNonQuery();
+        return Task.CompletedTask;
+    }
 
-        // Dropping the Session Table
-        string dropSession = "DROP TABLE [Session]";
-        using var command7 = new SqlCommand(dropSession, connection);
-        _ = command7.ExecuteNonQuery();
+    public void NoContraint(SqlTransaction transaction, SqlConnection connection)
+    {
+        /*
+         * Remove Refresh Token Contraint
+         */
+        string constraint = "ALTER TABLE [revmetrix-test].dbo.RefreshToken DROP CONSTRAINT FK_RefreshToken_User";
 
-        // Dropping the League Table
-        string dropLeague = "DROP TABLE [League]";
-        using var command8 = new SqlCommand(dropLeague, connection);
-        _ = command8.ExecuteNonQuery();
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "Refresh-User Constraint Removed.");
+        }
+        
+        /*
+         * Remove Arsenal Constraints
+         */
+        constraint = "ALTER TABLE [revmetrix-test].dbo.Arsenal DROP CONSTRAINT Arsenal_Ball_FK";
 
-        // Dropping the Tournament Table
-        string dropTournament = "DROP TABLE [Tournament]";
-        using var command9 = new SqlCommand(dropTournament, connection);
-        _ = command9.ExecuteNonQuery();
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "Arsenal-Ball Constraint Removed");
+        }
+        
+        constraint = "ALTER TABLE [revmetrix-test].dbo.Arsenal DROP CONSTRAINT Arsenal_User_FK";
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "Arsenal-User Constraint Removed");
+        }
+        
+        /*
+         * Remove Simulated Shot List Constraints
+         */
+        constraint = "ALTER TABLE [revmetrix-test].dbo.SimulatedShotList DROP CONSTRAINT SimulatedShotList_SimulatedShot_FK";
 
-        // Dropping the Practice Table
-        string dropPractice = "DROP TABLE [Practice]";
-        using var command10 = new SqlCommand(dropPractice, connection);
-        _ = command10.ExecuteNonQuery();
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SimulatedShotList-SimulatedShot Constraint Removed");
+        }
+        constraint = "ALTER TABLE [revmetrix-test].dbo.SimulatedShotList DROP CONSTRAINT SimulatedShotList_User_FK";
 
-        // Dropping the Event Table 
-        string dropEvent = "DROP TABLE [Event]";
-        using var command11 = new SqlCommand(dropEvent, connection);
-        _ = command11.ExecuteNonQuery();
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SimulatedShotList-User Constraint Removed");
+        }
+        
+        /*
+         * Remove Simulated Shot Constraints
+         */
+        /*constraint = "ALTER TABLE [revmetrix-test].dbo.SimulatedShot DROP CONSTRAINT SimulatedShot_Ball_FK";
 
-        // Dropping the RefreshToken Table
-        string dropRefreshToken = "DROP TABLE [RefreshToken]";
-        using var command12 = new SqlCommand(dropRefreshToken, connection);
-        _ = command12.ExecuteNonQuery();
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SimulatedShotList-User Constraint Removed");
+        }*/
+        
+        /*
+         * Remove SmartDot Sensor Constraints
+         */
+        constraint = "ALTER TABLE [revmetrix-test].dbo.SD_Sensor DROP CONSTRAINT SD_Sensor_SimulatedShot_FK";
 
-        // Droping the User Table
-        string dropUser = "DROP TABLE [User]";
-        using var command13 = new SqlCommand(dropUser, connection);
-        _ = command13.ExecuteNonQuery();
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-SimulatedShot Constraint Removed");
+        }
+        /*
+         * Remove SampleData Constraint
+         */
+        constraint = "ALTER TABLE [revmetrix-test].dbo.SensorData DROP CONSTRAINT SampleData_SDSensor_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SampleData-SDSensor Constraint Removed");
+        }
+    }
+
+    public int CheckTables(SqlTransaction transaction, SqlConnection connection)
+    {
+        string query =
+            "USE [revmetrix-test] SELECT COUNT(*) from information_schema.tables WHERE table_type = 'base table'";
+        using (SqlCommand command = new SqlCommand(query, connection, transaction))
+        {
+            // Execute the query and return the count as an integer
+            return (int)command.ExecuteScalar();
+        }
     }
 }

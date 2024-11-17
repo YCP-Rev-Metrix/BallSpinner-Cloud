@@ -6,25 +6,26 @@ public class SampleData: Poco
 {
     public SampleData() { }
 
-    public SampleData(int? sensorType, int? count, float? timestamp, float? x, float? y, float? z)
+    public SampleData(string? type, int? count, double? logtime, double? x, double? y, double? z, double? w)
     {
-        SensorType = sensorType;
+        Type = type;
         Count = count;
-        Timestamp = timestamp;
+        Logtime = logtime;
         X = x;
         Y = y;
         Z = z;
+        W = w;
     }
-        
-    public int? SensorType { get; set; }
-
+    public string? Type {get; set;}
+    
     public int? Count { get; set; }
 
-    public float? Timestamp { get; set; }
+    public double? Logtime { get; set; }
 
-    public float? X { get; set; }
-    public float? Y { get; set; }
-    public float? Z { get; set; }
+    public double? X { get; set; }
+    public double? Y { get; set; }
+    public double? Z { get; set; }
+    public double? W { get; set; }
     
 
 }

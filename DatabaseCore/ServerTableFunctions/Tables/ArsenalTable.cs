@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
@@ -6,52 +7,56 @@ public partial class RevMetrixDB
 {
     private void ArsenalTable(Database temp)
     {
-        // Arsenal Table
+        Console.WriteLine("Creating ArsenalTable and temp data");
+        var arsenalTable = new Table(temp, "Arsenal");
+
+        // User Id
+        var userid = new Column(arsenalTable, "userid", DataType.BigInt)
         {
-            var ArsenalTable = new Table(temp, "Arsenal");
+            Nullable = false
+        };
 
-            var userid = new Column(ArsenalTable, "userid", DataType.BigInt)
+        arsenalTable.Columns.Add(userid);
+
+        // Ball Id
+        var ballId = new Column(arsenalTable, "ball_id", DataType.BigInt)
+        {
+            Nullable = false
+        };
+
+        arsenalTable.Columns.Add(ballId);
+
+
+        if (!temp.Tables.Contains("Arsenal"))
+        {
+            arsenalTable.Create();
+
+            arsenalTable = temp.Tables["Arsenal"];
+
+            // Ball FK
+            var ballIdKey = new ForeignKey(arsenalTable, "Arsenal_Ball_FK");
+            var ballIdKeyCol = new ForeignKeyColumn(ballIdKey, "ball_id")
             {
-                Nullable = false
+                ReferencedColumn = "ballid"
             };
-            ArsenalTable.Columns.Add(userid);
+            ballIdKey.Columns.Add(ballIdKeyCol);
+            ballIdKey.ReferencedTable = "Ball";
 
-            var ball_id = new Column(ArsenalTable, "ball_id", DataType.BigInt)
+            ballIdKey.Create();
+            
+            // User FK
+            var userIdKey = new ForeignKey(arsenalTable, "Arsenal_User_FK");
+            var userIdKeyCol = new ForeignKeyColumn(userIdKey, "userid")
             {
-                Nullable = false
+                ReferencedColumn = "id"
             };
-            ArsenalTable.Columns.Add(ball_id);
+            userIdKey.Columns.Add(userIdKeyCol);
+            userIdKey.ReferencedTable = "User";
 
-            // Check if the Arsenal table already exists
-            if (!temp.Tables.Contains("Arsenal"))
-            {
-                // TODO: Fix this primary key 
-                // Create a primary key for the Arsenal table
-                //var primaryKey = new PrimaryKey(ArsenalTable, "PK_Arsenal", new[] { userid.Name, ball_id.Name });
-                //ArsenalTable.Keys.Add(primaryKey);
-
-                // Optionally add foreign key constraints if necessary
-                var userIdKey = new ForeignKey(ArsenalTable, "FK_Arsenal_User");
-                var userIdKeyCol = new ForeignKeyColumn(userIdKey, "userid")
-                {
-                    ReferencedColumn = "id"
-                };
-                
-                userIdKey.Columns.Add(userIdKeyCol);
-                userIdKey.ReferencedTable = "User";
-                userIdKey.Create();
-                
-                var ballIdKey = new ForeignKey(ArsenalTable, "FK_Arsenal_Ball");
-                var ballIdKeyCol = new ForeignKeyColumn(ballIdKey, "ball_id")
-                {
-                    ReferencedColumn = "ballid"
-                };
-                userIdKey.Columns.Add(ballIdKeyCol);
-                userIdKey.ReferencedTable = "Ball";
-                userIdKey.Create();
-                // Add the Arsenal table to the database
-                temp.Tables.Add(ArsenalTable);
-            }
+            userIdKey.Create();
+            Console.WriteLine("Success");
         }
+        
     }
+    
 }

@@ -21,17 +21,16 @@ public partial class RevMetrixDB
         BallTable(temp);
         ArsenalTable(temp);
         //SmartDotListTable(temp);
-        SmartDotTable(temp);
-        BallSpinnerTable(temp);
+        //SmartDotTable(temp);
+        //BallSpinnerTable(temp);
         //BallSpinnerList(temp);
-        //SimulatedShotListTable(temp);
-        //SimulatedShotTable(temp);
+        SimulatedShotTable(temp);
+        SimulatedShotListTable(temp);
         //BallSpinnerSensorsTable(temp);
-        BS_SensorsTable(temp);
-        //SmartDotSensors(temp);
+        //BS_SensorsTable(temp);
         SDSensorTable(temp);
-        SampleQueueIDTable(temp);
-        //SensorSampleTable(temp);
+        SensorDataTable(temp);
+
 
     }
 }

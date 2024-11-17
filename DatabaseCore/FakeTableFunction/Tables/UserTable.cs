@@ -74,8 +74,9 @@ public partial class RevMetrixBSTest
 
         sql = "ALTER TABLE [User] ADD CONSTRAINT Username_UNIQUE UNIQUE (username);";
         temp.ExecuteNonQuery(sql);
-
+        
         CreateDefaultUser();
+        
         Console.WriteLine("Success");
     }
 }

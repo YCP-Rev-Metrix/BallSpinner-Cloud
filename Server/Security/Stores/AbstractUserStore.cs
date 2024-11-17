@@ -1,4 +1,5 @@
 ﻿using Common.POCOs;
+using Microsoft.SqlServer.Management.Smo;
 
 namespace Server.Security.Stores;
 
@@ -12,6 +13,9 @@ public abstract class AbstractUserStore
     public abstract Task<(bool success, string[]? roles)> VerifyUser(string? username, string? password);
 
     public abstract Task<bool> InsertSampleData(SampleData sampleData);
-    public abstract Task<bool> InsertSimulatedShot(SimulatedShot simulatedShot, string? username);
+    public abstract Task<bool> InsertSimulatedShot(Shot simulatedShot, string? username);
     public abstract Task<int> GetUserId(string? username);
+    public abstract Task<ShotList> GetShotsByUsername(string? username);
+    
+    public abstract Task<ShotList> GetShotsByShotname(string? username, string? shotname);
 }

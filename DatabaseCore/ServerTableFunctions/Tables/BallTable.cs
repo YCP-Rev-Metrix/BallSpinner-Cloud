@@ -1,8 +1,5 @@
-﻿using Common.Logging;
-using Common.POCOs;
+using Microsoft.Data.SqlClient;
 using Microsoft.SqlServer.Management.Smo;
-using System.Data;
-using System.Numerics;
 
 namespace DatabaseCore.DatabaseComponents;
 
@@ -10,41 +7,55 @@ public partial class RevMetrixDB
 {
     private void BallTable(Database temp)
     {
-        // Ball Table
+        Console.WriteLine("Creating BallTable and temp data");
+        var ballTable = new Table(temp, "Ball");
+
+        // Ball Id
+        var ballid = new Column(ballTable, "ballid", DataType.BigInt)
         {
-            // Create new table
-            var BallTable = new Table(temp, "Ball");
+            IdentityIncrement = 1,
+            Nullable = false,
+            IdentitySeed = 1,
+            Identity = true
+        };
 
-            // ball_id
-            var ball_id = new Column(BallTable, "ball_id", DataType.BigInt)
-            {
-                IdentityIncrement = 1,
-                Nullable = false,
-                IdentitySeed = 1,
-                Identity = true
-            };
-            BallTable.Columns.Add(ball_id);
+        ballTable.Columns.Add(ballid);
 
-            // weight
-            var weight = new Column(BallTable, "weight", DataType.Float)
-            {
-                Nullable = false
-            };
-            BallTable.Columns.Add(weight);
+        var name = new Column(ballTable, "name", DataType.VarChar(100))
+        {
+            Nullable = false
+        };
 
-            // color
-            var color = new Column(BallTable, "color", DataType.VarChar(50));
-            BallTable.Columns.Add(color);
+        ballTable.Columns.Add(name);
 
-            if (!temp.Tables.Contains("Ball"))
-            {
-                BallTable.Create();
+        var weight = new Column(ballTable, "weight", DataType.VarChar(100))
+        {
+            Nullable = false
+        };
 
-                // Create the primary key constraint using SQL
-                string sql = "ALTER TABLE [Ball] ADD CONSTRAINT PK_Ball PRIMARY KEY (ball_id);";
+        ballTable.Columns.Add(weight);
 
-                temp.ExecuteNonQuery(sql);
-            }
+        var hardness = new Column(ballTable, "hardness", DataType.VarChar(100))
+        {
+            Nullable = true
+        };
+
+        ballTable.Columns.Add(hardness);
+
+        var coretype = new Column(ballTable, "core_type", DataType.VarChar(25))
+        {
+            Nullable = true
+        };
+
+        ballTable.Columns.Add(coretype);
+
+        if (!temp.Tables.Contains("Ball"))
+        {
+            ballTable.Create();
+
+            string sql = "ALTER TABLE [Ball] ADD CONSTRAINT Ball_PK PRIMARY KEY (ballid);";
+            temp.ExecuteNonQuery(sql);
+            Console.WriteLine("Success");
         }
     }
 }

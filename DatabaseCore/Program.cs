@@ -4,16 +4,19 @@ internal class Program
 {
     private static async Task Main(string[] args)
     {
+        Console.WriteLine("Revmetrix-BS");
+        await RevMetrixDatabaseAsync();
+        Console.WriteLine("\n\nRevmetrix-test");
         await FakeBsDatabaseAsync();
     }
 
 
     private static async Task FakeBsDatabaseAsync()
     {
-        var revMetrixTest = new RevMetrixBSTest();
+        var revMetrixDb = new RevMetrixBSTest();
         try
-        {
-            _ = revMetrixTest.NukeAsync();
+        { 
+            _ = revMetrixDb.NukeAsync();
         }
         catch (Exception e)
         {
@@ -23,7 +26,7 @@ internal class Program
         Console.WriteLine("-----");
         try
         {
-            revMetrixTest.CreateTables();
+            revMetrixDb.CreateTables();
         }
         catch (Exception e)
         {
@@ -32,12 +35,12 @@ internal class Program
         }
     }
 
-    private static async Task BallSpinnerDatabaseAsync()
+    private static async Task RevMetrixDatabaseAsync()
     {
         var revMetrix = new RevMetrixDB();
         try
         {
-            _ = revMetrix.Kill();
+            _ = revMetrix.NukeAsync();
         }
         catch (Exception e)
         {

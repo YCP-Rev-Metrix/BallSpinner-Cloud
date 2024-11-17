@@ -1,3 +1,4 @@
+using Common.POCOs;
 using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
@@ -7,7 +8,7 @@ public partial class RevMetrixBSTest
     public void CreateTables()
     {
         var database = new Microsoft.SqlServer.Management.Smo.Database(Server, DatabaseName);
-
+ 
         // will need to look at this part
         if (!Server.Databases.Contains(DatabaseName))
         {
@@ -28,9 +29,7 @@ public partial class RevMetrixBSTest
         //BallSpinnerSensorsTable(temp);
         //BS_SensorsTable(temp);
         SDSensorTable(temp);
-        //SmartDotSensorsTable(temp);
-        //SampleQueueIDTable(temp);
-        //SensorSampleTable(temp);
+        SensorDataTable(temp);
 
     }
 }

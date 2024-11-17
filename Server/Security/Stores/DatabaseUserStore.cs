@@ -64,7 +64,7 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.InsertSampleData(sampleData);
     }
 
-    public override async Task<bool> InsertSimulatedShot(SimulatedShot simulatedShot, string? username)
+    public override async Task<bool> InsertSimulatedShot(Shot simulatedShot, string? username)
     {
         return await ServerState.UserDatabase.InsertSimulatedShot(simulatedShot, username);
     }
@@ -73,6 +73,16 @@ public class DatabaseUserStore : AbstractUserStore
     {
         return await ServerState.UserDatabase.GetUserId(username);
     }
+    public override async Task<ShotList> GetShotsByUsername(string? username)
+    {
+        return await ServerState.UserDatabase.GetShotsbyUsername(username);
+    }
+
+    public override async Task<ShotList> GetShotsByShotname(string? username, string? shotname)
+    {
+        return await ServerState.UserDatabase.GetShotsByShotname(username, shotname);
+    }
+
 
 
 }

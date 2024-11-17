@@ -54,7 +54,6 @@ public partial class RevMetrixBSTest
             userIdKey.ReferencedTable = "User";
 
             userIdKey.Create();
-
             CreateDefaultArsenal();
             Console.WriteLine("Success");
         }

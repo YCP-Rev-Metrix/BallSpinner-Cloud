@@ -11,19 +11,19 @@ public partial class RevMetrixDB
         using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync();
         string insertQuery = @"
-            INSERT INTO [SampleData] (sensor_id, yaxis, xaxis, zaxis, brightness, samplenumber, logtime) 
-                VALUES (@sensor_id, @yaxis, @xaxis, @zaxis, @brightness, @samplenumber, @logtime)";
+            INSERT INTO [SensorData] (sensor_id, sample_number, brightness, xaxis, yaxis, zaxis, waxis, logtime) 
+                VALUES (@sensor_id, @sample_number, @brightness, @xaxis, @yaxis, @zaxis, @waxis, @logtime)";
         
         using var command = new SqlCommand(insertQuery, connection);
         
         // Set parameters
-        command.Parameters.AddWithValue("@sensor_id", sampleData.SensorType ?? (object)DBNull.Value);
-        command.Parameters.AddWithValue("@yaxis", sampleData.Y ?? (object)DBNull.Value);
-        command.Parameters.AddWithValue("@xaxis", sampleData.X ?? (object)DBNull.Value);
-        command.Parameters.AddWithValue("@zaxis", sampleData.Z ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@sample_number", sampleData.Count ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@brightness", 1.22);
-        command.Parameters.AddWithValue("@samplenumber", sampleData.Count ?? (object)DBNull.Value);
-        command.Parameters.AddWithValue("@logtime", sampleData.Timestamp ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@xaxis", sampleData.X ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@yaxis", sampleData.Y ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@zaxis", sampleData.Z ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@waxis", sampleData.W ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@logtime", sampleData.Logtime ?? (object)DBNull.Value);
         
         int affectedRows = await command.ExecuteNonQueryAsync();
         return affectedRows > 0;
