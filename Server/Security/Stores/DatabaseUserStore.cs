@@ -83,6 +83,11 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.GetShotsByShotname(username, shotname);
     }
 
+    public override async Task<ShotList> GetAllShots(string? username)
+    {
+        return await ServerState.UserDatabase.GetAllShots(username);
+    }
+
 
 
 }

@@ -18,4 +18,6 @@ public abstract class AbstractUserStore
     public abstract Task<ShotList> GetShotsByUsername(string? username);
     
     public abstract Task<ShotList> GetShotsByShotname(string? username, string? shotname);
+    public abstract Task<ShotList> GetAllShots(string? username);
+
 }
