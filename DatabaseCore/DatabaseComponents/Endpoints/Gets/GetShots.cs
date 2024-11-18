@@ -182,7 +182,7 @@ public partial class RevMetrixDB
                 } 
                 return new ShotList(shots.Values.ToList());
             }
-            throw new Exception($"User {username} is not an administrator");
+            throw new Exception($"User: {username} is not an administrator");
         }
         catch (Exception e)
         {
