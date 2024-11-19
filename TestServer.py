@@ -49,12 +49,12 @@ class TestAPIEndpoint(unittest.TestCase):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
         url = "https://localhost:7238/api/posts/Register"
         payload = {
-            "firstname": "sup",
-            "lastname": "sup",
-            "username": "sup",
-            "password": "sup",
-            "email": "sup@example.com",
-            "phoneNumber": "sup"
+            "firstname": "newUser",
+            "lastname": "newUser",
+            "username": "newUser",
+            "password": "newUser",
+            "email": "newUser@example.com",
+            "phoneNumber": "123213212"
         }
         response = requests.post(url, json=payload,verify=False)
         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
@@ -86,6 +86,182 @@ class TestAPIEndpoint(unittest.TestCase):
         }
         response = requests.post(url, data=payload,verify=False) # Not JSON encoded, so request data is invalid
         self.assertEqual(response.status_code, 415, f"Expected 415, but got {response.status_code}")
+
+
+    def test_get_shot_by_username(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload,verify=False)
+        token = response.json().get("tokenA")
+
+        url = "https://localhost:7238/api/gets/GetShotsByUsername"
+        headers = {
+                "Authorization": f"Bearer {token}"
+                }
+
+        
+        response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+    def test_insert_simulated_shot(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload,verify=False)
+        token = response.json().get("tokenA")
+
+        url = "https://localhost:7238/api/posts/InsertSimulatedShot"
+        headers = {
+                "Authorization": f"Bearer {token}",
+                }
+        payload = {
+            "simulatedShot": {
+                "name": "newShot",
+                "speed": 12.3,
+                "angle": 51.1,
+                "position": 12.1,
+                "frequency": 25
+            },
+            "data": [
+                {
+                    "type": "Lightsensor",
+                    "count": 2,
+                    "logtime": 12,
+                    "x": 41,
+                    "y": 21,
+                    "z": 12,
+                    "w": 32
+                },
+                {
+                    "type": "Accelerometer",
+                    "count": 2,
+                    "logtime": 12,
+                    "x": 41,
+                    "y": 21,
+                    "z": 12,
+                    "w": 32
+                },
+                {
+                    "type": "Gyroscope",
+                    "count": 2,
+                    "logtime": 12,
+                    "x": 41,
+                    "y": 21,
+                    "z": 12,
+                    "w": 32
+                },
+                {
+                    "type": "Magnetometer",
+                    "count": 2,
+                    "logtime": 12,
+                    "x": 41,
+                    "y": 21,
+                    "z": 12,
+                    "w": 32
+                }
+            ]
+        }
+
+
+        response = requests.post(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+    def test_insert_simulated_shot_invalid(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload,verify=False)
+        token = response.json().get("tokenA")
+
+        url = "https://localhost:7238/api/posts/InsertSimulatedShot"
+        headers = {
+                "Authorization": f"Bearer {token}",
+                }
+        payload = {
+            "simulatedShot": {
+                "name": "newShot",
+                "speed": 12.3,
+                "angle": 51.1,
+                "position": 12.1,
+                "frequency": 25
+            },
+            "data": [
+                {
+                    "type": "Lightsensor",
+                    "count": 2,
+                    "logtime": 12,
+                    "x": 41,
+                    "y": 21,
+                    "z": 12,
+                    "w": 32
+                }
+            ]
+        }
+
+
+        response = requests.post(url, json=payload,verify=False,headers=headers)
+        self.assertEqual(response.status_code, 403, f"Expected 403, but got {response.status_code}")
+
+    def test_get_all_shots(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload, verify=False)
+        token = response.json().get("tokenA")
+
+        url = "https://localhost:7238/api/gets/GetAllShots"
+        headers = {
+                "Authorization": f"Bearer {token}"
+                }
+
+        response = requests.get(url, verify=False, headers=headers)
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+    def test_get_all_shots_invalid(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/posts/Register"
+        payload = {
+            "firstname": "testing",
+            "lastname": "testing",
+            "username": "testing",
+            "password": "testing",
+            "email": "testing@example.com",
+            "phoneNumber": "testing"
+        }
+        response = requests.post(url, data=payload,verify=False) # Not JSON encoded, so request data is invalid
+        token = response.json().get("tokenA")
+
+        url = "https://localhost:7238/api/gets/GetAllShots"
+        headers = {
+                "Authorization": f"Bearer {token}"
+                }
+
+        response = requests.get(url, verify=False, headers=headers)
+        self.assertEqual(response.status_code, 401, f"Expected 401, but got {response.status_code}")
+
+    def test_get_userid(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/gets/GetUserId"
+
+        query = {
+            "username": "string"
+        }
+
+        response = requests.get(url, verify=False,params=query)
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
 
 if __name__ == "__main__":

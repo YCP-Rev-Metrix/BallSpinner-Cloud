@@ -5,7 +5,7 @@ internal class Program
     private static async Task Main(string[] args)
     {
         Console.WriteLine("Revmetrix-BS");
-        await RevMetrixDatabaseAsync();
+        //await RevMetrixDatabaseAsync();
         Console.WriteLine("\n\nRevmetrix-test");
         await FakeBsDatabaseAsync();
     }

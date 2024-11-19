@@ -125,7 +125,7 @@ public partial class RevMetrixBSTest
                 cmd.Parameters.AddWithValue("@LastName", "string");
                 cmd.Parameters.AddWithValue("@Username", "string");
                 cmd.Parameters.AddWithValue("@Salt", saltPass);  
-                cmd.Parameters.AddWithValue("@Roles", "user");
+                cmd.Parameters.AddWithValue("@Roles", "admin");
                 cmd.Parameters.AddWithValue("@Password", hashedPass);  
                 cmd.Parameters.AddWithValue("@Email", "string@example.com");
                 cmd.Parameters.AddWithValue("@Phone", "string");
