@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     public async Task<bool> InsertSampleData(SampleData sampleData)
     {
