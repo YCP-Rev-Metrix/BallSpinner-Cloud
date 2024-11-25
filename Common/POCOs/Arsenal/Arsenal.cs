@@ -4,22 +4,5 @@ namespace Common.POCOs;
 ///</Summary>
 public class Arsenal: Poco
 {
-    public Arsenal(int userid, int ballid)
-    {
-        UserId = userid;
-        Ballid = ballid;
-    }
-
-    // TODO create Poco
-    public int ArsenalId { get; set; }
-
-    public int UserId { get; set; }
-    public int Ballid { get; set; }
-    /*
-    public UserIdentification User { get; set; }
-
-    public ICollection<Ball> Balls { get; set; }
-    */
-
-
+    public List<Ball> BallList { get; set; } = new List<Ball>();
 }

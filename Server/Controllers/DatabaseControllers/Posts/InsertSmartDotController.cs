@@ -9,18 +9,18 @@ namespace Server.Controllers.DatabaseControllers.Deletes;
 [ApiController]
 [Tags("Posts")]
 [Route("api/posts/[controller]")]
-public class InsertBallController : AbstractFeaturedController
+public class InsertSmartDotController : AbstractFeaturedController
 {
     [Authorize]
-    [HttpPost(Name = "InsertBall")]
+    [HttpPost(Name = "InsertSmartDot")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    public async Task<IActionResult> InsertBall([FromBody] Ball ball)
+    public async Task<IActionResult> InsertSmartDot([FromBody] SmartDot smartDot)
     {
-        bool sucess = await ServerState.UserStore.AddBall(ball, GetUsername());
-        return !sucess ? Problem("unable to add ball to the database") : Ok("ball inserted successfully");
+        bool sucess = await ServerState.UserStore.AddSmartDot(smartDot, GetUsername());
+        return !sucess ? Problem("unable to add smartdot to the database") : Ok("SmartDot inserted successfully");
     }
 }

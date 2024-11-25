@@ -4,6 +4,13 @@ namespace Common.POCOs;
 ///</Summary>
 public class SmartDot: Poco
 {
-    // TODO create Poco
 
+    public SmartDot(string? name, string? macaddress)
+    {
+        Name = name;
+        MacAddress = macaddress;
+    }
+
+    public string? Name { get; set; }
+    public string? MacAddress { get; set; }
 }

@@ -3,7 +3,7 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     private void SimulatedShotListTable(Database temp)
     {

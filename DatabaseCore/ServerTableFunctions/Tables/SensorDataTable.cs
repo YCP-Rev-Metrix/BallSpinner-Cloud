@@ -3,11 +3,11 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     private void SensorDataTable(Database temp)
     {
-        Console.WriteLine("Creating SampleDataTable and temp data");
+        Console.WriteLine("Creating SampleDataTable");
         
         var sampleData = new Table(temp, "SensorData");
 

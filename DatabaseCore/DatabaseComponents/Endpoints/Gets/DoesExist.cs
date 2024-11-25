@@ -4,7 +4,7 @@ using System.Data;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     public bool DoesExist()
     {

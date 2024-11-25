@@ -1,13 +1,19 @@
 ﻿namespace Common.POCOs;
 public class Ball : Poco
 {
-    public Ball(float weight, string? color)
+
+    public Ball(string? name, double? weight, double? hardness, string? coretype)
     {
+        Name = name;
         Weight = weight;
-        Color = color;
+        Hardness = hardness;
+        CoreType = coretype;
     }
 
-    public float Weight { get; set; }
-    public string? Color { get; set; }
+    public string? Name { get; set; }
+    public string? CoreType { get; set; }
+    public double? Hardness { get; set; }
+
+    public double? Weight { get; set; }
 
 }

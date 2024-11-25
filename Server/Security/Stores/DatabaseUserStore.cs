@@ -88,6 +88,20 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.GetAllShots(username);
     }
 
+    public override async Task<bool> AddBall(Ball ball, string? username)
+    {
+        return await ServerState.UserDatabase.AddBall(ball, username);
+    }
+
+    public override async Task<Arsenal> GetArsenalbyUsername(string? username)
+    {
+        return await ServerState.UserDatabase.GetArsenalbyUsername(username);
+    }
+
+    public override Task<bool> AddSmartDot(SmartDot smartDot, string? username)
+    {
+        return ServerState.UserDatabase.AddSmartDot(smartDot, username);
+    }
 
 
 }

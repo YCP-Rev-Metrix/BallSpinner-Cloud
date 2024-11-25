@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {   
     public Task NukeAsync()
     {
-        string? ConnectionString = Environment.GetEnvironmentVariable("SERVER_CONNECTION_STRING");
+        string? ConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
         // Define your connection string (use your own credentials and server details)
 
         using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -75,7 +75,7 @@ public partial class RevMetrixDB
         /*
          * Remove Refresh Token Contraint
          */
-        string constraint = "ALTER TABLE [revmetrix-test].dbo.RefreshToken DROP CONSTRAINT FK_RefreshToken_User";
+        string constraint = "ALTER TABLE RefreshToken DROP CONSTRAINT FK_RefreshToken_User";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -86,7 +86,7 @@ public partial class RevMetrixDB
         /*
          * Remove Arsenal Constraints
          */
-        constraint = "ALTER TABLE [revmetrix-test].dbo.Arsenal DROP CONSTRAINT Arsenal_Ball_FK";
+        constraint = "ALTER TABLE Arsenal DROP CONSTRAINT Arsenal_Ball_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -94,7 +94,7 @@ public partial class RevMetrixDB
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "Arsenal-Ball Constraint Removed");
         }
         
-        constraint = "ALTER TABLE [revmetrix-test].dbo.Arsenal DROP CONSTRAINT Arsenal_User_FK";
+        constraint = "ALTER TABLE Arsenal DROP CONSTRAINT Arsenal_User_FK";
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
@@ -104,14 +104,14 @@ public partial class RevMetrixDB
         /*
          * Remove Simulated Shot List Constraints
          */
-        constraint = "ALTER TABLE [revmetrix-test].dbo.SimulatedShotList DROP CONSTRAINT SimulatedShotList_SimulatedShot_FK";
+        constraint = "ALTER TABLE SimulatedShotList DROP CONSTRAINT SimulatedShotList_SimulatedShot_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SimulatedShotList-SimulatedShot Constraint Removed");
         }
-        constraint = "ALTER TABLE [revmetrix-test].dbo.SimulatedShotList DROP CONSTRAINT SimulatedShotList_User_FK";
+        constraint = "ALTER TABLE SimulatedShotList DROP CONSTRAINT SimulatedShotList_User_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -120,20 +120,9 @@ public partial class RevMetrixDB
         }
         
         /*
-         * Remove Simulated Shot Constraints
-         */
-        /*constraint = "ALTER TABLE [revmetrix-test].dbo.SimulatedShot DROP CONSTRAINT SimulatedShot_Ball_FK";
-
-        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
-        {
-            int rows = dropTableCommand.ExecuteNonQuery();
-            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SimulatedShotList-User Constraint Removed");
-        }*/
-        
-        /*
          * Remove SmartDot Sensor Constraints
          */
-        constraint = "ALTER TABLE [revmetrix-test].dbo.SD_Sensor DROP CONSTRAINT SD_Sensor_SimulatedShot_FK";
+        constraint = "ALTER TABLE SD_Sensor DROP CONSTRAINT SD_Sensor_SimulatedShot_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -143,13 +132,32 @@ public partial class RevMetrixDB
         /*
          * Remove SampleData Constraint
          */
-        constraint = "ALTER TABLE [revmetrix-test].dbo.SensorData DROP CONSTRAINT SampleData_SDSensor_FK";
+        constraint = "ALTER TABLE SensorData DROP CONSTRAINT SampleData_SDSensor_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SampleData-SDSensor Constraint Removed");
         }
+        /*
+         * Remove SmartDotList Constraint
+         */
+        constraint = "ALTER TABLE SmartDotList DROP CONSTRAINT SmartDotList_User_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotList-User Constraint Removed");
+        }
+        
+        constraint = "ALTER TABLE SmartDotList DROP CONSTRAINT SmartDotList_SmartDot_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotList-SmartDot Constraint Removed");
+        }
+        Console.WriteLine("");
     }
 
     public int CheckTables(SqlTransaction transaction, SqlConnection connection)

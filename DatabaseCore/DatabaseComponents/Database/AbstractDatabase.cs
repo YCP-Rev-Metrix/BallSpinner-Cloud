@@ -52,3 +52,11 @@ public abstract class AbstractDatabase
         Database = Server.Databases[DatabaseName];
     }
 }
+public static class SqlDataReaderExtensions
+{
+    public static T? GetNullableValue<T>(this SqlDataReader reader, string columnName) where T : struct
+    {
+        var ordinal = reader.GetOrdinal(columnName);
+        return reader.IsDBNull(ordinal) ? (T?)null : reader.GetFieldValue<T>(ordinal);
+    }
+}

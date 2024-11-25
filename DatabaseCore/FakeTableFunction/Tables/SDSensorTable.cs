@@ -31,7 +31,7 @@ public partial class RevMetrixBSTest
         };
         sdSensor.Columns.Add(frequency);
         
-        var type = new Column(sdSensor, "type", DataType.VarChar(15))
+        var type = new Column(sdSensor, "type_id", DataType.BigInt)
         {
             Nullable = false
         };
@@ -56,6 +56,17 @@ public partial class RevMetrixBSTest
 
             SDIdKey.Create();
             
+            // SensorType - SDSensor FK
+            var TypeIdKey = new ForeignKey(sdSensor, "SD_Sensor_SensorType_FK");
+            var TypeIdKeyCol = new ForeignKeyColumn(TypeIdKey, "type_id")
+            {
+                ReferencedColumn = "type_id"
+            };
+            TypeIdKey.Columns.Add(TypeIdKeyCol);
+            TypeIdKey.ReferencedTable = "SensorType";
+
+            TypeIdKey.Create();
+            
             CreateDefaultSmartDotSensor();
 
             Console.WriteLine("Success");
@@ -64,8 +75,8 @@ public partial class RevMetrixBSTest
 
     private void CreateDefaultSmartDotSensor()
     {
-        string sql = "INSERT INTO [SD_Sensor] (frequency, type, shotid) " +
-                     "VALUES (@frequency, @type, @shotid)";
+        string sql = "INSERT INTO [SD_Sensor] (frequency, type_id, shotid) " +
+                     "VALUES (@frequency, @typeid, @shotid)";
 
         string? serverConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
 
@@ -76,7 +87,7 @@ public partial class RevMetrixBSTest
             {
                 // Add parameters to the command
                 cmd.Parameters.AddWithValue("@frequency", 15);
-                cmd.Parameters.AddWithValue("@type", "LightSensor");
+                cmd.Parameters.AddWithValue("@typeid", 1);
                 cmd.Parameters.AddWithValue("@shotid", "1");
 
 

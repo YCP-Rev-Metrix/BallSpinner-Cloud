@@ -3,11 +3,11 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     private void ArsenalTable(Database temp)
     {
-        Console.WriteLine("Creating ArsenalTable and temp data");
+        Console.WriteLine("Creating ArsenalTable");
         var arsenalTable = new Table(temp, "Arsenal");
 
         // User Id

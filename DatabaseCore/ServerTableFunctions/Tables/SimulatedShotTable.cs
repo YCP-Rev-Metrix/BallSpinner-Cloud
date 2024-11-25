@@ -3,7 +3,7 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     private void SimulatedShotTable(Database temp)
     {
@@ -64,9 +64,6 @@ public partial class RevMetrixDB
         if (!temp.Tables.Contains("SimulatedShot"))
         {
             simulatedShot.Create();
-            
-            simulatedShot = temp.Tables["SimulatedShot"];
-            
             
             string sql = "ALTER TABLE [SimulatedShot] ADD CONSTRAINT SimulatedShot_PK PRIMARY KEY (shotid);";
             temp.ExecuteNonQuery(sql);

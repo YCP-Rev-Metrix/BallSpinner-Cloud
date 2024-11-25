@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     private void RefreshTokenTable(Database temp)
     {

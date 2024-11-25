@@ -4,5 +4,5 @@ namespace Common.POCOs;
 ///</Summary>
 public class SmartDotList: Poco
 {
-    // TODO create Poco
+    public List<SmartDot> SmartDots { get; set; } = new List<SmartDot>();
 }

@@ -5,47 +5,46 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixBSTest
 {
-    private void ArsenalTable(Database temp)
+    private void SmartDotListTable(Database temp)
     {
-        Console.WriteLine("Creating ArsenalTable and temp data");
-        var arsenalTable = new Table(temp, "Arsenal");
+        Console.WriteLine("Creating SmartDotListTable and temp data");
+        
+        var smartDotListTable = new Table(temp, "SmartDotList");
 
         // User Id
-        var userid = new Column(arsenalTable, "userid", DataType.BigInt)
+        var userid = new Column(smartDotListTable, "userid", DataType.BigInt)
         {
             Nullable = false
         };
 
-        arsenalTable.Columns.Add(userid);
+        smartDotListTable.Columns.Add(userid);
 
         // Ball Id
-        var ballId = new Column(arsenalTable, "ball_id", DataType.BigInt)
+        var smartdotid = new Column(smartDotListTable, "smartdot_id", DataType.BigInt)
         {
             Nullable = false
         };
 
-        arsenalTable.Columns.Add(ballId);
+        smartDotListTable.Columns.Add(smartdotid);
 
 
-        if (!temp.Tables.Contains("Arsenal"))
+        if (!temp.Tables.Contains("SmartDotList"))
         {
-            arsenalTable.Create();
-
-            arsenalTable = temp.Tables["Arsenal"];
+            smartDotListTable.Create();
 
             // Ball FK
-            var ballIdKey = new ForeignKey(arsenalTable, "Arsenal_Ball_FK");
-            var ballIdKeyCol = new ForeignKeyColumn(ballIdKey, "ball_id")
+            var smartdotIdKey = new ForeignKey(smartDotListTable, "SmartDotList_SmartDot_FK");
+            var smartdotIdKeyCol = new ForeignKeyColumn(smartdotIdKey, "smartdot_id")
             {
-                ReferencedColumn = "ballid"
+                ReferencedColumn = "smartdot_id"
             };
-            ballIdKey.Columns.Add(ballIdKeyCol);
-            ballIdKey.ReferencedTable = "Ball";
+            smartdotIdKey.Columns.Add(smartdotIdKeyCol);
+            smartdotIdKey.ReferencedTable = "SmartDot";
 
-            ballIdKey.Create();
+            smartdotIdKey.Create();
             
             // User FK
-            var userIdKey = new ForeignKey(arsenalTable, "Arsenal_User_FK");
+            var userIdKey = new ForeignKey(smartDotListTable, "SmartDotList_User_FK");
             var userIdKeyCol = new ForeignKeyColumn(userIdKey, "userid")
             {
                 ReferencedColumn = "id"
@@ -54,16 +53,16 @@ public partial class RevMetrixBSTest
             userIdKey.ReferencedTable = "User";
 
             userIdKey.Create();
-            CreateDefaultArsenal();
+            CreateDefaultSmartDotList();
             Console.WriteLine("Success");
         }
         
     }
 
-    private void CreateDefaultArsenal()
+    private void CreateDefaultSmartDotList()
     {
-        string sql = "INSERT INTO [Arsenal] (userid, ball_id) " +
-                     "VALUES (@userid, @ball_id);";
+        string sql = "INSERT INTO [SmartDotList] (userid, smartdot_id) " +
+                     "VALUES (@userid, @smartdot_id);";
         
         string? serverConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
 
@@ -74,7 +73,7 @@ public partial class RevMetrixBSTest
             {
                 // Add parameters to the command
                 cmd.Parameters.AddWithValue("@userid", 1);
-                cmd.Parameters.AddWithValue("@ball_id", 1);
+                cmd.Parameters.AddWithValue("@smartdot_id", 1);
 
                 // Execute the query
                 cmd.ExecuteNonQuery();

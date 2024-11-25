@@ -28,14 +28,14 @@ public partial class RevMetrixBSTest
 
         ballTable.Columns.Add(name);
 
-        var weight = new Column(ballTable, "weight", DataType.VarChar(100))
+        var weight = new Column(ballTable, "weight", DataType.Float)
         {
             Nullable = false
         };
 
         ballTable.Columns.Add(weight);
 
-        var hardness = new Column(ballTable, "hardness", DataType.VarChar(100))
+        var hardness = new Column(ballTable, "hardness", DataType.Float)
         {
             Nullable = true
         };
@@ -55,6 +55,10 @@ public partial class RevMetrixBSTest
 
             string sql = "ALTER TABLE [Ball] ADD CONSTRAINT Ball_PK PRIMARY KEY (ballid);";
             temp.ExecuteNonQuery(sql);
+            
+            sql = "ALTER TABLE [Ball] ADD CONSTRAINT BallName_UNIQUE UNIQUE (name);";
+            temp.ExecuteNonQuery(sql);
+
             CreateDefaultBall();
             Console.WriteLine("Success");
         }
@@ -75,8 +79,8 @@ public partial class RevMetrixBSTest
             {
                 // Add parameters to the command
                 cmd.Parameters.AddWithValue("@name", "string");
-                cmd.Parameters.AddWithValue("@weight", "string");
-                cmd.Parameters.AddWithValue("@hardness", "string");
+                cmd.Parameters.AddWithValue("@weight", 12);
+                cmd.Parameters.AddWithValue("@hardness", 5.4);
                 cmd.Parameters.AddWithValue("@core_type", "string");  
 
                 // Execute the query

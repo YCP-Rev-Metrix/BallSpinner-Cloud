@@ -2,7 +2,7 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     public void CreateTables()
     {
@@ -20,8 +20,8 @@ public partial class RevMetrixDB
         RefreshTokenTable(temp);
         BallTable(temp);
         ArsenalTable(temp);
-        //SmartDotListTable(temp);
-        //SmartDotTable(temp);
+        SmartDotTable(temp);
+        SmartDotListTable(temp);
         //BallSpinnerTable(temp);
         //BallSpinnerList(temp);
         SimulatedShotTable(temp);

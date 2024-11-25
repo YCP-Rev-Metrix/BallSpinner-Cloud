@@ -20,14 +20,15 @@ public partial class RevMetrixBSTest
         RefreshTokenTable(temp);
         BallTable(temp);
         ArsenalTable(temp);
-        //SmartDotListTable(temp);
-        //SmartDotTable(temp);
+        SmartDotTable(temp);
+        SmartDotListTable(temp);
         //BallSpinnerTable(temp);
         //BallSpinnerList(temp);
         SimulatedShotTable(temp);
         SimulatedShotListTable(temp);
         //BallSpinnerSensorsTable(temp);
         //BS_SensorsTable(temp);
+        SensorTypeTable(temp);
         SDSensorTable(temp);
         SensorDataTable(temp);
 

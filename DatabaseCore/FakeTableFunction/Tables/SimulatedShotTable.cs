@@ -65,9 +65,6 @@ public partial class RevMetrixBSTest
         {
             simulatedShot.Create();
             
-            simulatedShot = temp.Tables["SimulatedShot"];
-            
-            
             string sql = "ALTER TABLE [SimulatedShot] ADD CONSTRAINT SimulatedShot_PK PRIMARY KEY (shotid);";
             temp.ExecuteNonQuery(sql);
 

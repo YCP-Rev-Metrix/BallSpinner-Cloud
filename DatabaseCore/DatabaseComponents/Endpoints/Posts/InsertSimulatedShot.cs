@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DatabaseCore.DatabaseComponents
 {
-    public partial class RevMetrixDB
+    public partial class RevMetrixDb
     {
         public async Task<bool> InsertSimulatedShot(Shot shot, string? username)
         {
@@ -18,7 +18,7 @@ namespace DatabaseCore.DatabaseComponents
                 }
 
                 // Open the connection
-                using var connection = new SqlConnection(ConnectionString);
+                await using var connection = new SqlConnection(ConnectionString);
                 await connection.OpenAsync();
 
                 // Get User Id
@@ -30,7 +30,7 @@ namespace DatabaseCore.DatabaseComponents
 
                 // Create Simulated Shot Entry
                 string insertQuery = "INSERT INTO [SimulatedShot] (name, speed, angle, position, Created) " +
-                                     "VALUES (@name, @speed, @angle, @position, @Created); " +
+                                     "VALUES (@name, @speed, @angle, @position, @Created)" +
                                      "SELECT SCOPE_IDENTITY()";
                 using var insertShot = new SqlCommand(insertQuery, connection);
                 insertShot.Parameters.AddWithValue("@name", shot.SimulatedShot.Name);
@@ -57,65 +57,47 @@ namespace DatabaseCore.DatabaseComponents
                 await insertShotList.ExecuteNonQueryAsync();
 
                 // Set up the SmartDot sensors with proper frequencies
-                string[] sensorNames = { "Lightsensor", "Accelerometer", "Gyroscope", "Magnetometer" };
-                long[] sensorIds = new long[4];
+                long[] sensorIds = { 1, 2, 3, 4 };
+                long[] sensorsCreated = new long[4];
                 int i = 0;
-                foreach (var sensorName in sensorNames)
+                foreach (var id in sensorIds)
                 {
-                    insertQuery = "INSERT INTO [SD_Sensor] (frequency, type, shotid)" +
-                                  "VALUES (@frequency, @type, @shotid)";
+                    insertQuery = @"INSERT INTO [SD_Sensor] (frequency, type_id, shotid)
+                                    OUTPUT INSERTED.sensor_id
+                                    VALUES (@frequency, @typeid, @shotid)";
                     using var insertSensor = new SqlCommand(insertQuery, connection);
                     insertSensor.Parameters.AddWithValue("@frequency", shot.SimulatedShot.Frequency);
-                    insertSensor.Parameters.AddWithValue("@type", sensorName);
+                    insertSensor.Parameters.AddWithValue("@typeid", id);
                     insertSensor.Parameters.AddWithValue("@shotid", shotid);
-                    await insertSensor.ExecuteNonQueryAsync();
-                }
+                    object? result = await insertSensor.ExecuteScalarAsync();
+                    if (result == null || result == DBNull.Value)
+                    {
+                        throw new InvalidOperationException("Failed to insert sensor or retrieve sensorid ID.");
+                    }
 
-                i = 0;
-                
-                foreach (var sensorName in sensorNames)
-                {
-                    // Use parameterized query to prevent SQL injection and ensure proper handling of values
-                    insertQuery = "SELECT sensor_id FROM [SD_Sensor] WHERE shotid = @shotid AND type = @sensorName";
-
-                    using var insertSensor = new SqlCommand(insertQuery, connection);
-
-                    // Add parameters to the SQL command to prevent SQL injection
-                    insertSensor.Parameters.AddWithValue("@shotid", shotid);
-                    insertSensor.Parameters.AddWithValue("@sensorName", sensorName);
-
-                    var sensorId = await insertSensor.ExecuteScalarAsync();
-                   
-                    sensorIds[i] = (long)sensorId;
+                    int sensorId = Convert.ToInt32(result);
+                    sensorsCreated[i] = sensorId;
                     i++;
                 }
+                
+                i = 0;
 
                 foreach (SampleData data in shot.Data)
                 {
-                    long sensorid;
-                    if (data.Type == sensorNames[0])
+                    long sensorid = data.Type switch
                     {
-                        sensorid = sensorIds[0];
-                    }
-                    else if (data.Type == sensorNames[1])
-                    {
-                        sensorid = sensorIds[1];
-                    }
-                    else if (data.Type == sensorNames[2])
-                    {
-                        sensorid = sensorIds[2];
-                    }
-                    else
-                    {
-                        sensorid = sensorIds[3];
-                    }
-                    
+                        "1" => sensorsCreated[0],
+                        "2" => sensorsCreated[1],
+                        "3" => sensorsCreated[2],
+                        "4" => sensorsCreated[3],
+                        _ => throw new ArgumentOutOfRangeException(nameof(shot))
+                    };
                     insertQuery = @"
                         INSERT INTO [SensorData] (sensor_id, count, brightness, xaxis, yaxis, zaxis, waxis, logtime) 
                         VALUES (@sensor_id, @count, @brightness, @xaxis, @yaxis, @zaxis, @waxis, @logtime)";
-        
+
                     using var command = new SqlCommand(insertQuery, connection);
-        
+
                     // Set parameters
                     command.Parameters.AddWithValue("@sensor_id", sensorid);
                     command.Parameters.AddWithValue("@count", data.Count ?? (object)DBNull.Value);
@@ -126,9 +108,10 @@ namespace DatabaseCore.DatabaseComponents
                     command.Parameters.AddWithValue("@waxis", data.W ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@logtime", data.Logtime ?? (object)DBNull.Value);
                     command.ExecuteNonQuery();
+                    i++;
                 }
 
-                return true;  // Operation succeeded
+                return true; // Operation succeeded
             }
             catch (SqlException sqlEx)
             {
@@ -145,3 +128,4 @@ namespace DatabaseCore.DatabaseComponents
         }
     }
 }
+

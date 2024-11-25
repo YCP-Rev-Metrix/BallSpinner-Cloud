@@ -7,9 +7,9 @@ using System.Numerics;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB : AbstractDatabase
+public partial class RevMetrixDb : AbstractDatabase
 {
-    public RevMetrixDB() : base(getDatabaseName()) { }
+    public RevMetrixDb() : base(getDatabaseName()) { }
 
     public static string getDatabaseName()
     {

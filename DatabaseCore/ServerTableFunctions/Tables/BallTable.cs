@@ -3,11 +3,11 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     private void BallTable(Database temp)
     {
-        Console.WriteLine("Creating BallTable and temp data");
+        Console.WriteLine("Creating BallTable");
         var ballTable = new Table(temp, "Ball");
 
         // Ball Id
@@ -28,14 +28,14 @@ public partial class RevMetrixDB
 
         ballTable.Columns.Add(name);
 
-        var weight = new Column(ballTable, "weight", DataType.VarChar(100))
+        var weight = new Column(ballTable, "weight", DataType.Float)
         {
             Nullable = false
         };
 
         ballTable.Columns.Add(weight);
 
-        var hardness = new Column(ballTable, "hardness", DataType.VarChar(100))
+        var hardness = new Column(ballTable, "hardness", DataType.Float)
         {
             Nullable = true
         };
@@ -54,6 +54,8 @@ public partial class RevMetrixDB
             ballTable.Create();
 
             string sql = "ALTER TABLE [Ball] ADD CONSTRAINT Ball_PK PRIMARY KEY (ballid);";
+            temp.ExecuteNonQuery(sql);
+            sql = "ALTER TABLE [Ball] ADD CONSTRAINT BallName_UNIQUE UNIQUE (name);";
             temp.ExecuteNonQuery(sql);
             Console.WriteLine("Success");
         }

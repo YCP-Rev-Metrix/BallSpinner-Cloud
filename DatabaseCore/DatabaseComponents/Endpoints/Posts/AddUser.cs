@@ -4,7 +4,7 @@ using System.Data;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     public async Task<bool> AddUser(string? firstname, string? lastname, string? username, byte[] hashedPassword, byte[] salt, string roles, string? phone, string? email)
     {

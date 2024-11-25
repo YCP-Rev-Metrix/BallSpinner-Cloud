@@ -6,7 +6,7 @@ using Common.POCOs;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDB
+public partial class RevMetrixDb
 {
     public async Task<(bool success, List<UserIdentification> users)> GetUsers()
     {
