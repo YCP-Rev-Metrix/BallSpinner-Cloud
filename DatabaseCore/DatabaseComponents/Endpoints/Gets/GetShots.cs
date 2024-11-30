@@ -15,7 +15,7 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
 
         string selectQuery = @"
-            SELECT ss.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, sds.[type], sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
+            SELECT ss.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, sds.[type_id], sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
             FROM [User] AS u
             INNER JOIN SimulatedShotList AS ssl ON u.id = ssl.userid
             INNER JOIN SimulatedShot AS ss ON ssl.shotid = ss.shotid
@@ -47,7 +47,7 @@ public partial class RevMetrixDb
 
             var sampleData = new SampleData
             {
-                Type = reader["type"].ToString(),
+                Type = reader["type_id"].ToString(),
                 Count = reader.GetNullableValue<int>("count"),
                 X = reader.GetNullableValue<double>("xaxis"),
                 Y = reader.GetNullableValue<double>("yaxis"),
