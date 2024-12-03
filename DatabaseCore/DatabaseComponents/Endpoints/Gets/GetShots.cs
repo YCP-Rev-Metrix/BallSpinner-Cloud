@@ -7,9 +7,9 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<ShotList> GetShotsbyUsername(string? username)
+    public async Task<SimulatedShotList> GetShotsbyUsername(string? username)
     {
-        var shots = new Dictionary<string?, Shot>();
+        var shots = new Dictionary<string?, SimulatedShot>();
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
@@ -34,7 +34,7 @@ public partial class RevMetrixDb
 
             if (!shots.ContainsKey(shotName))
             {
-                var simulatedShot = new SimulatedShot
+                var simulatedShot = new ShotInfo
                 {
                     Name = shotName,
                     Angle = reader.GetNullableValue<double>("angle"),
@@ -42,7 +42,9 @@ public partial class RevMetrixDb
                     Position = reader.GetNullableValue<double>("position"),
                     Frequency = reader.GetNullableValue<double>("frequency")
                 };
-                shots[shotName] = new Shot(simulatedShot);
+                shots[shotName] = new SimulatedShot();
+                shots[shotName].simulatedShot = simulatedShot;
+                shots[shotName].data = new List<SampleData?>();
             }
 
             var sampleData = new SampleData
@@ -52,18 +54,18 @@ public partial class RevMetrixDb
                 X = reader.GetNullableValue<double>("xaxis"),
                 Y = reader.GetNullableValue<double>("yaxis"),
                 Z = reader.GetNullableValue<double>("zaxis"),
-                W = reader.GetNullableValue<double>("waxis"),
+                //W = reader.GetNullableValue<double>("waxis"),
                 Logtime = reader.GetNullableValue<double>("logtime")
             };
 
-            shots[shotName].Data.Add(sampleData);
+            shots[shotName].data.Add(sampleData);
         }
-        return new ShotList(shots.Values.ToList());
+        return new SimulatedShotList(shots.Values.ToList());
     }
 
-    public async Task<ShotList> GetShotsByShotname(string? username, string? shotname)
+    public async Task<SimulatedShotList> GetShotsByShotname(string? username, string? shotname)
     {
-        var shots = new Dictionary<string?, Shot>();
+        var shots = new Dictionary<string?, SimulatedShot>();
 
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
@@ -89,7 +91,7 @@ public partial class RevMetrixDb
             string? shotName = reader["name"].ToString();
             if (!shots.ContainsKey(shotName))
             {
-                var simulatedShot = new SimulatedShot
+                var simulatedShot = new ShotInfo
                 {
                     Name = shotName,
                     Angle = reader.GetNullableValue<double>("angle"),
@@ -97,7 +99,9 @@ public partial class RevMetrixDb
                     Position = reader.GetNullableValue<double>("position"),
                     Frequency = reader.GetNullableValue<double>("frequency")
                 };
-                shots[shotName] = new Shot(simulatedShot);
+                shots[shotName] = new SimulatedShot();
+                shots[shotName].simulatedShot = simulatedShot;
+                shots[shotName].data = new List<SampleData?>();
             }
 
             var sampleData = new SampleData
@@ -107,18 +111,18 @@ public partial class RevMetrixDb
                 X = reader.GetNullableValue<double>("xaxis"),
                 Y = reader.GetNullableValue<double>("yaxis"),
                 Z = reader.GetNullableValue<double>("zaxis"),
-                W = reader.GetNullableValue<double>("waxis"),
+                //W = reader.GetNullableValue<double>("waxis"),
                 Logtime = reader.GetNullableValue<double>("logtime")
             };
             
-            shots[shotName].Data.Add(sampleData);
+            shots[shotName].data.Add(sampleData);
         }
 
-        return new ShotList(shots.Values.ToList());
+        return new SimulatedShotList(shots.Values.ToList());
     }
-    public async Task<ShotList> GetAllShots(string? username)
+    public async Task<SimulatedShotList> GetAllShots(string? username)
     {
-        var shots = new Dictionary<string?, Shot>();
+        var shots = new Dictionary<string?, SimulatedShot>();
 
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
@@ -146,7 +150,7 @@ public partial class RevMetrixDb
 
                     if (!shots.ContainsKey(shotName))
                     {
-                        var simulatedShot = new SimulatedShot
+                        var simulatedShot = new ShotInfo
                         { 
                             Name = shotName,
                             Angle = reader.GetNullableValue<double>("angle"),
@@ -154,7 +158,9 @@ public partial class RevMetrixDb
                             Position = reader.GetNullableValue<double>("position"),
                             Frequency = reader.GetNullableValue<double>("frequency")
                         };
-                        shots[shotName] = new Shot(simulatedShot);
+                        shots[shotName] = new SimulatedShot();
+                        shots[shotName].simulatedShot = simulatedShot;
+                        shots[shotName].data = new List<SampleData?>();
                     }
 
                     var sampleData = new SampleData
@@ -164,12 +170,12 @@ public partial class RevMetrixDb
                         X = reader.GetNullableValue<double>("xaxis"),
                         Y = reader.GetNullableValue<double>("yaxis"),
                         Z = reader.GetNullableValue<double>("zaxis"),
-                        W = reader.GetNullableValue<double>("waxis"),
+                        //W = reader.GetNullableValue<double>("waxis"),
                         Logtime = reader.GetNullableValue<double>("logtime")
                     };
-                    shots[shotName].Data.Add(sampleData);
+                    shots[shotName].data.Add(sampleData);
                 } 
-                return new ShotList(shots.Values.ToList());
+                return new SimulatedShotList(shots.Values.ToList());
             }
             throw new Exception($"User: {username} is not an administrator");
         }

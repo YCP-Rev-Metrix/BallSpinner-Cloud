@@ -6,7 +6,7 @@ namespace DatabaseCore.DatabaseComponents
 {
     public partial class RevMetrixDb
     {
-        public async Task<bool> InsertSimulatedShot(Shot shot, string? username)
+        public async Task<bool> InsertSimulatedShot(SimulatedShot shot, string? username)
         {
             try
             {
@@ -33,10 +33,10 @@ namespace DatabaseCore.DatabaseComponents
                                      "VALUES (@name, @speed, @angle, @position, @Created)" +
                                      "SELECT SCOPE_IDENTITY()";
                 using var insertShot = new SqlCommand(insertQuery, connection);
-                insertShot.Parameters.AddWithValue("@name", shot.SimulatedShot.Name);
-                insertShot.Parameters.AddWithValue("@speed", shot.SimulatedShot.Speed);
-                insertShot.Parameters.AddWithValue("@angle", shot.SimulatedShot.Angle);
-                insertShot.Parameters.AddWithValue("@position", shot.SimulatedShot.Position);
+                insertShot.Parameters.AddWithValue("@name", shot.simulatedShot.Name);
+                insertShot.Parameters.AddWithValue("@speed", shot.simulatedShot.Speed);
+                insertShot.Parameters.AddWithValue("@angle", shot.simulatedShot.Angle);
+                insertShot.Parameters.AddWithValue("@position", shot.simulatedShot.Position);
                 insertShot.Parameters.AddWithValue("@Created", DateTime.Now);
 
                 var shotResult = await insertShot.ExecuteScalarAsync();
@@ -66,7 +66,7 @@ namespace DatabaseCore.DatabaseComponents
                                     OUTPUT INSERTED.sensor_id
                                     VALUES (@frequency, @typeid, @shotid)";
                     using var insertSensor = new SqlCommand(insertQuery, connection);
-                    insertSensor.Parameters.AddWithValue("@frequency", shot.SimulatedShot.Frequency);
+                    insertSensor.Parameters.AddWithValue("@frequency", shot.simulatedShot.Frequency);
                     insertSensor.Parameters.AddWithValue("@typeid", id);
                     insertSensor.Parameters.AddWithValue("@shotid", shotid);
                     object? result = await insertSensor.ExecuteScalarAsync();
@@ -82,7 +82,7 @@ namespace DatabaseCore.DatabaseComponents
                 
                 i = 0;
 
-                foreach (SampleData data in shot.Data)
+                foreach (SampleData data in shot.data)
                 {
                     long sensorid = data.Type switch
                     {
@@ -94,7 +94,7 @@ namespace DatabaseCore.DatabaseComponents
                     };
                     insertQuery = @"
                         INSERT INTO [SensorData] (sensor_id, count, brightness, xaxis, yaxis, zaxis, waxis, logtime) 
-                        VALUES (@sensor_id, @count, @brightness, @xaxis, @yaxis, @zaxis, @waxis, @logtime)";
+                        VALUES (@sensor_id, @count, @brightness, @xaxis, @yaxis, @zaxis, NULL, @logtime)";
 
                     using var command = new SqlCommand(insertQuery, connection);
 
@@ -105,7 +105,7 @@ namespace DatabaseCore.DatabaseComponents
                     command.Parameters.AddWithValue("@xaxis", data.X ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@yaxis", data.Y ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@zaxis", data.Z ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@waxis", data.W ?? (object)DBNull.Value);
+                    //command.Parameters.AddWithValue("@waxis", data.W ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@logtime", data.Logtime ?? (object)DBNull.Value);
                     command.ExecuteNonQuery();
                     i++;

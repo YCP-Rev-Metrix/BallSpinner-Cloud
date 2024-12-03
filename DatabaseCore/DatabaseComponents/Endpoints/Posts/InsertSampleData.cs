@@ -22,7 +22,7 @@ public partial class RevMetrixDb
         command.Parameters.AddWithValue("@xaxis", sampleData.X ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@yaxis", sampleData.Y ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@zaxis", sampleData.Z ?? (object)DBNull.Value);
-        command.Parameters.AddWithValue("@waxis", sampleData.W ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@waxis", null ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@logtime", sampleData.Logtime ?? (object)DBNull.Value);
         
         int affectedRows = await command.ExecuteNonQueryAsync();
