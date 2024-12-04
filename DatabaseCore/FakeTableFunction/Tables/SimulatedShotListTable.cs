@@ -25,6 +25,12 @@ public partial class RevMetrixBSTest
         };
 
         simulatedShotListTable.Columns.Add(shotId);
+        
+        var name = new Column(simulatedShotListTable, "name", DataType.VarChar(30))
+        {
+            Nullable = true
+        };
+        simulatedShotListTable.Columns.Add(name);
 
 
         if (!temp.Tables.Contains("SimulatedShotList"))
@@ -52,6 +58,9 @@ public partial class RevMetrixBSTest
             };
             userIdKey.Columns.Add(userIdKeyCol);
             userIdKey.ReferencedTable = "User";
+
+            var sql = "ALTER TABLE [SimulatedShotList] ADD CONSTRAINT SimulatedShotList_UserName_UNIQUE UNIQUE (userid, name);";
+            temp.ExecuteNonQuery(sql);
 
             userIdKey.Create();
 

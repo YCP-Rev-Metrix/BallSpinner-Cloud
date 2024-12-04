@@ -31,6 +31,7 @@ public partial class RevMetrixDb
         //BS_SensorsTable(temp);
         SDSensorTable(temp);
         SensorDataTable(temp);
+        UserLocalShotsTable(temp);
 
 
     }

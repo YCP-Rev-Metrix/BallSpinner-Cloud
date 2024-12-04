@@ -55,10 +55,6 @@ public class DatabaseUserStore : AbstractUserStore
 
         return true;
     }
-    public override async Task<bool> InsertBall(float weight, string? color)
-    {
-        return await ServerState.UserDatabase.Insertball(weight, color);
-    }
     public override async Task<bool> InsertSampleData(SampleData sampleData)
     {
         return await ServerState.UserDatabase.InsertSampleData(sampleData);
@@ -103,6 +99,10 @@ public class DatabaseUserStore : AbstractUserStore
         return ServerState.UserDatabase.AddSmartDot(smartDot, username);
     }
 
+    public override Task<bool> DeleteBallByName(string? ballname, string? username)
+    {
+        return ServerState.UserDatabase.RemoveBall(ballname, username);
+    }
 
 }
 

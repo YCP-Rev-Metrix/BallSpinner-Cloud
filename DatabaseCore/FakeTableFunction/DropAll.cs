@@ -165,13 +165,26 @@ public partial class RevMetrixBSTest
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotList-SmartDot Constraint Removed");
         }
+        
+        /*
+         * Remove LocalShotsTable
+         */
+        
+        constraint = "ALTER TABLE LocalShots DROP CONSTRAINT LocalShot_userID_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "LocalShots-User Constraint Removed");
+        }
         Console.WriteLine("");
+
+        
     }
 
     public int CheckTables(SqlTransaction transaction, SqlConnection connection)
     {
-        string query =
-            "USE [revmetrix-test] SELECT COUNT(*) from information_schema.tables WHERE table_type = 'base table'";
+        string query = "SELECT COUNT(*) FROM [revmetrix-test].INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
         using (SqlCommand command = new SqlCommand(query, connection, transaction))
         {
             // Execute the query and return the count as an integer

@@ -10,7 +10,7 @@ public partial class RevMetrixDb
     {
         // RefreshToken Table
         {
-            Console.WriteLine("Creating RefreshTokenTable and temp data");
+            Console.WriteLine("Creating RefreshTokenTable");
             // Create new
             var tokenTable = new Table(temp, "RefreshToken");
 

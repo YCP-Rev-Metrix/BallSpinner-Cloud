@@ -10,7 +10,7 @@ public partial class RevMetrixDb
 {
     private void UserTable(Database temp)
     {
-        Console.WriteLine("Creating UserTable and User");
+        Console.WriteLine("Creating UserTable");
         // User Table
         var userTable = new Table(temp, "User");
 

@@ -8,7 +8,6 @@ public abstract class AbstractUserStore
     public abstract Task<bool> CreateUser(string? firstname, string? lastname, string? username, string? password, 
                                                             string? email, string? phoneNumber, string[]? roles = null);
     public abstract Task<bool> DeleteUser(string username);
-    public abstract Task<bool> InsertBall(float weight, string? color);
     public abstract Task<(bool success, string[]? roles)> GetRoles(string username);
     public abstract Task<(bool success, string[]? roles)> VerifyUser(string? username, string? password);
 
@@ -24,4 +23,5 @@ public abstract class AbstractUserStore
     public abstract Task<Arsenal> GetArsenalbyUsername(string? username);
     
     public abstract Task<bool> AddSmartDot(SmartDot smartDot, string? username);
+    public abstract Task<bool> DeleteBallByName(string? ballname, string? username);
 }

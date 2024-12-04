@@ -31,11 +31,11 @@ public partial class RevMetrixDb
         };
         sdSensor.Columns.Add(frequency);
         
-        var type_id = new Column(sdSensor, "type_id", DataType.SmallInt)
+        var type = new Column(sdSensor, "type_id", DataType.SmallInt)
         {
             Nullable = false
         };
-        sdSensor.Columns.Add(type_id);
+        sdSensor.Columns.Add(type);
 
         if (!temp.Tables.Contains("SD_Sensor"))
         {
@@ -46,27 +46,28 @@ public partial class RevMetrixDb
 
             
             // SimulatedShot - SDSensor FK
-            var SDIdKey = new ForeignKey(sdSensor, "SD_Sensor_SimulatedShot_FK");
-            var SDIdKeyCol = new ForeignKeyColumn(SDIdKey, "shotid")
+            var sdIdKey = new ForeignKey(sdSensor, "SD_Sensor_SimulatedShot_FK");
+            var sdIdKeyCol = new ForeignKeyColumn(sdIdKey, "shotid")
             {
                 ReferencedColumn = "shotid"
             };
-            SDIdKey.Columns.Add(SDIdKeyCol);
-            SDIdKey.ReferencedTable = "SimulatedShot";
+            sdIdKey.Columns.Add(sdIdKeyCol);
+            sdIdKey.ReferencedTable = "SimulatedShot";
 
-            SDIdKey.Create();
-
+            sdIdKey.Create();
+            
             // SensorType - SDSensor FK
-            var IdKey = new ForeignKey(sdSensor, "SD_Sensor_SensorType_FK");
-            var IdKeyCol = new ForeignKeyColumn(IdKey, "type_id")
+            var typeIdKey = new ForeignKey(sdSensor, "SD_Sensor_SensorType_FK");
+            var typeIdKeyCol = new ForeignKeyColumn(typeIdKey, "type_id")
             {
                 ReferencedColumn = "type_id"
             };
-            IdKey.Columns.Add(IdKeyCol);
-            IdKey.ReferencedTable = "SensorType";
+            typeIdKey.Columns.Add(typeIdKeyCol);
+            typeIdKey.ReferencedTable = "SensorType";
 
-            IdKey.Create();
+            typeIdKey.Create();
+            
             Console.WriteLine("Success");
         }
-    } 
+    }
 }

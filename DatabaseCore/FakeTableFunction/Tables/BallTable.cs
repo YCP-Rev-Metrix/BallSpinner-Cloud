@@ -35,12 +35,12 @@ public partial class RevMetrixBSTest
 
         ballTable.Columns.Add(weight);
 
-        var hardness = new Column(ballTable, "hardness", DataType.Float)
+        var diameter = new Column(ballTable, "diameter", DataType.Float)
         {
-            Nullable = true
+            Nullable = false
         };
-
-        ballTable.Columns.Add(hardness);
+        
+        ballTable.Columns.Add(diameter);
 
         var coretype = new Column(ballTable, "core_type", DataType.VarChar(25))
         {
@@ -67,8 +67,8 @@ public partial class RevMetrixBSTest
 
     private void CreateDefaultBall()
     {
-        string sql = "INSERT INTO [Ball] (name, weight, hardness, core_type) " +
-                     "VALUES (@name, @weight, @hardness, @core_type);";
+        string sql = "INSERT INTO [Ball] (name, weight, diameter, core_type) " +
+                     "VALUES (@name, @weight, @diameter, @core_type);";
         
         string? serverConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
 
@@ -80,8 +80,8 @@ public partial class RevMetrixBSTest
                 // Add parameters to the command
                 cmd.Parameters.AddWithValue("@name", "string");
                 cmd.Parameters.AddWithValue("@weight", 12);
-                cmd.Parameters.AddWithValue("@hardness", 5.4);
                 cmd.Parameters.AddWithValue("@core_type", "string");  
+                cmd.Parameters.AddWithValue("@diameter", 20);
 
                 // Execute the query
                 cmd.ExecuteNonQuery();

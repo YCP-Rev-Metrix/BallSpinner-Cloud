@@ -1,12 +1,8 @@
-﻿
 using Microsoft.SqlServer.Management.Smo;
-using System.Security.Cryptography;
-using System.Text;
-using Microsoft.Data.SqlClient;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDb
+public partial class RevMetrixBSTest
 {
     private void SensorTypeEnum(Database temp)
     {
@@ -27,13 +23,13 @@ public partial class RevMetrixDb
         SensorTypeTable.Columns.Add(SensorType);
 
 
-        if (!temp.Tables.Contains("sensortype"))
+        if (!temp.Tables.Contains("SensorType"))
         {
             SensorTypeTable.Create();
-            
+
             string sql = "ALTER TABLE [SensorType] ADD CONSTRAINT typeid_PK PRIMARY KEY (type_id);";
             temp.ExecuteNonQuery(sql);
-            
+
             // Insert values into enum
             string insertQuery = @"
             INSERT INTO SensorType (type_id, type) VALUES 

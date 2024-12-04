@@ -123,7 +123,7 @@ class TestAPIEndpoint(unittest.TestCase):
                 }
         payload = {
             "simulatedShot": {
-                "name": "newShot",
+                "name": "pytestshot",
                 "speed": 12.3,
                 "angle": 51.1,
                 "position": 12.1,
@@ -131,40 +131,36 @@ class TestAPIEndpoint(unittest.TestCase):
             },
             "data": [
                 {
-                    "type": "Lightsensor",
+                    "type": "1",
                     "count": 2,
                     "logtime": 12,
                     "x": 41,
                     "y": 21,
-                    "z": 12,
-                    "w": 32
+                    "z": 12
                 },
                 {
-                    "type": "Accelerometer",
+                    "type": "2",
                     "count": 2,
                     "logtime": 12,
                     "x": 41,
                     "y": 21,
-                    "z": 12,
-                    "w": 32
+                    "z": 12
                 },
                 {
-                    "type": "Gyroscope",
+                    "type": "3",
                     "count": 2,
                     "logtime": 12,
                     "x": 41,
                     "y": 21,
-                    "z": 12,
-                    "w": 32
+                    "z": 12
                 },
                 {
-                    "type": "Magnetometer",
+                    "type": "4",
                     "count": 2,
                     "logtime": 12,
                     "x": 41,
                     "y": 21,
-                    "z": 12,
-                    "w": 32
+                    "z": 12
                 }
             ]
         }

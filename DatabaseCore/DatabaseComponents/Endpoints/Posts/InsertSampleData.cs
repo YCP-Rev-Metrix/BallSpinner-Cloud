@@ -11,8 +11,8 @@ public partial class RevMetrixDb
         using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync();
         string insertQuery = @"
-            INSERT INTO [SensorData] (sensor_id, sample_number, brightness, xaxis, yaxis, zaxis, waxis, logtime) 
-                VALUES (@sensor_id, @sample_number, @brightness, @xaxis, @yaxis, @zaxis, @waxis, @logtime)";
+            INSERT INTO [SensorData] (sensor_id, count, brightness, xaxis, yaxis, zaxis, waxis, logtime) 
+                VALUES (@sensor_id, @count, @brightness, @xaxis, @yaxis, @zaxis, @waxis, @logtime)";
         
         using var command = new SqlCommand(insertQuery, connection);
         

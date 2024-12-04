@@ -48,12 +48,7 @@ public partial class RevMetrixBSTest
             Nullable = true
         };
         simulatedShot.Columns.Add(ballSpinnerSensorsId);
-    
-        var name = new Column(simulatedShot, "name", DataType.VarChar(30))
-        {
-            Nullable = false
-        };
-        simulatedShot.Columns.Add(name);
+        
         
         var created = new Column(simulatedShot, "Created", DataType.DateTime)
         {
@@ -67,10 +62,7 @@ public partial class RevMetrixBSTest
             
             string sql = "ALTER TABLE [SimulatedShot] ADD CONSTRAINT SimulatedShot_PK PRIMARY KEY (shotid);";
             temp.ExecuteNonQuery(sql);
-
-            sql = "ALTER TABLE [SimulatedShot] ADD CONSTRAINT ShotName_UNIQUE UNIQUE (name);";
-            temp.ExecuteNonQuery(sql);
-
+            
             CreateDefaultSimulatedShot();
             Console.WriteLine("Success");
         }
@@ -79,8 +71,8 @@ public partial class RevMetrixBSTest
     private void CreateDefaultSimulatedShot()
     {
 
-        string sql = "INSERT INTO [SimulatedShot] (speed, angle, position, smartdot_sensorsid, ballspinner_sensorsid, name, Created) " +
-                     "VALUES (@speed, @angle, @position, @Smartdot_sensorsid, @Ballspinner_sensorsid, @Name, @Created)";
+        string sql = "INSERT INTO [SimulatedShot] (speed, angle, position, smartdot_sensorsid, ballspinner_sensorsid, Created) " +
+                     "VALUES (@speed, @angle, @position, @Smartdot_sensorsid, @Ballspinner_sensorsid, @Created)";
         
         string? serverConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
 
@@ -95,7 +87,6 @@ public partial class RevMetrixBSTest
                 cmd.Parameters.AddWithValue("@position", 7.4);  
                 cmd.Parameters.AddWithValue("@Smartdot_sensorsid", "1");
                 cmd.Parameters.AddWithValue("@Ballspinner_sensorsid", "1");  
-                cmd.Parameters.AddWithValue("@Name", "BestShot");
                 cmd.Parameters.AddWithValue("@Created", DateTime.Now);
 
                 // Execute the query

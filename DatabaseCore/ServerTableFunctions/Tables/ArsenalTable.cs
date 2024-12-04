@@ -26,7 +26,13 @@ public partial class RevMetrixDb
 
         arsenalTable.Columns.Add(ballId);
 
+        //status
+        var status = new Column(arsenalTable, "status", DataType.Int)
+        {
+            Nullable = false
+        };
 
+        arsenalTable.Columns.Add(status);
         if (!temp.Tables.Contains("Arsenal"))
         {
             arsenalTable.Create();

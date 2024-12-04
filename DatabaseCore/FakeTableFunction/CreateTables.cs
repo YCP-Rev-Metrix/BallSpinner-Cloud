@@ -16,6 +16,7 @@ public partial class RevMetrixBSTest
         }
         Database temp = Server.Databases[DatabaseName];
         // call each function to create the respective tables
+        SensorTypeEnum(temp);
         UserTable(temp);
         RefreshTokenTable(temp);
         BallTable(temp);
@@ -28,9 +29,9 @@ public partial class RevMetrixBSTest
         SimulatedShotListTable(temp);
         //BallSpinnerSensorsTable(temp);
         //BS_SensorsTable(temp);
-        SensorTypeTable(temp);
         SDSensorTable(temp);
         SensorDataTable(temp);
+        UserLocalShotsTable(temp);
 
     }
 }

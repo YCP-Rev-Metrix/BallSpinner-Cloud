@@ -1,3 +1,5 @@
+using System.Data;
+using System.Text;
 using Common.Logging;
 using Common.POCOs;
 using Microsoft.Data.SqlClient;
@@ -29,11 +31,10 @@ namespace DatabaseCore.DatabaseComponents
                 }
 
                 // Create Simulated Shot Entry
-                string insertQuery = "INSERT INTO [SimulatedShot] (name, speed, angle, position, Created) " +
-                                     "VALUES (@name, @speed, @angle, @position, @Created)" +
+                string insertQuery = "INSERT INTO [SimulatedShot] (speed, angle, position, Created) " +
+                                     "VALUES (@speed, @angle, @position, @Created)" +
                                      "SELECT SCOPE_IDENTITY()";
                 using var insertShot = new SqlCommand(insertQuery, connection);
-                insertShot.Parameters.AddWithValue("@name", shot.simulatedShot.Name);
                 insertShot.Parameters.AddWithValue("@speed", shot.simulatedShot.Speed);
                 insertShot.Parameters.AddWithValue("@angle", shot.simulatedShot.Angle);
                 insertShot.Parameters.AddWithValue("@position", shot.simulatedShot.Position);
@@ -50,10 +51,12 @@ namespace DatabaseCore.DatabaseComponents
                 int shotid = Convert.ToInt32(shotResult);
 
                 // Use the Simulated Shot Id from the previous query to insert into simulated shot list
-                insertQuery = "INSERT INTO [SimulatedShotList](shotid, userid) VALUES (@shotid, @userid)";
+                insertQuery = "INSERT INTO [SimulatedShotList](shotid, userid, name) VALUES (@shotid, @userid, @name)";
                 using var insertShotList = new SqlCommand(insertQuery, connection);
                 insertShotList.Parameters.AddWithValue("@shotid", shotid);
                 insertShotList.Parameters.AddWithValue("@userid", userid);
+                insertShotList.Parameters.AddWithValue("@name", shot.simulatedShot.Name);
+
                 await insertShotList.ExecuteNonQueryAsync();
 
                 // Set up the SmartDot sensors with proper frequencies
@@ -79,8 +82,14 @@ namespace DatabaseCore.DatabaseComponents
                     sensorsCreated[i] = sensorId;
                     i++;
                 }
-                
-                i = 0;
+                // Batch query
+                var query = new StringBuilder(@"
+                INSERT INTO [SensorData] 
+                (sensor_id, count, brightness, xaxis, yaxis, zaxis, waxis, logtime) 
+                VALUES ");
+
+                var parameters = new List<SqlParameter>();
+                int parameterIndex = 0;
 
                 foreach (SampleData data in shot.data)
                 {
@@ -90,32 +99,48 @@ namespace DatabaseCore.DatabaseComponents
                         "2" => sensorsCreated[1],
                         "3" => sensorsCreated[2],
                         "4" => sensorsCreated[3],
-                        _ => throw new ArgumentOutOfRangeException(nameof(shot))
+                        _ => throw new ArgumentOutOfRangeException(nameof(data.Type), "Invalid sensor type")
                     };
-                    insertQuery = @"
-                        INSERT INTO [SensorData] (sensor_id, count, brightness, xaxis, yaxis, zaxis, waxis, logtime) 
-                        VALUES (@sensor_id, @count, @brightness, @xaxis, @yaxis, @zaxis, NULL, @logtime)";
 
-                    using var command = new SqlCommand(insertQuery, connection);
+                    // Add placeholders for each row
+                    query.Append($"(@sensor_id{parameterIndex}, @count{parameterIndex}, @brightness{parameterIndex}, ");
+                    query.Append($"@xaxis{parameterIndex}, @yaxis{parameterIndex}, @zaxis{parameterIndex}, ");
+                    query.Append($"@waxis{parameterIndex}, @logtime{parameterIndex}),");
 
-                    // Set parameters
-                    command.Parameters.AddWithValue("@sensor_id", sensorid);
-                    command.Parameters.AddWithValue("@count", data.Count ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@brightness", 0);
-                    command.Parameters.AddWithValue("@xaxis", data.X ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@yaxis", data.Y ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@zaxis", data.Z ?? (object)DBNull.Value);
-                    //command.Parameters.AddWithValue("@waxis", data.W ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@logtime", data.Logtime ?? (object)DBNull.Value);
-                    command.ExecuteNonQuery();
-                    i++;
+                    // Add parameters for the row
+                    parameters.Add(new SqlParameter($"@sensor_id{parameterIndex}", sensorid));
+                    parameters.Add(new SqlParameter($"@count{parameterIndex}", data.Count ?? (object)DBNull.Value));
+
+                    // Explicitly handle brightness
+                    parameters.Add(new SqlParameter($"@brightness{parameterIndex}",5)); 
+
+                    parameters.Add(new SqlParameter($"@xaxis{parameterIndex}", data.X ?? (object)DBNull.Value));
+                    parameters.Add(new SqlParameter($"@yaxis{parameterIndex}", data.Y ?? (object)DBNull.Value));
+                    parameters.Add(new SqlParameter($"@zaxis{parameterIndex}", data.Z ?? (object)DBNull.Value));
+                    parameters.Add(new SqlParameter($"@waxis{parameterIndex}", DBNull.Value));
+
+                    parameters.Add(new SqlParameter($"@logtime{parameterIndex}", data.Logtime ?? (object)DBNull.Value));
+
+                    parameterIndex++;
                 }
 
-                return true; // Operation succeeded
+                // Remove the trailing comma
+                if (query.Length > 0 && query[query.Length - 1] == ',')
+                {
+                    query.Length--; 
+                }
+
+
+                // Execute the batch query
+                using var command = new SqlCommand(query.ToString(), connection);
+                command.Parameters.AddRange(parameters.ToArray());
+                await command.ExecuteNonQueryAsync();
+                
+                return true; 
             }
             catch (SqlException sqlEx)
             {
-                // Log SQL exceptions (e.g., connection issues, query errors)
+                // Log SQL exceptions
                 LogWriter.LogInfo(sqlEx.Message);
                 return false;
             }

@@ -15,7 +15,7 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
 
         string selectQuery = @"
-            SELECT ss.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, sds.[type_id], sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
+            SELECT ssl.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, sds.[type_id], sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
             FROM [User] AS u
             INNER JOIN SimulatedShotList AS ssl ON u.id = ssl.userid
             INNER JOIN SimulatedShot AS ss ON ssl.shotid = ss.shotid
@@ -72,13 +72,14 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
 
        string selectQuery = @"
-            SELECT ss.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, sds.[type], sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
+            SELECT ssl.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, st.type, sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
             FROM [User] AS u
             INNER JOIN SimulatedShotList AS ssl ON u.id = ssl.userid
             INNER JOIN SimulatedShot AS ss ON ssl.shotid = ss.shotid
             INNER JOIN SD_Sensor AS sds ON sds.shotid = ss.shotid
             INNER JOIN SensorData AS sd ON sds.sensor_id = sd.sensor_id
-            WHERE u.username = @Username AND ss.name = @Shotname";
+            INNER JOIN SensorType AS st ON st.type_id = sds.type_id
+            WHERE u.username = @Username AND ssl.name = @Shotname";
                 
         using var command = new SqlCommand(selectQuery, connection);
     
@@ -134,11 +135,12 @@ public partial class RevMetrixDb
             if (success && roles == "admin")
             {
                 string selectQuery = @"
-                SELECT ss.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, sds.[type], sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
+                SELECT ssl.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, st.type, sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
                 FROM [User] AS u
                 INNER JOIN SimulatedShotList AS ssl ON u.id = ssl.userid
                 INNER JOIN SimulatedShot AS ss ON ssl.shotid = ss.shotid
                 INNER JOIN SD_Sensor AS sds ON sds.shotid = ss.shotid
+                INNER JOIN SensorType AS st ON st.type_id = sds.type_id
                 INNER JOIN SensorData AS sd ON sds.sensor_id = sd.sensor_id";
 
                 using var command = new SqlCommand(selectQuery, connection);

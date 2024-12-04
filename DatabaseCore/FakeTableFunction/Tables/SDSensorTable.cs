@@ -31,7 +31,7 @@ public partial class RevMetrixBSTest
         };
         sdSensor.Columns.Add(frequency);
         
-        var type = new Column(sdSensor, "type_id", DataType.BigInt)
+        var type = new Column(sdSensor, "type_id", DataType.SmallInt)
         {
             Nullable = false
         };

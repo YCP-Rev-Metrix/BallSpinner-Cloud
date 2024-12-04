@@ -7,7 +7,7 @@ public partial class RevMetrixDb
 {
     private void SimulatedShotTable(Database temp)
     {
-        Console.WriteLine("Creating SimulatedShotTable and temp data");
+        Console.WriteLine("Creating SimulatedShotTable");
         var simulatedShot = new Table(temp, "SimulatedShot");
         
         var shotid = new Column(simulatedShot, "shotid", DataType.BigInt)
@@ -48,12 +48,7 @@ public partial class RevMetrixDb
             Nullable = true
         };
         simulatedShot.Columns.Add(ballSpinnerSensorsId);
-    
-        var name = new Column(simulatedShot, "name", DataType.VarChar(30))
-        {
-            Nullable = false
-        };
-        simulatedShot.Columns.Add(name);
+        
         
         var created = new Column(simulatedShot, "Created", DataType.DateTime)
         {
@@ -66,9 +61,6 @@ public partial class RevMetrixDb
             simulatedShot.Create();
             
             string sql = "ALTER TABLE [SimulatedShot] ADD CONSTRAINT SimulatedShot_PK PRIMARY KEY (shotid);";
-            temp.ExecuteNonQuery(sql);
-
-            sql = "ALTER TABLE [SimulatedShot] ADD CONSTRAINT ShotName_UNIQUE UNIQUE (name);";
             temp.ExecuteNonQuery(sql);
 
             Console.WriteLine("Success");

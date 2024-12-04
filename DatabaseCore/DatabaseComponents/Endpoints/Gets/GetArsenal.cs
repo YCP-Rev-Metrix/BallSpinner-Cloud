@@ -15,11 +15,11 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
 
         string selectQuery = @"
-        SELECT b.name, b.core_type, b.hardness, b.weight
+        SELECT b.name, b.core_type, b.diameter, b.weight, a.status
         FROM [User] AS u
         INNER JOIN Arsenal AS a ON u.id = a.userid
         INNER JOIN Ball AS b ON a.ball_id = b.ballid
-        WHERE u.username = @Username;";
+        WHERE u.username = @Username AND a.status = 1;";
 
         using var command = new SqlCommand(selectQuery, connection);
         command.Parameters.AddWithValue("@Username", username);
@@ -30,10 +30,10 @@ public partial class RevMetrixDb
             
             var name = reader["name"].ToString();
             var weight = reader.GetNullableValue<double>("weight");
-            var hardness = reader. GetNullableValue<double>("weight");
+            var diameter = reader. GetNullableValue<double>("diameter");
             string? coreType = reader["core_type"].ToString();
 
-            var ball = new Ball(name, weight, hardness, coreType, null);
+            var ball = new Ball(name, diameter, weight, coreType);
             arsenal.BallList.Add(ball);
         }
         return arsenal;

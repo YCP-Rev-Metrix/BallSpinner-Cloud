@@ -25,7 +25,14 @@ public partial class RevMetrixBSTest
         };
 
         arsenalTable.Columns.Add(ballId);
+        
+        //status
+        var status = new Column(arsenalTable, "status", DataType.Int)
+        {
+            Nullable = false
+        };
 
+        arsenalTable.Columns.Add(status);
 
         if (!temp.Tables.Contains("Arsenal"))
         {
@@ -41,6 +48,7 @@ public partial class RevMetrixBSTest
             };
             ballIdKey.Columns.Add(ballIdKeyCol);
             ballIdKey.ReferencedTable = "Ball";
+            ballIdKey.DeleteAction = ForeignKeyAction.Cascade;
 
             ballIdKey.Create();
             
@@ -52,7 +60,6 @@ public partial class RevMetrixBSTest
             };
             userIdKey.Columns.Add(userIdKeyCol);
             userIdKey.ReferencedTable = "User";
-
             userIdKey.Create();
             CreateDefaultArsenal();
             Console.WriteLine("Success");
@@ -62,8 +69,8 @@ public partial class RevMetrixBSTest
 
     private void CreateDefaultArsenal()
     {
-        string sql = "INSERT INTO [Arsenal] (userid, ball_id) " +
-                     "VALUES (@userid, @ball_id);";
+        string sql = "INSERT INTO [Arsenal] (userid, ball_id, status) " +
+                     "VALUES (@userid, @ball_id, @status);";
         
         string? serverConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
 
@@ -75,6 +82,7 @@ public partial class RevMetrixBSTest
                 // Add parameters to the command
                 cmd.Parameters.AddWithValue("@userid", 1);
                 cmd.Parameters.AddWithValue("@ball_id", 1);
+                cmd.Parameters.AddWithValue("@status", 1);
 
                 // Execute the query
                 cmd.ExecuteNonQuery();

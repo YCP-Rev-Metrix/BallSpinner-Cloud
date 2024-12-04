@@ -9,7 +9,7 @@ public partial class RevMetrixDb
 {   
     public Task NukeAsync()
     {
-        string? ConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
+        string? ConnectionString = Environment.GetEnvironmentVariable("SERVER_CONNECTION_STRING");
         // Define your connection string (use your own credentials and server details)
 
         using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -29,7 +29,7 @@ public partial class RevMetrixDb
                         // Get all table names
                         string getTablesQuery = @"
                         SELECT TABLE_NAME 
-                        FROM [revmetrix-test].INFORMATION_SCHEMA.TABLES
+                        FROM [revmetrix-bs].INFORMATION_SCHEMA.TABLES
                         WHERE TABLE_TYPE = 'BASE TABLE'";
 
                         SqlCommand getTablesCommand = new SqlCommand(getTablesQuery, connection, transaction);
@@ -75,7 +75,7 @@ public partial class RevMetrixDb
         /*
          * Remove Refresh Token Contraint
          */
-        string constraint = "ALTER TABLE RefreshToken DROP CONSTRAINT FK_RefreshToken_User";
+        string constraint = "ALTER TABLE [revmetrix-bs].dbo.RefreshToken DROP CONSTRAINT FK_RefreshToken_User";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -86,7 +86,7 @@ public partial class RevMetrixDb
         /*
          * Remove Arsenal Constraints
          */
-        constraint = "ALTER TABLE Arsenal DROP CONSTRAINT Arsenal_Ball_FK";
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.Arsenal DROP CONSTRAINT Arsenal_Ball_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -94,7 +94,7 @@ public partial class RevMetrixDb
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "Arsenal-Ball Constraint Removed");
         }
         
-        constraint = "ALTER TABLE Arsenal DROP CONSTRAINT Arsenal_User_FK";
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.Arsenal DROP CONSTRAINT Arsenal_User_FK";
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
@@ -104,14 +104,14 @@ public partial class RevMetrixDb
         /*
          * Remove Simulated Shot List Constraints
          */
-        constraint = "ALTER TABLE SimulatedShotList DROP CONSTRAINT SimulatedShotList_SimulatedShot_FK";
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.SimulatedShotList DROP CONSTRAINT SimulatedShotList_SimulatedShot_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SimulatedShotList-SimulatedShot Constraint Removed");
         }
-        constraint = "ALTER TABLE SimulatedShotList DROP CONSTRAINT SimulatedShotList_User_FK";
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.SimulatedShotList DROP CONSTRAINT SimulatedShotList_User_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -122,17 +122,25 @@ public partial class RevMetrixDb
         /*
          * Remove SmartDot Sensor Constraints
          */
-        constraint = "ALTER TABLE SD_Sensor DROP CONSTRAINT SD_Sensor_SimulatedShot_FK";
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.SD_Sensor DROP CONSTRAINT SD_Sensor_SimulatedShot_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-SimulatedShot Constraint Removed");
         }
+        
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.SD_Sensor DROP CONSTRAINT SD_Sensor_SensorType_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-SensorType Constraint Removed");
+        }
         /*
          * Remove SampleData Constraint
          */
-        constraint = "ALTER TABLE SensorData DROP CONSTRAINT SampleData_SDSensor_FK";
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.SensorData DROP CONSTRAINT SampleData_SDSensor_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -142,7 +150,7 @@ public partial class RevMetrixDb
         /*
          * Remove SmartDotList Constraint
          */
-        constraint = "ALTER TABLE SmartDotList DROP CONSTRAINT SmartDotList_User_FK";
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.SmartDotList DROP CONSTRAINT SmartDotList_User_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -150,7 +158,7 @@ public partial class RevMetrixDb
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotList-User Constraint Removed");
         }
         
-        constraint = "ALTER TABLE SmartDotList DROP CONSTRAINT SmartDotList_SmartDot_FK";
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.SmartDotList DROP CONSTRAINT SmartDotList_SmartDot_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
@@ -162,8 +170,7 @@ public partial class RevMetrixDb
 
     public int CheckTables(SqlTransaction transaction, SqlConnection connection)
     {
-        string query =
-            "USE [revmetrix-test] SELECT COUNT(*) from information_schema.tables WHERE table_type = 'base table'";
+        string query = "SELECT COUNT(*) FROM [revmetrix-bs].INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
         using (SqlCommand command = new SqlCommand(query, connection, transaction))
         {
             // Execute the query and return the count as an integer

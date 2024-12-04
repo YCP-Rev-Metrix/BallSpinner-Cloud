@@ -36,10 +36,10 @@ internal class Program
 
     private static async Task FakeBsDatabaseAsync()
     {
-        var revMetrixDb = new RevMetrixBSTest();
+        var revMetrixDbTest = new RevMetrixBSTest();
         try
         { 
-            _ = revMetrixDb.NukeAsync();
+            _ = revMetrixDbTest.NukeAsync();
         }
         catch (Exception e)
         {
@@ -49,7 +49,7 @@ internal class Program
         Console.WriteLine("-----");
         try
         {
-            revMetrixDb.CreateTables();
+            revMetrixDbTest.CreateTables();
         }
         catch (Exception e)
         {

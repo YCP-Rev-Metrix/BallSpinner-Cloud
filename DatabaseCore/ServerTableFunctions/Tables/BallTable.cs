@@ -6,7 +6,7 @@ namespace DatabaseCore.DatabaseComponents;
 public partial class RevMetrixDb
 {
     private void BallTable(Database temp)
-    {
+    { 
         Console.WriteLine("Creating BallTable");
         var ballTable = new Table(temp, "Ball");
 
@@ -35,12 +35,12 @@ public partial class RevMetrixDb
 
         ballTable.Columns.Add(weight);
 
-        var hardness = new Column(ballTable, "hardness", DataType.Float)
+        var diameter = new Column(ballTable, "diameter", DataType.Float)
         {
-            Nullable = true
+            Nullable = false
         };
-
-        ballTable.Columns.Add(hardness);
+        
+        ballTable.Columns.Add(diameter);
 
         var coretype = new Column(ballTable, "core_type", DataType.VarChar(25))
         {
@@ -55,9 +55,12 @@ public partial class RevMetrixDb
 
             string sql = "ALTER TABLE [Ball] ADD CONSTRAINT Ball_PK PRIMARY KEY (ballid);";
             temp.ExecuteNonQuery(sql);
+            
             sql = "ALTER TABLE [Ball] ADD CONSTRAINT BallName_UNIQUE UNIQUE (name);";
             temp.ExecuteNonQuery(sql);
+
             Console.WriteLine("Success");
         }
+        
     }
 }
