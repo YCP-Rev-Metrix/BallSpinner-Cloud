@@ -35,7 +35,7 @@ namespace DatabaseCore.DatabaseComponents
                     SET Arsenal.status = 0
                     FROM Arsenal
                     INNER JOIN Ball AS b ON Arsenal.ball_id = b.ballid
-                    WHERE Arsenal.userid = @userId AND b.name = @BallName;
+                    WHERE Arsenal.userid = @UserId AND b.name = @BallName;
                     ";
                 
                 using var deleteCommand = new SqlCommand(deleteQuery, connection);

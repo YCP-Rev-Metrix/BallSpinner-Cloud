@@ -7,8 +7,8 @@ using Server.Controllers.APIControllers;
 namespace Server.Controllers.DatabaseControllers.Deletes;
 
 [ApiController]
-[Tags("Posts")]
-[Route("api/posts/[controller]")]
+[Tags("Deletes")]
+[Route("api/deletes/[controller]")]
 public class DeleteShotController : AbstractFeaturedController
 {
     /// <summary>
@@ -17,12 +17,12 @@ public class DeleteShotController : AbstractFeaturedController
     /// <param name="request">The name of the ball to delete</param>
     /// <returns>A response indicating the outcome of the operation.</returns>
     [Authorize]
-    [HttpPost(Name = "DeleteShot")]
+    [HttpDelete(Name = "DeleteShot")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)] // Changed to NotFound
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteShot([FromBody] DeleteShotRequest request)
+    public async Task<IActionResult> DeleteShot([FromQuery] DeleteShotRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.ShotName))
         {

@@ -7,8 +7,8 @@ using Server.Controllers.APIControllers;
 namespace Server.Controllers.DatabaseControllers.Deletes;
 
 [ApiController]
-[Tags("Posts")]
-[Route("api/posts/[controller]")]
+[Tags("Deletes")]
+[Route("api/deletes/[controller]")]
 public class DeleteBallController : AbstractFeaturedController
 {
     /// <summary>
@@ -17,36 +17,35 @@ public class DeleteBallController : AbstractFeaturedController
     /// <param name="request">The name of the ball to delete</param>
     /// <returns>A response indicating the outcome of the operation.</returns>
     [Authorize]
-    [HttpPost(Name = "DeleteBall")]
+    [HttpDelete(Name = "DeleteBall")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)] // Changed to NotFound
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteBall([FromBody] DeleteBallRequest request)
+    public async Task<IActionResult> DeleteBall([FromQuery] string ballName)
     {
-        if (string.IsNullOrWhiteSpace(request.BallName))
+        if (string.IsNullOrWhiteSpace(ballName))
         {
             LogWriter.LogWarn("Delete Ball failed: Ball name is null or empty");
             return BadRequest("Ball name cannot be null or empty.");
         }
-
         try
         {
-            LogWriter.LogInfo($"Delete Ball called by user '{GetUsername()}' for ball '{request.BallName}'");
+            LogWriter.LogInfo($"Delete Ball called by user '{GetUsername()}' for ball '{ballName}'");
 
-            bool success = await ServerState.UserDatabase.RemoveBall(request.BallName, GetUsername());
+            bool success = await ServerState.UserDatabase.RemoveBall(ballName, GetUsername());
             if (!success)
             {
-                LogWriter.LogWarn($"Ball '{request.BallName}' not found for user '{GetUsername()}'");
-                return NotFound($"Ball '{request.BallName}' not found for user '{GetUsername()}'"); // Updated to NotFound
+                LogWriter.LogWarn($"Ball '{ballName}' not found for user '{GetUsername()}'");
+                return NotFound($"Ball '{ballName}' not found for user '{GetUsername()}'"); // Updated to NotFound
             }
 
-            LogWriter.LogInfo($"Ball '{request.BallName}' successfully deleted for user '{GetUsername()}'");
+            LogWriter.LogInfo($"Ball '{ballName}' successfully deleted for user '{GetUsername()}'");
             return Ok("Ball deleted");
         }
         catch (Exception ex)
         {
-            LogWriter.LogError($"An error occurred while deleting ball '{request.BallName}' for user '{GetUsername()}': {ex.Message}\n{ex}");
+            LogWriter.LogError($"An error occurred while deleting ball '{ballName}' for user '{GetUsername()}': {ex.Message}\n{ex}");
             return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
         }
     }
