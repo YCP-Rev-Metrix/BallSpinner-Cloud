@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixBSTest
+public partial class Dbcoretest
 {   
     public Task NukeAsync()
     {
@@ -129,14 +129,15 @@ public partial class RevMetrixBSTest
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-SimulatedShot Constraint Removed");
         }
-        
         constraint = "ALTER TABLE SD_Sensor DROP CONSTRAINT SD_Sensor_SensorType_FK";
 
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
-            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-SensorType Constraint Removed");
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-Type Constraint Removed");
         }
+
+        
         /*
          * Remove SampleData Constraint
          */

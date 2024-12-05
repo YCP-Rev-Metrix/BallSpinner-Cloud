@@ -6,7 +6,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixBSTest
+public partial class Dbcoretest
 {
     private void UserTable(Database temp)
 {

@@ -24,7 +24,11 @@ public partial class RevMetrixDb : AbstractDatabase
         }
     }
 } 
-public partial class RevMetrixBSTest : AbstractDatabase
+public partial class Dbcoretest : AbstractDatabase
 {
-    public RevMetrixBSTest() : base("revmetrix-test") { }
+    public Dbcoretest() : base("revmetrix-test") { }
 } 
+public partial class Dbcore : AbstractDatabase
+{
+    public Dbcore() : base("revmetrix-bs") { }
+}

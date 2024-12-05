@@ -6,7 +6,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDb
+public partial class Dbcore
 {
     private void SensorTypeEnum(Database temp)
     {

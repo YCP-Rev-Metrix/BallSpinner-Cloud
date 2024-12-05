@@ -36,7 +36,7 @@ internal class Program
 
     private static async Task FakeBsDatabaseAsync()
     {
-        var revMetrixDbTest = new RevMetrixBSTest();
+        var revMetrixDbTest = new Dbcoretest();
         try
         { 
             _ = revMetrixDbTest.NukeAsync();
@@ -60,10 +60,14 @@ internal class Program
 
     private static async Task RevMetrixDatabaseAsync()
     {
-        var revMetrix = new RevMetrixDb();
+        var revMetrix = new Dbcore();
         try
         {
-            _ = revMetrix.NukeAsync();
+            var x = revMetrix.NukeAsync();
+            if (x.IsFaulted)
+            {
+                throw x.Exception.InnerException;
+            }
         }
         catch (Exception e)
         {

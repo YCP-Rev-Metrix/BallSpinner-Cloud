@@ -7,7 +7,7 @@ using Common.POCOs;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixBSTest
+public partial class Dbcoretest
 {
     private void UserLocalShotsTable(Database temp)
     {

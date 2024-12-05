@@ -3,7 +3,7 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixBSTest
+public partial class Dbcoretest
 {
     public void CreateTables()
     {

@@ -3,11 +3,11 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixBSTest
+public partial class Dbcoretest
 {
     private void SimulatedShotListTable(Database temp)
     {
-        Console.WriteLine("Creating SimulatedShotListTable and temp data");
+        Console.WriteLine("Creating SimulatedShotListTable");
         var simulatedShotListTable = new Table(temp, "SimulatedShotList");
 
         // User Id

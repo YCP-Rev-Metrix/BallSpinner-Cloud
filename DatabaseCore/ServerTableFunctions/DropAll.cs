@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDb
+public partial class Dbcore
 {   
     public Task NukeAsync()
     {
-        string? ConnectionString = Environment.GetEnvironmentVariable("SERVER_CONNECTION_STRING");
+        string? ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         // Define your connection string (use your own credentials and server details)
 
         using (SqlConnection connection = new SqlConnection(ConnectionString))
@@ -24,6 +24,13 @@ public partial class RevMetrixDb
                 {
                     if (CheckTables(transaction, connection) > 0)
                     {
+                        Console.WriteLine("Make sure to delete all tables before proceeding");
+                        
+                        // TODO
+                        // There is somehthing with the env stuff which is preventing the connectionstring for the 
+                        // revmetrix-bs database to be used.
+                        
+                        /*
                         NoContraint(transaction, connection);
                     
                         // Get all table names
@@ -38,25 +45,30 @@ public partial class RevMetrixDb
                         adapter.Fill(tables);
 
                         // Loop through the table names and drop each one
-                        foreach (DataRow row in tables.Rows)
-                        {
-                            string tableName = row["TABLE_NAME"].ToString();
-                            string dropTableQuery = $"DROP TABLE [{tableName}]";
+                         foreach (DataRow row in tables.Rows)
+                         {
+                             string tableName = row["TABLE_NAME"].ToString();
+                             string dropTableQuery = $"DROP TABLE [{tableName}]";
 
-                            using (SqlCommand dropTableCommand = new SqlCommand(dropTableQuery, connection, transaction))
-                            {
-                                dropTableCommand.ExecuteNonQuery();
-                                Console.WriteLine($"Dropped table: {tableName}");
-                            }
-                        }
+                             using (SqlCommand dropTableCommand = new SqlCommand(dropTableQuery, connection, transaction))
+                             {
+                                 dropTableCommand.ExecuteNonQuery();
+                                 Console.WriteLine($"Dropped table: {tableName}");
+                             }
+                         }
 
-                        // Commit the transaction
-                        transaction.Commit();
-                        Console.WriteLine("All tables have been dropped ");
+                         // Commit the transaction
+                         transaction.Commit();
+                         Console.WriteLine("All tables have been dropped ");
+                         */
+                        return Task.FromException(new Exception($"Delete all tables before proceeding"));
+
                     }
                     else
                     {
                         Console.WriteLine("No tables exist in the database");
+                        return Task.CompletedTask;
+
                     }
                     
                 }
@@ -64,13 +76,14 @@ public partial class RevMetrixDb
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return Task.FromException(ex);
+
             }
         }
 
-        return Task.CompletedTask;
     }
 
-    public void NoContraint(SqlTransaction transaction, SqlConnection connection)
+    private void NoContraint(SqlTransaction transaction, SqlConnection connection)
     {
         /*
          * Remove Refresh Token Contraint
@@ -135,7 +148,7 @@ public partial class RevMetrixDb
         using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
         {
             int rows = dropTableCommand.ExecuteNonQuery();
-            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-SensorType Constraint Removed");
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotSensor-Type Constraint Removed");
         }
         /*
          * Remove SampleData Constraint
@@ -164,6 +177,17 @@ public partial class RevMetrixDb
         {
             int rows = dropTableCommand.ExecuteNonQuery();
             Console.WriteLine(rows == 0 ? "No constraint to drop." : "SmartDotList-SmartDot Constraint Removed");
+        }
+        /*
+         * Remove LocalShotsTable
+         */
+        
+        constraint = "ALTER TABLE [revmetrix-bs].dbo.LocalShots DROP CONSTRAINT LocalShot_userID_FK";
+
+        using (SqlCommand dropTableCommand = new SqlCommand(constraint, connection, transaction))
+        {
+            int rows = dropTableCommand.ExecuteNonQuery();
+            Console.WriteLine(rows == 0 ? "No constraint to drop." : "LocalShots-User Constraint Removed");
         }
         Console.WriteLine("");
     }

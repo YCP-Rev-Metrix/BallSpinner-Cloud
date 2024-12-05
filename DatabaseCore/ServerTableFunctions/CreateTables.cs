@@ -2,7 +2,7 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace DatabaseCore.DatabaseComponents;
 
-public partial class RevMetrixDb
+public partial class Dbcore
 {
     public void CreateTables()
     {
