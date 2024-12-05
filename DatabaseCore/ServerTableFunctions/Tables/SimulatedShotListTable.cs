@@ -48,6 +48,8 @@ public partial class Dbcore
             shotIdKey.Columns.Add(shotIdKeyCol);
             shotIdKey.ReferencedTable = "SimulatedShot";
 
+            shotIdKey.DeleteAction = ForeignKeyAction.Cascade;
+
             shotIdKey.Create();
             
             // User FK

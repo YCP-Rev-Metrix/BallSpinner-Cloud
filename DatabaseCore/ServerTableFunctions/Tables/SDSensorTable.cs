@@ -54,6 +54,8 @@ public partial class Dbcore
             sdIdKey.Columns.Add(sdIdKeyCol);
             sdIdKey.ReferencedTable = "SimulatedShot";
 
+            sdIdKey.DeleteAction = ForeignKeyAction.Cascade;
+
             sdIdKey.Create();
             
             // SensorType - SDSensor FK
@@ -65,6 +67,7 @@ public partial class Dbcore
             typeIdKey.Columns.Add(typeIdKeyCol);
             typeIdKey.ReferencedTable = "SensorType";
 
+            typeIdKey.DeleteAction = ForeignKeyAction.NoAction;
             typeIdKey.Create();
             
             Console.WriteLine("Success");

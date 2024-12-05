@@ -78,6 +78,8 @@ public partial class Dbcoretest
             sensorIdKey.Columns.Add(sensorIdKeyCol);
             
             sensorIdKey.ReferencedTable = "SD_Sensor";
+            
+            sensorIdKey.DeleteAction = ForeignKeyAction.Cascade;
 
             sensorIdKey.Create();
             CreateDefaultSampleData();

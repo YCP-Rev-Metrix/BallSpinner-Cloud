@@ -78,6 +78,7 @@ public partial class Dbcore
             sensorIdKey.Columns.Add(sensorIdKeyCol);
             
             sensorIdKey.ReferencedTable = "SD_Sensor";
+            sensorIdKey.DeleteAction = ForeignKeyAction.Cascade;
 
             sensorIdKey.Create();
             

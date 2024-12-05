@@ -53,6 +53,8 @@ public partial class Dbcoretest
             };
             SDIdKey.Columns.Add(SDIdKeyCol);
             SDIdKey.ReferencedTable = "SimulatedShot";
+            
+            SDIdKey.DeleteAction = ForeignKeyAction.Cascade;
 
             SDIdKey.Create();
             
@@ -64,6 +66,8 @@ public partial class Dbcoretest
             };
             TypeIdKey.Columns.Add(TypeIdKeyCol);
             TypeIdKey.ReferencedTable = "SensorType";
+
+            TypeIdKey.DeleteAction = ForeignKeyAction.NoAction;
 
             TypeIdKey.Create();
             

@@ -7,7 +7,7 @@ namespace DatabaseCore.DatabaseComponents
 {
     public partial class RevMetrixDb
     {
-        public async Task<bool> RemoveBall(string? ballName, string? username)
+        public async Task<bool> RemoveShot(string shotname, string? username)
         {
             try
             {
@@ -28,24 +28,34 @@ namespace DatabaseCore.DatabaseComponents
                 {
                     throw new ArgumentException("Invalid user ID.");
                 }
-
-                // Delete Ball from Arsenal and Ball tables
+                /*
+                 * DELETE FROM [Ball]
+                   FROM [dbo].[Ball]
+                   INNER JOIN [dbo].[Arsenal] ON [dbo].[Arsenal].ball_id = [dbo].[Ball].ballid
+                   INNER JOIN [dbo].[User] ON [dbo].[User].id = [dbo].[Arsenal].userid
+                   WHERE [dbo].[Ball].name = 'testing12' AND [dbo].[User].id = 1;
+                   
+                 */
+                // Delete shot
                 string deleteQuery = @"
-                    UPDATE Arsenal
-                    SET Arsenal.status = 0
-                    FROM Arsenal
-                    INNER JOIN Ball AS b ON Arsenal.ball_id = b.ballid
-                    WHERE Arsenal.userid = @userId AND b.name = @BallName;
+                    DELETE FROM ss
+                    FROM SimulatedShot as ss
+                    INNER JOIN SimulatedShotList AS ssl ON ss.ShotId = ssl.ShotId
+                    INNER JOIN SD_Sensor as sds ON sds.shotid = ss.shotid
+                    INNER JOIN SensorType as st ON  st.type_id = sds.type_id
+                    INNER JOIN SensorData as sd ON sd.sensor_id = sds.sensor_id
+                    INNER JOIN [User] U on U.id = ssl.userid
+                    WHERE U.id = @userId AND ssl.name = @shotname;
                     ";
                 
                 using var deleteCommand = new SqlCommand(deleteQuery, connection);
-                deleteCommand.Parameters.AddWithValue("@BallName", ballName);
-                deleteCommand.Parameters.AddWithValue("@UserId", userId);
+                deleteCommand.Parameters.AddWithValue("@shotname", shotname);
+                deleteCommand.Parameters.AddWithValue("@userId", userId);
 
                 int rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
                 if (rowsAffected <= 0)
                 {
-                    throw new InvalidOperationException($"Failed to delete ball '{ballName}' for user '{username}'.");
+                    throw new InvalidOperationException($"Failed to delete shot '{shotname}' for user '{username}'.");
                 }
 
                 return true;

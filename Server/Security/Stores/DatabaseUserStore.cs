@@ -103,6 +103,10 @@ public class DatabaseUserStore : AbstractUserStore
     {
         return ServerState.UserDatabase.RemoveBall(ballname, username);
     }
+    public override Task<bool> DeleteShotByName(string? shotname, string? username)
+    {
+        return ServerState.UserDatabase.RemoveBall(shotname, username);
+    }
 
 }
 

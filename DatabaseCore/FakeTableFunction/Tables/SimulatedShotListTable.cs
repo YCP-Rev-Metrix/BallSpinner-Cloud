@@ -48,8 +48,10 @@ public partial class Dbcoretest
             shotIdKey.Columns.Add(shotIdKeyCol);
             shotIdKey.ReferencedTable = "SimulatedShot";
 
-            shotIdKey.Create();
+            shotIdKey.DeleteAction = ForeignKeyAction.Cascade;
             
+            shotIdKey.Create();
+
             // User FK
             var userIdKey = new ForeignKey(simulatedShotListTable, "SimulatedShotList_User_FK");
             var userIdKeyCol = new ForeignKeyColumn(userIdKey, "userid")
