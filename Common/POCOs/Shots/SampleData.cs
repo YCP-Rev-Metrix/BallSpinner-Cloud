@@ -8,11 +8,12 @@ public class SampleData: Poco
 {
     public SampleData() { }
 
-    public SampleData(string? type, float? timestamp, int count, double? x, double? y, double? z)
+    public SampleData(string? type, float? timestamp, int count, float brightness, double? x, double? y, double? z)
     {
         Type = type;
         Logtime = timestamp;
         Count = count;
+        Brightness = brightness;
         X = x;
         Y = y;
         Z = z;
@@ -25,6 +26,9 @@ public class SampleData: Poco
 
     [JsonPropertyName("Count")]
     public int? Count { get; set; }
+    [JsonPropertyName("Brightness")]
+    public float? Brightness { get; set; }
+
 
     [JsonPropertyName("X")]
     public double? X { get; set; }

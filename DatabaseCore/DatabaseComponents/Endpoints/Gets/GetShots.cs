@@ -51,6 +51,7 @@ public partial class RevMetrixDb
             {
                 Type = reader["type_id"].ToString(),
                 Count = reader.GetNullableValue<int>("count"),
+                Brightness = reader.GetNullableValue<float>("brightness"),
                 X = reader.GetNullableValue<double>("xaxis"),
                 Y = reader.GetNullableValue<double>("yaxis"),
                 Z = reader.GetNullableValue<double>("zaxis"),
@@ -109,6 +110,7 @@ public partial class RevMetrixDb
             {
                 Type = reader["type"].ToString(),
                 Count = reader.GetNullableValue<int>("count"),
+                Brightness = reader.GetNullableValue<float>("brightness"),
                 X = reader.GetNullableValue<double>("xaxis"),
                 Y = reader.GetNullableValue<double>("yaxis"),
                 Z = reader.GetNullableValue<double>("zaxis"),
@@ -169,6 +171,7 @@ public partial class RevMetrixDb
                     {
                         Type = reader["type"].ToString(),
                         Count = reader.GetNullableValue<int>("count"),
+                        Brightness = reader.GetNullableValue<float>("brightness"),
                         X = reader.GetNullableValue<double>("xaxis"),
                         Y = reader.GetNullableValue<double>("yaxis"),
                         Z = reader.GetNullableValue<double>("zaxis"),

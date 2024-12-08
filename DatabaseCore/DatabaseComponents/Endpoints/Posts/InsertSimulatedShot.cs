@@ -112,7 +112,7 @@ namespace DatabaseCore.DatabaseComponents
                     parameters.Add(new SqlParameter($"@count{parameterIndex}", data.Count ?? (object)DBNull.Value));
 
                     // Explicitly handle brightness
-                    parameters.Add(new SqlParameter($"@brightness{parameterIndex}",5)); 
+                    parameters.Add(new SqlParameter($"@brightness{parameterIndex}",data.Brightness?? (object)DBNull.Value)); 
 
                     parameters.Add(new SqlParameter($"@xaxis{parameterIndex}", data.X ?? (object)DBNull.Value));
                     parameters.Add(new SqlParameter($"@yaxis{parameterIndex}", data.Y ?? (object)DBNull.Value));
