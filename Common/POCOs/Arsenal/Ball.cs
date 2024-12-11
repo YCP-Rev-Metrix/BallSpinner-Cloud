@@ -1,7 +1,7 @@
 ﻿namespace Common.POCOs;
 public class Ball : Poco
 {
-
+    public Ball(){}
     public Ball(string? name, double? diameter, double? weight, string? coretype)
     {
         Name = name;

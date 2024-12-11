@@ -74,8 +74,8 @@ public partial class Dbcoretest
 
     private void CreateDefaultSimulatedShotList()
     {
-        string sql = "INSERT INTO [SimulatedShotList] (userid, shotid) " +
-                     "VALUES (@userid, @shotid);";
+        string sql = "INSERT INTO [SimulatedShotList] (userid, shotid, name) " +
+                     "VALUES (@userid, @shotid, @name);";
         
         string? serverConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
 
@@ -87,6 +87,7 @@ public partial class Dbcoretest
                 // Add parameters to the command
                 cmd.Parameters.AddWithValue("@userid", "1");
                 cmd.Parameters.AddWithValue("@shotid", "1");
+                cmd.Parameters.AddWithValue("@name", "test");
 
                 // Execute the query
                 cmd.ExecuteNonQuery();

@@ -25,7 +25,29 @@ public partial class RevMetrixDb
             int userId = await GetUserId(username);
             if (userId <= 0)
             {
-                throw new ArgumentException($"Invalid user ID for username: {username}");
+                LogWriter.LogError($"Invalid user ID for username: {username}");
+                return false;
+            }
+
+            string selectQuery = @"
+            UPDATE Arsenal
+            SET status = 1
+            WHERE status = 0
+            AND ball_id IN (
+                SELECT b.ballid
+                FROM [User] AS u
+                INNER JOIN Arsenal AS a ON u.id = a.userid
+                INNER JOIN Ball AS b ON a.ball_id = b.ballid
+                WHERE u.username = @Username AND b.name = @BallName
+            );";
+            using var command = new SqlCommand(selectQuery, connection, transaction);
+            command.Parameters.AddWithValue("@Username", username);
+            command.Parameters.AddWithValue("@BallName", ball.Name);
+            int success = await command.ExecuteNonQueryAsync();
+            if (success > 0)
+            {
+                await transaction.CommitAsync();
+                return true;
             }
 
             // Insert Ball and retrieve Ball ID

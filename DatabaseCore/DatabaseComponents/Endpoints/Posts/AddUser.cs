@@ -19,7 +19,11 @@ public partial class RevMetrixDb
                              "VALUES (@Firstname, @Lastname, @Username, @Salt, @Roles, @Password, @Email, @Phone)";
 
         using var command = new SqlCommand(insertQuery, connection1);
-
+        if (username is null)
+        {
+            await connection1.CloseAsync();
+            return false;
+        }
         // Set the parameter values
         command.Parameters.Add("@Firstname", SqlDbType.VarChar).Value = firstname;
         command.Parameters.Add("@Lastname", SqlDbType.VarChar).Value = lastname;

@@ -28,14 +28,7 @@ namespace DatabaseCore.DatabaseComponents
                 {
                     throw new ArgumentException("Invalid user ID.");
                 }
-                /*
-                 * DELETE FROM [Ball]
-                   FROM [dbo].[Ball]
-                   INNER JOIN [dbo].[Arsenal] ON [dbo].[Arsenal].ball_id = [dbo].[Ball].ballid
-                   INNER JOIN [dbo].[User] ON [dbo].[User].id = [dbo].[Arsenal].userid
-                   WHERE [dbo].[Ball].name = 'testing12' AND [dbo].[User].id = 1;
-                   
-                 */
+                
                 // Delete shot
                 string deleteQuery = @"
                     DELETE FROM ss

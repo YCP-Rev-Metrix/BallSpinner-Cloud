@@ -20,7 +20,8 @@ public partial class RevMetrixDb
         int userId = await GetUserId(username);
         if (userId <= 0)
         {
-            throw new ArgumentException($"Invalid user ID for username: {username}");
+            LogWriter.LogError($"Invalid user ID for username: {username}");
+            return false;
         }
 
         // Insert into SD table and get the generated ID

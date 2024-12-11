@@ -43,7 +43,7 @@ public partial class RevMetrixDb
                     Frequency = reader.GetNullableValue<double>("frequency")
                 };
                 shots[shotName] = new SimulatedShot();
-                shots[shotName].simulatedShot = simulatedShot;
+                shots[shotName].shotinfo = simulatedShot;
                 shots[shotName].data = new List<SampleData?>();
             }
 
@@ -102,7 +102,7 @@ public partial class RevMetrixDb
                     Frequency = reader.GetNullableValue<double>("frequency")
                 };
                 shots[shotName] = new SimulatedShot();
-                shots[shotName].simulatedShot = simulatedShot;
+                shots[shotName].shotinfo = simulatedShot;
                 shots[shotName].data = new List<SampleData?>();
             }
 
@@ -163,7 +163,7 @@ public partial class RevMetrixDb
                             Frequency = reader.GetNullableValue<double>("frequency")
                         };
                         shots[shotName] = new SimulatedShot();
-                        shots[shotName].simulatedShot = simulatedShot;
+                        shots[shotName].shotinfo = simulatedShot;
                         shots[shotName].data = new List<SampleData?>();
                     }
 

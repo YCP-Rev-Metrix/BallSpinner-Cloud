@@ -6,7 +6,7 @@ namespace Common.POCOs;
 
 public class SimulatedShot
 {
-    public ShotInfo? simulatedShot { get; set; }
+    public ShotInfo? shotinfo { get; set; }
     public List<SampleData?> data { get; set; }
 
 }

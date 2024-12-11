@@ -35,9 +35,9 @@ namespace DatabaseCore.DatabaseComponents
                                      "VALUES (@speed, @angle, @position, @Created)" +
                                      "SELECT SCOPE_IDENTITY()";
                 using var insertShot = new SqlCommand(insertQuery, connection);
-                insertShot.Parameters.AddWithValue("@speed", shot.simulatedShot.Speed);
-                insertShot.Parameters.AddWithValue("@angle", shot.simulatedShot.Angle);
-                insertShot.Parameters.AddWithValue("@position", shot.simulatedShot.Position);
+                insertShot.Parameters.AddWithValue("@speed", shot.shotinfo.Speed);
+                insertShot.Parameters.AddWithValue("@angle", shot.shotinfo.Angle);
+                insertShot.Parameters.AddWithValue("@position", shot.shotinfo.Position);
                 insertShot.Parameters.AddWithValue("@Created", DateTime.Now);
 
                 var shotResult = await insertShot.ExecuteScalarAsync();
@@ -55,7 +55,7 @@ namespace DatabaseCore.DatabaseComponents
                 using var insertShotList = new SqlCommand(insertQuery, connection);
                 insertShotList.Parameters.AddWithValue("@shotid", shotid);
                 insertShotList.Parameters.AddWithValue("@userid", userid);
-                insertShotList.Parameters.AddWithValue("@name", shot.simulatedShot.Name);
+                insertShotList.Parameters.AddWithValue("@name", shot.shotinfo.Name);
 
                 await insertShotList.ExecuteNonQueryAsync();
 
@@ -69,7 +69,7 @@ namespace DatabaseCore.DatabaseComponents
                                     OUTPUT INSERTED.sensor_id
                                     VALUES (@frequency, @typeid, @shotid)";
                     using var insertSensor = new SqlCommand(insertQuery, connection);
-                    insertSensor.Parameters.AddWithValue("@frequency", shot.simulatedShot.Frequency);
+                    insertSensor.Parameters.AddWithValue("@frequency", shot.shotinfo.Frequency);
                     insertSensor.Parameters.AddWithValue("@typeid", id);
                     insertSensor.Parameters.AddWithValue("@shotid", shotid);
                     object? result = await insertSensor.ExecuteScalarAsync();
