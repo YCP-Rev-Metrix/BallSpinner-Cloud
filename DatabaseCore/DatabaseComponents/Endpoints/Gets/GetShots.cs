@@ -15,7 +15,7 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
 
         string selectQuery = @"
-            SELECT ssl.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, sds.[type_id], sds.frequency, sd.count, sd.brightness, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
+            SELECT ssl.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, sds.[type_id], sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
             FROM [User] AS u
             INNER JOIN SimulatedShotList AS ssl ON u.id = ssl.userid
             INNER JOIN SimulatedShot AS ss ON ssl.shotid = ss.shotid
@@ -51,7 +51,6 @@ public partial class RevMetrixDb
             {
                 Type = reader["type_id"].ToString(),
                 Count = reader.GetNullableValue<int>("count"),
-                Brightness = reader.GetNullableValue<double>("brightness"),
                 X = reader.GetNullableValue<double>("xaxis"),
                 Y = reader.GetNullableValue<double>("yaxis"),
                 Z = reader.GetNullableValue<double>("zaxis"),
@@ -73,7 +72,7 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
 
        string selectQuery = @"
-            SELECT ssl.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, st.type, sds.frequency, sd.count, sd.brightness,sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
+            SELECT ssl.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, st.type, sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
             FROM [User] AS u
             INNER JOIN SimulatedShotList AS ssl ON u.id = ssl.userid
             INNER JOIN SimulatedShot AS ss ON ssl.shotid = ss.shotid
@@ -110,7 +109,6 @@ public partial class RevMetrixDb
             {
                 Type = reader["type"].ToString(),
                 Count = reader.GetNullableValue<int>("count"),
-                Brightness = reader.GetNullableValue<double>("brightness"),
                 X = reader.GetNullableValue<double>("xaxis"),
                 Y = reader.GetNullableValue<double>("yaxis"),
                 Z = reader.GetNullableValue<double>("zaxis"),
@@ -137,7 +135,7 @@ public partial class RevMetrixDb
             if (success && roles == "admin")
             {
                 string selectQuery = @"
-                SELECT ssl.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, st.type, sds.frequency, sd.count, sd.brightness, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
+                SELECT ssl.name, ss.speed, ss.angle, ss.[position], sds.sensor_id, st.type, sds.frequency, sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
                 FROM [User] AS u
                 INNER JOIN SimulatedShotList AS ssl ON u.id = ssl.userid
                 INNER JOIN SimulatedShot AS ss ON ssl.shotid = ss.shotid
@@ -171,7 +169,6 @@ public partial class RevMetrixDb
                     {
                         Type = reader["type"].ToString(),
                         Count = reader.GetNullableValue<int>("count"),
-                        Brightness = reader.GetNullableValue<double>("brightness"),
                         X = reader.GetNullableValue<double>("xaxis"),
                         Y = reader.GetNullableValue<double>("yaxis"),
                         Z = reader.GetNullableValue<double>("zaxis"),

@@ -28,4 +28,6 @@ public class ShotInfo
     [JsonPropertyName("Frequency")]
     public double? Frequency { get; set; }
 
+    public int? DataCount { get; set; }
+
 }

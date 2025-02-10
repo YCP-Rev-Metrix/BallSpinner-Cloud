@@ -24,11 +24,6 @@ public partial class Dbcore
         };
         sampleData.Columns.Add(count);
 
-        var brightness = new Column(sampleData, "brightness", DataType.Float)
-        {
-            Nullable = true
-        };
-        sampleData.Columns.Add(brightness);
         
         var xaxis = new Column(sampleData, "xaxis", DataType.Float)
         {

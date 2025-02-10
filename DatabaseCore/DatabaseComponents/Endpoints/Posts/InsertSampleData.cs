@@ -11,14 +11,13 @@ public partial class RevMetrixDb
         using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync();
         string insertQuery = @"
-            INSERT INTO [SensorData] (sensor_id, count, brightness, xaxis, yaxis, zaxis, waxis, logtime) 
-                VALUES (@sensor_id, @count, @brightness, @xaxis, @yaxis, @zaxis, @waxis, @logtime)";
+            INSERT INTO [SensorData] (sensor_id, count, xaxis, yaxis, zaxis, waxis, logtime) 
+                VALUES (@sensor_id, @count, @xaxis, @yaxis, @zaxis, @waxis, @logtime)";
         
         using var command = new SqlCommand(insertQuery, connection);
         
         // Set parameters
         command.Parameters.AddWithValue("@sample_number", sampleData.Count ?? (object)DBNull.Value);
-        command.Parameters.AddWithValue("@brightness", 1.22);
         command.Parameters.AddWithValue("@xaxis", sampleData.X ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@yaxis", sampleData.Y ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@zaxis", sampleData.Z ?? (object)DBNull.Value);

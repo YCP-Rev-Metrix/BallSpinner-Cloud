@@ -85,7 +85,7 @@ namespace DatabaseCore.DatabaseComponents
                 // Batch query
                 var query = new StringBuilder(@"
                 INSERT INTO [SensorData] 
-                (sensor_id, count, brightness, xaxis, yaxis, zaxis, waxis, logtime) 
+                (sensor_id, count, xaxis, yaxis, zaxis, waxis, logtime) 
                 VALUES ");
 
                 var parameters = new List<SqlParameter>();
@@ -103,7 +103,7 @@ namespace DatabaseCore.DatabaseComponents
                     };
 
                     // Add placeholders for each row
-                    query.Append($"(@sensor_id{parameterIndex}, @count{parameterIndex}, @brightness{parameterIndex}, ");
+                    query.Append($"(@sensor_id{parameterIndex}, @count{parameterIndex}, ");
                     query.Append($"@xaxis{parameterIndex}, @yaxis{parameterIndex}, @zaxis{parameterIndex}, ");
                     query.Append($"@waxis{parameterIndex}, @logtime{parameterIndex}),");
 
@@ -111,8 +111,6 @@ namespace DatabaseCore.DatabaseComponents
                     parameters.Add(new SqlParameter($"@sensor_id{parameterIndex}", sensorid));
                     parameters.Add(new SqlParameter($"@count{parameterIndex}", data.Count ?? (object)DBNull.Value));
 
-                    // Explicitly handle brightness
-                    parameters.Add(new SqlParameter($"@brightness{parameterIndex}",data.Brightness?? (object)DBNull.Value)); 
 
                     parameters.Add(new SqlParameter($"@xaxis{parameterIndex}", data.X ?? (object)DBNull.Value));
                     parameters.Add(new SqlParameter($"@yaxis{parameterIndex}", data.Y ?? (object)DBNull.Value));

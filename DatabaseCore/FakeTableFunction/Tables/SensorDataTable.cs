@@ -24,11 +24,6 @@ public partial class Dbcoretest
         };
         sampleData.Columns.Add(count);
 
-        var brightness = new Column(sampleData, "brightness", DataType.Float)
-        {
-            Nullable = true
-        };
-        sampleData.Columns.Add(brightness);
         
         var xaxis = new Column(sampleData, "xaxis", DataType.Float)
         {
@@ -90,8 +85,8 @@ public partial class Dbcoretest
 
     private void CreateDefaultSampleData()
     {
-        string sql = "INSERT INTO [SensorData] (sensor_id, count, brightness, xaxis, yaxis, zaxis, waxis, logtime) " +
-                     "VALUES (@sensor_id, @sample_number, @brightness, @xaxis, @yaxis, @zaxis, @waxis, @logtime)";
+        string sql = "INSERT INTO [SensorData] (sensor_id, count, xaxis, yaxis, zaxis, waxis, logtime) " +
+                     "VALUES (@sensor_id, @sample_number, @xaxis, @yaxis, @zaxis, @waxis, @logtime)";
 
         string? serverConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
 
