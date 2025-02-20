@@ -14,27 +14,15 @@ public abstract class AbstractDatabase
     {
         // process necessary environment variables
         string? dockerizedEnviron = Environment.GetEnvironmentVariable("DOCKERIZED");
-        string? serverConnectionString = Environment.GetEnvironmentVariable("SERVER_CONNECTION_STRING");
         string? localConnectionString = Environment.GetEnvironmentVariable("LOCAL_CONNECTION_STRING");
-
-        string? TestDBENV = Environment.GetEnvironmentVariable("TESTDB_ENV");
-
-        // create the connectionString used for connections to SQL Server, without direct connection to the DB (needed to create the DB)
-        if (dockerizedEnviron == null || TestDBENV != null)
+        string? localDBConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
+        if (dockerizedEnviron == null)
         {
-            ConnectionString = serverConnectionString;
-        }
-        else if (dockerizedEnviron == "Dockerized")
-        {
-            ConnectionString = serverConnectionString; // Should try to make this localConnectionString in the future, but for now it does not work
+            Environment.SetEnvironmentVariable("SERVER_CONNECTION_STRING", localConnectionString);
+            Environment.SetEnvironmentVariable("SERVERDB_CONNECTION_STRING", localDBConnectionString);
         }
 
-        // If this is a test enviornment, need to set ServerDB env variable to point to test server
-        if (TestDBENV != null || dockerizedEnviron == null)
-        {
-            string TestDBConnectionString = Environment.GetEnvironmentVariable("TESTBS_CONNECTION_STRING");
-            Environment.SetEnvironmentVariable("SERVERDB_CONNECTION_STRING", TestDBConnectionString);
-        }
+        ConnectionString = Environment.GetEnvironmentVariable("SERVER_CONNECTION_STRING");
 
         DatabaseName = databaseName;
         Initialize();

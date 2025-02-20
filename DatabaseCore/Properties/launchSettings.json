@@ -3,9 +3,17 @@
     "WSL": {
       "commandName": "WSL2",
       "distributionName": "",
+      "environmentVariables": {
+        "LOCAL_CONNECTION_STRING": "Server=sql_server;User Id=SA;Password=Strong1PassMAN!!!;TrustServerCertificate=True;",
+        "LOCALDB_CONNECTION_STRING": "Server=sql_server;Database=revmetrix-bs;User Id=SA; Password=Strong1PassMAN!!!;TrustServerCertificate=True;"
+      },
     },
     "Mac": {
       "commandName": "Project",
+      "environmentVariables": {
+        "LOCAL_CONNECTION_STRING": "Server=sql_server;User Id=SA;Password=Strong1PassMAN!!!;TrustServerCertificate=True;",
+        "LOCALDB_CONNECTION_STRING": "Server=sql_server;Database=revmetrix-bs;User Id=SA; Password=Strong1PassMAN!!!;TrustServerCertificate=True;"
+      }
     }
   }
 }

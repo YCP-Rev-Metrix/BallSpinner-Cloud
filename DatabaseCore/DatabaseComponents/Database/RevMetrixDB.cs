@@ -9,21 +9,8 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb : AbstractDatabase
 {
-    public RevMetrixDb() : base(getDatabaseName()) { }
-
-    public static string getDatabaseName()
-    {
-        string env = Environment.GetEnvironmentVariable("TESTDB_ENV");
-        if (env == "true")
-        {
-            return "revmetrix-test";
-        }
-        else
-        {
-            return "revmetrix-bs";
-        }
-    }
-} 
+    public RevMetrixDb() : base("revmetrix-bs") { }
+}
 public partial class Dbcoretest : AbstractDatabase
 {
     public Dbcoretest() : base("revmetrix-test") { }

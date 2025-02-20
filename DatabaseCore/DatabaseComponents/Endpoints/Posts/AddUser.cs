@@ -1,6 +1,7 @@
 ﻿using Common.Logging;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Diagnostics;
 
 namespace DatabaseCore.DatabaseComponents;
 
@@ -12,7 +13,14 @@ public partial class RevMetrixDb
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         // ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
         using var connection1 = new SqlConnection(ConnectionString);
-        await connection1.OpenAsync();
+        try
+        {
+            await connection1.OpenAsync();
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+        }
         LogWriter.LogInfo(connection1);
 
         string insertQuery = "INSERT INTO [User] (firstname, lastname, username, salt, roles, password, email, phone) " +
