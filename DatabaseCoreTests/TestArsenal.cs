@@ -36,7 +36,7 @@ public class TestArsenal: DatabaseCoreTestSetup
         };
         string testUserName = "string";
 
-        bool success = await ServerState.UserStore.AddBall(ball, testUserName);
+        bool success = await database.AddBall(ball, testUserName);
         Assert.True(success);
     }
 
