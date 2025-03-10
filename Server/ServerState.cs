@@ -20,7 +20,7 @@ public static class ServerState
     /// <summary>
     /// Handles interactions with the User Database
     /// </summary>
-    public static readonly RevMetrixDb UserDatabase = new();
+    public static readonly RevMetrixDb UserDatabase = new("revmetrix-bs");
 
     /// <summary>
     /// Provides functionality surrounding JWTs and refresh tokens

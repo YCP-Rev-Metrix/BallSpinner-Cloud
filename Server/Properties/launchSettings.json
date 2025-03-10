@@ -16,8 +16,8 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "LOCAL_CONNECTION_STRING": "Server=localhost;User Id=SA;Password=Strong1PassMAN!!!;TrustServerCertificate=True;",
-        "LOCALDB_CONNECTION_STRING": "Server=localhost;Database=revmetrix-bs;User Id=SA; Password=Strong1PassMAN!!!;TrustServerCertificate=True;"
+        "LOCAL_CONNECTION_STRING": "Server=localhost, 1433;User Id=SA;Password=Strong1PassMAN!!!;TrustServerCertificate=True;",
+        "LOCALDB_CONNECTION_STRING": "Server=localhost, 1433;Database=revmetrix-bs;User Id=SA; Password=Strong1PassMAN!!!;TrustServerCertificate=True;"
 
       },
       "dotnetRunMessages": true,

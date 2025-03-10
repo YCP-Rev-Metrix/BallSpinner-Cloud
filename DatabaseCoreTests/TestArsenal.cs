@@ -36,7 +36,7 @@ public class TestArsenal: DatabaseCoreTestSetup
         };
         string testUserName = "string";
 
-        bool success = await database.AddBall(ball, testUserName);
+        bool success = await ServerState.UserStore.AddBall(ball, testUserName);
         Assert.True(success);
     }
 
@@ -75,9 +75,29 @@ public class TestArsenal: DatabaseCoreTestSetup
     [Fact]
     public async void TestDeleteBall()
     {
+        var builder = new StringBuilder(5);
+
+        char offset = true ? 'a' : 'A';
+        const int lettersOffset = 26;
+
+        for (var i = 0; i < 5; i++)
+        {
+            var @char = (char)_random.Next(offset, offset + lettersOffset);
+            builder.Append(@char);
+        }
         string testUserName = "string";
-        
-        bool success = await ServerState.UserStore.DeleteBallByName("string", testUserName);
+        string testBallName = builder.ToString();
+        Ball ball = new Ball
+        {
+            Name = testBallName,
+            Diameter = 12,
+            Weight = 12.3,
+            CoreType = "Symmetrical"
+        };
+        // Insert the ball first
+        await ServerState.UserStore.AddBall(ball, testUserName);
+        // Make sure the ball is deleted
+        bool success = await ServerState.UserStore.DeleteBallByName(testBallName, testUserName);
         Assert.True(success);
     }
 

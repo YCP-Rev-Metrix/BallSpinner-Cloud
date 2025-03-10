@@ -19,7 +19,8 @@ namespace DatabaseCoreTests
             // NEED SOMETHING HERE TO RUN SCRIPT TO REBUILD TEST DATABASE
 
             // Set environment to test environment to ensure the test database is used for the following tests
-            Environment.SetEnvironmentVariable("TESTDB_ENV", "true");
+            //Environment.SetEnvironmentVariable("TESTDB_ENV", "true");
+            Thread.Sleep(10000);
             //await FakeBsDatabaseAsync();
 
         }

@@ -166,14 +166,22 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
     [Fact]
     public async void TestRemoveShot()
     {
-        string testShotName = "test"; 
+        var builder = new StringBuilder(5);
+
+        char offset = true ? 'a' : 'A';
+        const int lettersOffset = 26;
+
+        for (var i = 0; i < 5; i++)
+        {
+            var @char = (char)_random.Next(offset, offset + lettersOffset);
+            builder.Append(@char);
+        }
+
+        string testShotName = builder.ToString(); 
         string testUserName = "string";
-        // Validate user credential
-        bool success = await ServerState.UserStore.DeleteShotByName(testShotName, testUserName);
-        Assert.True(success);
         ShotInfo shotInfo = new ShotInfo
         {
-            Name = "test",
+            Name = testShotName,
             Speed = 99,
             Angle = 99,
             Position = 99,
@@ -224,7 +232,11 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
             shotinfo = shotInfo,
             data = data,
         };
-        success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
+        bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
+        Assert.True(success);
+
+        // Validate user credential
+        success = await ServerState.UserStore.DeleteShotByName(testShotName, testUserName);
         Assert.True(success);
     }
 

@@ -1,0 +1,1 @@
+The following documentation file will desribe the RevMetrix cloud team's procedure for database updates and redeployments in the event of corruption.
