@@ -14,12 +14,13 @@ public partial class RevMetrixDb
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
+        // For now, every user has just one arsenal so this query will join on just the one arsenal for now
         string selectQuery = @"
-        SELECT b.name, b.core_type, b.diameter, b.weight, a.status
+        SELECT b.name, b.core_type, b.diameter, b.weight, b.status
         FROM [User] AS u
         INNER JOIN Arsenal AS a ON u.id = a.userid
-        INNER JOIN Ball AS b ON a.ball_id = b.ballid
-        WHERE u.username = @Username AND a.status = 1;";
+        INNER JOIN Ball AS b ON a.arsenalID = b.ArsenalID
+        WHERE u.username = @Username AND b.status = 1;";
 
         using var command = new SqlCommand(selectQuery, connection);
         command.Parameters.AddWithValue("@Username", username);

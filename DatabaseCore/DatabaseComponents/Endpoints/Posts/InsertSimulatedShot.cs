@@ -30,6 +30,7 @@ namespace DatabaseCore.DatabaseComponents
                     throw new ArgumentException("Invalid user ID.");
                 }
 
+
                 // Create Simulated Shot Entry
                 string insertQuery = "INSERT INTO [SimulatedShot] (speed, angle, position, Created) " +
                                      "VALUES (@speed, @angle, @position, @Created)" +

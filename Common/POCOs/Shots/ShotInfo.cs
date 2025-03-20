@@ -11,10 +11,7 @@ public class ShotInfo
     public ShotInfo(string? name, double? speed, double? angle, double? position, double? frequency)
     {
         Name = name;
-        Speed = speed;
-        Angle = angle;
-        Position = position;
-        Frequency = frequency;
+        
     }
 
     [JsonPropertyName("Name")]
