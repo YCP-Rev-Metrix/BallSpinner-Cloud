@@ -265,8 +265,9 @@ INSERT INTO SensorType (type_id, type) VALUES
 (3, 'Accelerometer'),
 (4, 'Magnetometer');
 -- rollback DELETE DATABASE revmetrix-bs
---changeset RevMetrix:2
 
+--changeset RevMetrix:2
+-- Arsenal changes 
 ALTER TABLE Arsenal
 DROP CONSTRAINT Arsenal_Ball_FK
 
@@ -294,9 +295,87 @@ GO;
 ALTER TABLE Ball
 ADD CONSTRAINT UniqueBallName UNIQUE (ArsenalID, name)
 
-ALTER TABLE BALL
+ALTER TABLE Ball
 ADD [status] smallint NOT NULL
 
+--changeset RevMetrix:3
+-- Upload Shot database changes
+
+-- create new initial values table
+CREATE TABLE InitialValues(
+	id bigint PRIMARY KEY IDENTITY(1,1),
+	InitialPointx float NOT NULL,
+	InitialPointy float NOT NULL,
+	InflectionPointx float NOT NULL,
+	InflectionPointy float NOT NULL,
+	FinalPointx float NOT NULL,
+	FinalPointy float NOT NULL,
+	TimeStep float
+);
+GO;
+-- add foreign key reference to Simulated Shot for initial values
+ALTER TABLE SimulatedShot
+ADD InitialValuesID bigint
+GO;
+
+ALTER TABLE SimulatedShot
+WITH NOCHECK
+ADD CONSTRAINT SimulatedShot_InitValues
+FOREIGN KEY(InitialValuesID)
+REFERENCES InitialValues(id)
+GO;
+
+--add reference to specific bowling ball for simulated shot
+ALTER TABLE SimulatedShot
+ADD 
+    ballid bigint,
+    [Name] varchar(30);
+GO;
+
+ALTER TABLE SimulatedShot
+WITH NOCHECK
+ADD CONSTRAINT SimulatedShot_Ball
+FOREIGN KEY (ballid)
+REFERENCES Ball(ballid)
+GO;
+
+
+-- add sensor info
+CREATE TABLE SensorList(
+    SmartDotID bigint PRIMARY KEY IDENTITY(1,1),
+    userid bigint,
+    MACAddress varbinary(6), -- 6 bytes for the mac address
+    Name varchar(40),
+    CONSTRAINT FK_SensorList_User FOREIGN KEY (userid) REFERENCES [User](id),
+	CONSTRAINT UQ_SensorList_User_MACAddress UNIQUE (userid, MACAddress)
+);
+
+GO;
+-- Create sensor info table
+CREATE TABLE SensorInfo(
+    infoID bigint PRIMARY KEY IDENTITY(1,1),
+    SmartDotID bigint,
+    Date datetime,
+    Comments varchar(1000),
+    CONSTRAINT FK_SensorInfo_SensorList FOREIGN KEY (SmartDotID) REFERENCES SensorList(SmartDotID)
+);
+GO;
+
+ALTER TABLE SimulatedShot
+DROP COLUMN speed, angle, position
+GO;
+
+
+ALTER TABLE SimulatedShot
+WITH NOCHECK
+ADD CONSTRAINT SimulatedShot_SensorInfo
+FOREIGN KEY (smartdot_sensorsid)
+REFERENCES SensorInfo(infoID)
+GO;
+
+ALTER TABLE SD_Sensor
+DROP COLUMN frequency
+GO;
 
 
 

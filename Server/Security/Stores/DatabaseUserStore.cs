@@ -76,12 +76,14 @@ public class DatabaseUserStore : AbstractUserStore
 
     public override async Task<SimulatedShotList> GetShotsByShotname(string? username, string? shotname)
     {
-        return await ServerState.UserDatabase.GetShotsByShotname(username, shotname);
+        //return await ServerState.UserDatabase.GetShotsByShotname(username, shotname);
+        throw new Exception("End point needs to be fixed");
     }
 
     public override async Task<SimulatedShotList> GetAllShots(string? username)
     {
-        return await ServerState.UserDatabase.GetAllShots(username);
+        //return await ServerState.UserDatabase.GetAllShots(username);
+        throw new Exception("End point needs to be fixed");
     }
 
     public override async Task<bool> AddBall(Ball ball, string? username)

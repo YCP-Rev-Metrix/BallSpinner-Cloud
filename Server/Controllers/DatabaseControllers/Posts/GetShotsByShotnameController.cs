@@ -14,6 +14,7 @@ namespace Server.Controllers.DatabaseControllers.Posts;
 [Route("api/posts/[controller]")]
 public class GetShotsByShotnameController : AbstractFeaturedController
 {
+    /* COMMENTED OUT UNTIL ENDPOINT IS FIXED
 
     [Authorize]
     [HttpPost(Name = "GetShotsByShotname")]
@@ -29,5 +30,6 @@ public class GetShotsByShotnameController : AbstractFeaturedController
     {
         public string? Shotname { get; set; }
     }
+    */
 
 }
