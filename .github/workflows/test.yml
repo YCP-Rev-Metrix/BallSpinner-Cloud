@@ -1,0 +1,27 @@
+on: workflow_dispatch
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Database Containers
+        run: docker-compose up - d
+        
+      - name: Wait to ensure docker containers are up and running
+        run: sleep 80
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '7.0'
+  
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Test with the dotnet CLI
+        run: dotnet test --no-build
+
+      - name: Cleanup
+        run: docker-compose down
