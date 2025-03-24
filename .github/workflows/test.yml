@@ -1,11 +1,14 @@
-on: workflow_dispatch
+on:
+  push:
+    branches: 
+      - rcurry2BallSpinnerCloud
 jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Setup Database Containers
-        run: docker-compose up - d
+        run: docker-compose up -d
         
       - name: Wait to ensure docker containers are up and running
         run: sleep 80
