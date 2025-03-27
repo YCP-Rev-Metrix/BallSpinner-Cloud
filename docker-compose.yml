@@ -13,7 +13,7 @@ services:
     networks:
       - web-network
     ports:
-      - "1401:1433"
+      - "1433:1433"
     # Will only run init.sql if the revmetrix-bs database does not already exist
     command: >
       /bin/bash -c "
