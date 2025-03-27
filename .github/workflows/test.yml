@@ -7,11 +7,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run docker compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        
-      - name: Wait to ensure docker containers are up and running
-        run: sleep 80
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
+
+      - name: Start dependencies (docker-compose)
+        run: |
+                    docker compose up -d  
+
+      - name: Wait for containers
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '80s'
+      - name: Debug
+        run: |
+          docker ps
+          docker exec sql_server sh -c "/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Strong1PassMAN!!!' -d master -C -Q \"IF NOT EXISTS (SELECT name FROM master.sys.databases WHERE name = N'revmetrix-bs') PRINT 'EXISTS'\""
+
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
