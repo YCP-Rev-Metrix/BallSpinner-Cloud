@@ -7,13 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run docker compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        with:
-          compose-file: "./docker-compose.yml"
-        
-      - name: Wait to ensure docker containers are up and running
-        run: sleep 85
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Run docker-compose up
+        run: |
+          docker-compose up -d
+          sleep 85 # Wait for the containers to start
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
