@@ -8,10 +8,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run docker compose
-        run: docker-compose up -d
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: "./docker-compose.yml"
         
       - name: Wait to ensure docker containers are up and running
-        run: sleep 120
+        run: sleep 85
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
