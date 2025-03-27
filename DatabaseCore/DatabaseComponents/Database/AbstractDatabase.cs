@@ -31,6 +31,8 @@ public abstract class AbstractDatabase
         ConnectionString = Environment.GetEnvironmentVariable("SERVER_CONNECTION_STRING");
         DatabaseName = databaseName;
 
+        Console.WriteLine(ConnectionString);
+
         Initialize();
     }
 
