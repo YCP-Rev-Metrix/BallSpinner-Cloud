@@ -61,26 +61,6 @@ namespace DatabaseCore.DatabaseComponents
                         InitialValuesID = Convert.ToInt32(insertResult);
                     }
 
-                    // Create new sensorInfo entry
-                    string sensorInfoQuery = @"
-                        INSERT INTO SensorInfo (SmartDotID, Date, Comments)
-                        OUTPUT INSERTED.infoID
-                        SELECT sl.SmartDotID, GETDATE(), @Comments
-                        FROM SensorList sl
-                        WHERE MACAddress = @MacAddress
-                    ";
-                    using (SqlCommand sensorInfo = new SqlCommand(sensorInfoQuery, connection, transaction))
-                    {
-                        sensorInfo.Parameters.AddWithValue("@Comments", shot.sensorInfo.Comments);
-                        sensorInfo.Parameters.AddWithValue("@MacAddress", shot.sensorInfo.MACAddress);
-                        var SensorInfoID = await sensorInfo.ExecuteScalarAsync();
-                        if (SensorInfoID == null || SensorInfoID == DBNull.Value)
-                        {
-                            throw new InvalidOperationException("Failed to insert simulated shot or retrieve shot ID.");
-                        }
-                        sensorInfoID = Convert.ToInt32(SensorInfoID);
-                    }
-
                     // Get ballID from the shot - FOR NOW THIS ASSUMES EACH USER ONLY HAS ONE ARSENAL. IN THE FUTURE, UPDATE THE POCO SO A USER CAN SEND A BALL FROM A SPECIFIC ARSENAL
                     string ballQuery = @"
                         SELECT b.ballid
@@ -102,16 +82,15 @@ namespace DatabaseCore.DatabaseComponents
                     }
 
                     // Create Simulated Shot Entry
-                    string insertQuery = "INSERT INTO [SimulatedShot] (smartdot_sensorsid, ballid, InitialValuesID, Name, Created) " +
-                        "VALUES (@sensorInfo, @ballid, @InitialValues, @Name, @Created)" +
+                    string insertQuery = "INSERT INTO [SimulatedShot] (ballid, InitialValuesID, Created, Comment) " +
+                        "VALUES (@ballid, @InitialValues, @Created, @Comment)" +
                         "SELECT SCOPE_IDENTITY()";
                     using (var insertShot = new SqlCommand(insertQuery, connection, transaction))
                     {
-                        insertShot.Parameters.AddWithValue("@sensorInfo", sensorInfoID);
                         insertShot.Parameters.AddWithValue("@ballid", ballID);
                         insertShot.Parameters.AddWithValue("@InitialValues", InitialValuesID);
-                        insertShot.Parameters.AddWithValue("@Name", shot.shotinfo.Name);
                         insertShot.Parameters.AddWithValue("@Created", DateTime.Now);
+                        insertShot.Parameters.AddWithValue("@Comment", shot.shotinfo.Comments);
                         var shotResult = await insertShot.ExecuteScalarAsync();
 
                         // Parse shot id into integer and handle null results
@@ -135,8 +114,8 @@ namespace DatabaseCore.DatabaseComponents
                     }
 
                     // Set up the SmartDot sensors with proper frequencies
-                    long[] sensorIds = { 1, 2, 3, 4 };
-                    long[] sensorsCreated = new long[4];
+                    long[] sensorIds = { 1, 2, 3, 4, 5, 6, 7 };
+                    long[] sensorsCreated = new long[7];
                     int i = 0;
                     foreach (var id in sensorIds)
                     {
@@ -167,6 +146,7 @@ namespace DatabaseCore.DatabaseComponents
 
                     var parameters = new List<SqlParameter>();
                     int parameterIndex = 0;
+                    int DataSize = shot.data.Count;
 
                     foreach (SampleData data in shot.data)
                     {
@@ -176,6 +156,9 @@ namespace DatabaseCore.DatabaseComponents
                             "2" => sensorsCreated[1],
                             "3" => sensorsCreated[2],
                             "4" => sensorsCreated[3],
+                            "5" => sensorsCreated[4],
+                            "6" => sensorsCreated[5],
+                            "7" => sensorsCreated[6],
                             _ => throw new ArgumentOutOfRangeException(nameof(data.Type), "Invalid sensor type")
                         };
 
@@ -197,20 +180,46 @@ namespace DatabaseCore.DatabaseComponents
                         parameters.Add(new SqlParameter($"@logtime{parameterIndex}", data.Logtime ?? (object)DBNull.Value));
 
                         parameterIndex++;
+                        DataSize--;
+                        // Every 200 sample points, commit the batch. And if less than 200 sample points remain, batch will be commited when number remaining is 0
+                        if (DataSize % 200 == 0)
+                        {
+                            // Remove the trailing comma
+                            if (query.Length > 0 && query[query.Length - 1] == ',')
+                            {
+                                query.Length--;
+                            }
+
+
+                            // Execute the batch query
+                            using (var command = new SqlCommand(query.ToString(), connection, transaction))
+                            {
+                                command.Parameters.AddRange(parameters.ToArray());
+                                await command.ExecuteNonQueryAsync();
+                            }
+                            // Reset batch query
+                            query.Clear();
+                            query.Append(@"
+                                INSERT INTO [SensorData] 
+                                (sensor_id, count, xaxis, yaxis, zaxis, waxis, logtime) 
+                                VALUES ");
+                            parameterIndex = 0;  // Reset parameter index for next batch
+                            parameters.Clear();
+                        }
                     }
-
-                    // Remove the trailing comma
-                    if (query.Length > 0 && query[query.Length - 1] == ',')
+                    // Commit remaining rows if any
+                    if (parameters.Count > 0)
                     {
-                        query.Length--;
-                    }
+                        if (query.Length > 0  && query[query.Length - 1] == ',')
+                        {
+                            query.Length--;
+                        }
 
-
-                    // Execute the batch query
-                    using (var command = new SqlCommand(query.ToString(), connection, transaction))
-                    {
-                        command.Parameters.AddRange(parameters.ToArray());
-                        await command.ExecuteNonQueryAsync();
+                        using (var command = new SqlCommand(query.ToString(), connection, transaction))
+                        {
+                            command.Parameters.AddRange(parameters.ToArray());
+                            await command.ExecuteNonQueryAsync();
+                        }
                     }
                     // Commit the transaction
                     transaction.Commit();

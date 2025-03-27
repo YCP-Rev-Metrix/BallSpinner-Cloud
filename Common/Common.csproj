@@ -6,7 +6,7 @@
 		<Title>RevMetrix BallSpinner Common API Dependancy</Title>
 		<Description>POCO items for Client</Description>
 		<PackageDescription>POCO items for Client</PackageDescription>
-        <Version>1.1.7</Version>
+        <Version>1.1.8</Version>
         <Authors>RevMetrix</Authors>
         <Company>RevMetrix</Company>
         <Nullable>enable</Nullable>

@@ -1,6 +1,5 @@
 using Common.Logging;
 using Common.POCOs;
-using Common.POCOs.Shots;
 using Microsoft.Data.SqlClient;
 using System.Net.Mail;
 
@@ -12,6 +11,7 @@ public partial class RevMetrixDb
     public async Task<SimulatedShotList> GetShotsbyUsername(string? username)
     {
         var shots = new Dictionary<string?, SimulatedShot>();
+        string? shotName = null;
         try
         {
             ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
@@ -20,13 +20,15 @@ public partial class RevMetrixDb
 
             // Get shot info and data points
             string selectQuery = @"
-            SELECT ssl.name, iv.InitialPointx, iv.InitialPointy, iv.InflectionPointx, iv.InflectionPointy, iv.FinalPointx, iv.FinalPointy, iv.TimeStep, sds.sensor_id, sds.[type_id], sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime
+            SELECT ssl.name AS ShotName, iv.InitialPointx, iv.InitialPointy, iv.InflectionPointx, iv.InflectionPointy, iv.FinalPointx, iv.FinalPointy, iv.TimeStep, sds.sensor_id, sds.[type_id],
+            sd.count, sd.xaxis, sd.yaxis, sd.zaxis, sd.waxis, sd.logtime, ss.Comment, b.name AS BallName, b.weight, b.core_type, b.diameter
             FROM [User] AS u
             INNER JOIN SimulatedShotList AS ssl ON u.id = ssl.userid
             INNER JOIN SimulatedShot AS ss ON ssl.shotid = ss.shotid
             INNER JOIN SD_Sensor AS sds ON sds.shotid = ss.shotid
             INNER JOIN SensorData AS sd ON sds.sensor_id = sd.sensor_id
             INNER JOIN InitialValues as iv ON iv.id = ss.InitialValuesID
+            INNER JOIN Ball as b ON b.ballid = ss.ballid
             WHERE u.username = @Username;";
 
             using var command = new SqlCommand(selectQuery, connection);
@@ -37,7 +39,7 @@ public partial class RevMetrixDb
             {
                 while (await reader.ReadAsync())
                 {
-                    string? shotName = reader["name"].ToString();
+                    shotName = reader["ShotName"].ToString();
 
                     if (!shots.ContainsKey(shotName))
                     {
@@ -45,6 +47,11 @@ public partial class RevMetrixDb
                         Coordinate BezierInflectionPoint = new Coordinate(reader.GetFieldValue<double>(reader.GetOrdinal("InflectionPointx")), reader.GetFieldValue<double>(reader.GetOrdinal("InflectionPointy")));
                         Coordinate BezierFinalPoint = new Coordinate(reader.GetFieldValue<double>(reader.GetOrdinal("FinalPointx")), reader.GetFieldValue<double>(reader.GetOrdinal("FinalPointy")));
                         double TimeStep = reader.GetFieldValue<double>(reader.GetOrdinal("TimeStep"));
+                        string Comment = reader.GetFieldValue<string>(reader.GetOrdinal("Comment"));
+                        string ballName = reader.GetFieldValue<string>(reader.GetOrdinal("BallName"));
+                        double ballWeight = reader.GetFieldValue<double>(reader.GetOrdinal("weight"));
+                        double ballDiameter= reader.GetFieldValue<double>(reader.GetOrdinal("diameter"));
+                        string coreType = reader.GetFieldValue<string>(reader.GetOrdinal("core_type"));
                         var simulatedShot = new ShotInfo
                         {
                             Name = shotName,
@@ -52,10 +59,12 @@ public partial class RevMetrixDb
                             BezierInflectionPoint = BezierInflectionPoint,
                             BezierFinalPoint = BezierFinalPoint,
                             TimeStep = TimeStep,
+                            Comments = Comment,
                         };
                         shots[shotName] = new SimulatedShot();
                         shots[shotName].shotinfo = simulatedShot;
                         shots[shotName].data = new List<SampleData?>();
+                        shots[shotName].ball = new Ball(ballName, ballDiameter, ballWeight, coreType);
                     }
 
                     var sampleData = new SampleData
@@ -70,40 +79,6 @@ public partial class RevMetrixDb
                     };
 
                     shots[shotName].data.Add(sampleData);
-                }
-            }
-            // Get ball and sensor info
-            string infoQuery = @"
-            SELECT b.name, b.weight, b.core_type, b.diameter, si.Comments, si.Date, sl.MACAddress
-            FROM [User] as u
-            INNER JOIN SimulatedShotList ssl ON u.id = ssl.userID
-            INNER JOIN SimulatedShot ss ON ssl.shotid = ss.shotid
-            INNER JOIN Ball b ON ss.ballID = b.ballID
-            INNER JOIN SensorInfo si ON si.infoID = ss.smartdot_sensorsid
-            INNER JOIN SensorList sl ON sl.SmartDotID = si.SmartDotID
-            ";
-            using var command2 = new SqlCommand(infoQuery, connection);
-            using (var reader2 = await command2.ExecuteReaderAsync())
-            {
-                if (await reader2.ReadAsync())
-                {
-                    Ball ball = new Ball
-                    {
-                        Name = reader2.GetFieldValue<string>(reader2.GetOrdinal("name")),
-                        Diameter = reader2.GetFieldValue<double>(reader2.GetOrdinal("diameter")),
-                        CoreType = reader2.GetFieldValue<string>(reader2.GetOrdinal("core_type")),
-                        Weight = reader2.GetFieldValue<double>(reader2.GetOrdinal("weight")),
-                    };
-                    SmartDotInfo info = new SmartDotInfo
-                    {
-                        MACAddress = reader2.GetFieldValue<byte[]>(reader2.GetOrdinal("MACAddress")),
-                        Comments = reader2.GetFieldValue<string>(reader2.GetOrdinal("Comments")),
-                        date = reader2.GetDateTime(reader2.GetOrdinal("Date")).ToString("yyyy-MM-dd"),
-                    };
-                }
-                else
-                {
-                    throw new Exception("Unable to retrieve ball / sensor information");
                 }
             }
         }

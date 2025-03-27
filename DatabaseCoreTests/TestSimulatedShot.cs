@@ -27,15 +27,17 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
             var @char = (char)_random.Next(offset, offset + lettersOffset);
             builder.Append(@char);
         }
-        
-        // Testing with valid user
+
+        // Testing with valid user with invalid ball
+        Ball ball = new Ball(builder.ToString(), 2, 2, "Pancake");
         ShotInfo shotInfo = new ShotInfo
         {
             Name = builder.ToString(),
-            Speed = 99,
-            Angle = 99,
-            Position = 99,
-            Frequency = 99
+            BezierInitPoint = new Coordinate(0, 0),
+            BezierInflectionPoint = new Coordinate(0, 0),
+            BezierFinalPoint = new Coordinate(0, 0),
+            TimeStep = 0.010,
+            Comments = "Test"
         };
         List<SampleData?> data = new List<SampleData?>
         {
@@ -81,12 +83,21 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         {
             shotinfo = shotInfo,
             data = data,
+            ball = ball,
         };
         
         string testUserName = "string";
-        // Validate user credential
+        // Should return false, as this user does not have this ball in the database
         bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
-        Assert.True(success);
+        Assert.False(success);
+
+        bool ballInserted = await ServerState.UserStore.AddBall(ball, testUserName);
+
+        Assert.True(ballInserted);
+
+        // Validate user credential
+        bool trueShotInsert = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
+        Assert.True(trueShotInsert);
     }
 
     [Fact]
@@ -96,10 +107,11 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         ShotInfo shotInfo = new ShotInfo
         {
             Name = "simulatedshottest",
-            Speed = 99,
-            Angle = 99,
-            Position = 99,
-            Frequency = 99
+            BezierInitPoint = new Coordinate(0,0),
+            BezierInflectionPoint = new Coordinate(0, 0),
+            BezierFinalPoint = new Coordinate(0, 0),
+            TimeStep = 0.010,
+            Comments = "Test"
         };
         List<SampleData?> data = new List<SampleData?>
         {
@@ -179,13 +191,16 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
 
         string testShotName = builder.ToString(); 
         string testUserName = "string";
+        Ball ball = new Ball(builder.ToString(), 2, 2, "Pancake");
+        bool ballInserted = await ServerState.UserStore.AddBall(ball, testUserName);
         ShotInfo shotInfo = new ShotInfo
         {
             Name = testShotName,
-            Speed = 99,
-            Angle = 99,
-            Position = 99,
-            Frequency = 99
+            BezierInitPoint = new Coordinate(0, 0),
+            BezierInflectionPoint = new Coordinate(2, 3),
+            BezierFinalPoint = new Coordinate(1, 2),
+            TimeStep = 0.010,
+            Comments = "Test"
         };
         List<SampleData?> data = new List<SampleData?>
         {
@@ -231,6 +246,7 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         {
             shotinfo = shotInfo,
             data = data,
+            ball = ball
         };
         bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
         Assert.True(success);

@@ -315,7 +315,8 @@ CREATE TABLE InitialValues(
 GO;
 -- add foreign key reference to Simulated Shot for initial values
 ALTER TABLE SimulatedShot
-ADD InitialValuesID bigint
+ADD InitialValuesID bigint,
+	Comment varchar(1000) NOT NULL;
 GO;
 
 ALTER TABLE SimulatedShot
@@ -327,10 +328,8 @@ GO;
 
 --add reference to specific bowling ball for simulated shot
 ALTER TABLE SimulatedShot
-ADD 
-    ballid bigint,
-    [Name] varchar(30);
-GO;
+ADD ballid bigint;
+
 
 ALTER TABLE SimulatedShot
 WITH NOCHECK
@@ -351,31 +350,20 @@ CREATE TABLE SensorList(
 );
 
 GO;
--- Create sensor info table
-CREATE TABLE SensorInfo(
-    infoID bigint PRIMARY KEY IDENTITY(1,1),
-    SmartDotID bigint,
-    Date datetime,
-    Comments varchar(1000),
-    CONSTRAINT FK_SensorInfo_SensorList FOREIGN KEY (SmartDotID) REFERENCES SensorList(SmartDotID)
-);
-GO;
 
 ALTER TABLE SimulatedShot
 DROP COLUMN speed, angle, position
 GO;
 
 
-ALTER TABLE SimulatedShot
-WITH NOCHECK
-ADD CONSTRAINT SimulatedShot_SensorInfo
-FOREIGN KEY (smartdot_sensorsid)
-REFERENCES SensorInfo(infoID)
-GO;
-
 ALTER TABLE SD_Sensor
 DROP COLUMN frequency
 GO;
+
+INSERT INTO SensorType (type_id, type) VALUES 
+(5, 'PrimaryEncoder'),
+(6, 'AOREncoder'),
+(7, 'ATMEncoder');
 
 
 
