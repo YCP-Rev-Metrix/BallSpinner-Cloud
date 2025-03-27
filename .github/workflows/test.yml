@@ -18,10 +18,9 @@ jobs:
         uses: jakejarvis/wait-action@master
         with:
           time: '80s'
-      - name: Debug
+      - name: Test SQL Server connection
         run: |
-          docker ps
-          docker exec sql_server sh -c "/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Strong1PassMAN!!!' -d master -C -Q \"IF NOT EXISTS (SELECT name FROM master.sys.databases WHERE name = N'revmetrix-bs') PRINT 'EXISTS'\""
+          docker exec sql_server /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Strong1PassMAN!!!' -d master -C -Q "SELECT name FROM sys.databases"
 
 
       - name: Setup dotnet
