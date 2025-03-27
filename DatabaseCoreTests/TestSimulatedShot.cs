@@ -86,17 +86,16 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
             ball = ball,
         };
         
-        string testUserName = "string";
         // Should return false, as this user does not have this ball in the database
-        bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
+        bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, TestUsername);
         Assert.False(success);
 
-        bool ballInserted = await ServerState.UserStore.AddBall(ball, testUserName);
+        bool ballInserted = await ServerState.UserStore.AddBall(ball, TestUsername);
 
         Assert.True(ballInserted);
 
         // Validate user credential
-        bool trueShotInsert = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
+        bool trueShotInsert = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, TestUsername);
         Assert.True(trueShotInsert);
     }
 
@@ -190,9 +189,8 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         }
 
         string testShotName = builder.ToString(); 
-        string testUserName = "string";
         Ball ball = new Ball(builder.ToString(), 2, 2, "Pancake");
-        bool ballInserted = await ServerState.UserStore.AddBall(ball, testUserName);
+        bool ballInserted = await ServerState.UserStore.AddBall(ball, TestUsername);
         ShotInfo shotInfo = new ShotInfo
         {
             Name = testShotName,
@@ -248,11 +246,11 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
             data = data,
             ball = ball
         };
-        bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
+        bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, TestUsername);
         Assert.True(success);
 
         // Validate user credential
-        success = await ServerState.UserStore.DeleteShotByName(testShotName, testUserName);
+        success = await ServerState.UserStore.DeleteShotByName(testShotName, TestUsername);
         Assert.True(success);
     }
 

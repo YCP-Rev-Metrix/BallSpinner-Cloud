@@ -27,9 +27,8 @@ public class TestSmartDot: DatabaseCoreTestSetup
             Name = builder.ToString(),
             MacAddress = "1a:2b:3c:4d:5e:6f"
         };
-        string testUserName = "string";
 
-        bool success = await ServerState.UserStore.AddSmartDot(smartDot, testUserName);
+        bool success = await ServerState.UserStore.AddSmartDot(smartDot, TestUsername);
         Assert.True(success);
     }
     

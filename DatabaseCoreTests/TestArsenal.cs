@@ -34,9 +34,8 @@ public class TestArsenal: DatabaseCoreTestSetup
             Weight = 12.3,
             CoreType = "Symmetrical"
         };
-        string testUserName = "string";
 
-        bool success = await ServerState.UserStore.AddBall(ball, testUserName);
+        bool success = await ServerState.UserStore.AddBall(ball, TestUsername);
         Assert.True(success);
     }
 
@@ -85,7 +84,6 @@ public class TestArsenal: DatabaseCoreTestSetup
             var @char = (char)_random.Next(offset, offset + lettersOffset);
             builder.Append(@char);
         }
-        string testUserName = "string";
         string testBallName = builder.ToString();
         Ball ball = new Ball
         {
@@ -95,9 +93,9 @@ public class TestArsenal: DatabaseCoreTestSetup
             CoreType = "Symmetrical"
         };
         // Insert the ball first
-        await ServerState.UserStore.AddBall(ball, testUserName);
+        await ServerState.UserStore.AddBall(ball, TestUsername);
         // Make sure the ball is deleted
-        bool success = await ServerState.UserStore.DeleteBallByName(testBallName, testUserName);
+        bool success = await ServerState.UserStore.DeleteBallByName(testBallName, TestUsername);
         Assert.True(success);
     }
 
