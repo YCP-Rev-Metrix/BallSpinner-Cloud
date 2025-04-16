@@ -365,6 +365,12 @@ INSERT INTO SensorType (type_id, type) VALUES
 (6, 'AOREncoder'),
 (7, 'ATMEncoder');
 
+--changeset RevMetrix:4
+CREATE TABLE TestTable(
+	id bigint PRIMARY KEY IDENTITY(1,1),
+	TestInt int NOT NULL,
+);
+GO;
 
-
-
+INSERT INTO TestTable (TestInt)
+VALUES (6), (34);
