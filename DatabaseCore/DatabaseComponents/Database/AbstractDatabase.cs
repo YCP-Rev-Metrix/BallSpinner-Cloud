@@ -10,21 +10,29 @@ public abstract class AbstractDatabase
     protected string DatabaseName { get; set; }
     protected string? ConnectionString { get; set; }
 
-    protected AbstractDatabase(string databaseName)
+    protected AbstractDatabase(string databaseName, string parameterConnectionString = null, string parameterDbConnectionString = null)
     {
         // process necessary environment variables
         string? dockerizedEnviron = Environment.GetEnvironmentVariable("DOCKERIZED");
         string? localConnectionString = Environment.GetEnvironmentVariable("LOCAL_CONNECTION_STRING");
         string? localDBConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
-        if (dockerizedEnviron == null)
+
+        if (parameterConnectionString != null && parameterDbConnectionString != null)
+        {
+            Environment.SetEnvironmentVariable("SERVER_CONNECTION_STRING", parameterConnectionString);
+            Environment.SetEnvironmentVariable("SERVERDB_CONNECTION_STRING", parameterDbConnectionString);
+        }
+        else if (dockerizedEnviron == null)
         {
             Environment.SetEnvironmentVariable("SERVER_CONNECTION_STRING", localConnectionString);
             Environment.SetEnvironmentVariable("SERVERDB_CONNECTION_STRING", localDBConnectionString);
         }
 
         ConnectionString = Environment.GetEnvironmentVariable("SERVER_CONNECTION_STRING");
-
         DatabaseName = databaseName;
+
+        Console.WriteLine(ConnectionString);
+
         Initialize();
     }
 

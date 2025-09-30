@@ -14,9 +14,10 @@ namespace Server.Controllers.DatabaseControllers.Posts;
 [Route("api/gets/[controller]")]
 public class GetUsersController : AbstractFeaturedController
 {
-    [HttpGet(Name = "GetUsers")]
+    [HttpGet(Name = "GetUser")]
     [ProducesResponseType(typeof(List<UserIdentification>), StatusCodes.Status200OK)] // Assuming this is the DTO containing user information without sensitive data
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+
     public async Task<IActionResult> GetUsers()
     {
         // Attempt to get the list of users from the database

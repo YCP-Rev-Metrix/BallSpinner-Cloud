@@ -8,21 +8,36 @@ services:
       - SA_PASSWORD=Strong1PassMAN!!!
       - ACCEPT_EULA=Y
     volumes:
-      #- sql-data:/var/opt/mssql
+      - sql-data:/var/opt/mssql
       - ./sql-scripts:/scripts
     networks:
       - web-network
     ports:
       - "1433:1433"
+    # Will only run init.sql if the revmetrix-bs database does not already exist
     command: >
       /bin/bash -c "
         /opt/mssql/bin/sqlservr & 
         sleep 30s && 
-        echo 'Running SQL Init Script' && 
-        /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Strong1PassMAN!!!' -d master -C -i /scripts/init.sql &&
-        echo 'Successfully ran SQL init script' && 
-        wait"
+        if /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Strong1PassMAN!!!' -d master -C -Q \"IF NOT EXISTS (SELECT name FROM master.sys.databases WHERE name = N'revmetrix-bs') PRINT 'EXISTS'\" | grep -q 'EXISTS'; then
+          /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Strong1PassMAN!!!' -d master -C -i /scripts/init.sql && 
+          echo 'Ran init.sql';
+        else 
+          echo 'Skipping init.sql';
+        fi && wait"
 
+  liquibase:
+    image: liquibase/liquibase
+    container_name: liquibase
+    depends_on:
+      - sql-server
+    volumes:
+      - ./Liquibase/changelog:/liquibase/changelog
+      - ./Liquibase/scripts/SQLScript:/liquibase/scripts
+    command: >
+      /bin/bash -c "sleep 60 && liquibase --url=\"jdbc:sqlserver://sql_server:1433;databaseName=revmetrix-bs;trustServerCertificate=true;\" --username=SA --password=Strong1PassMAN!!! --changeLogFile=changelog/changelog.xml update"
+    networks:
+      - web-network
 
 networks:
   web-network:

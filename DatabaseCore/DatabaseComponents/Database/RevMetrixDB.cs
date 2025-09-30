@@ -9,7 +9,7 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb : AbstractDatabase
 {
-    public RevMetrixDb() : base("revmetrix-bs") { }
+    public RevMetrixDb(string databaseName, string connectionString = null, string dbConnectionString = null) : base(databaseName, connectionString, dbConnectionString) { }
 }
 public partial class Dbcoretest : AbstractDatabase
 {

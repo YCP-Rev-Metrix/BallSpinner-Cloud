@@ -14,6 +14,7 @@ namespace Server.Controllers.DatabaseControllers.Posts;
 [Route("api/gets/[controller]")]
 public class GetAllShotsController : AbstractFeaturedController
 {
+    /* COMMENTED OUT UNTIL ENDPOINT IS FIXED
     [Authorize]
     [HttpGet(Name = "GetAllShots")]
     [ProducesResponseType(typeof(List<ShotList>), StatusCodes.Status200OK)] 
@@ -30,4 +31,5 @@ public class GetAllShotsController : AbstractFeaturedController
         
 
     }
+    */
 }

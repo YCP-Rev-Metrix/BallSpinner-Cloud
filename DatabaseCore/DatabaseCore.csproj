@@ -8,7 +8,17 @@
 	  <IsPackable>
 		  false
 	  </IsPackable>
-	  <Pack>false</Pack>
+	<Pack>false</Pack>
+	<PackageId>RevMetrix.BallSpinner.DatabaseCore</PackageId>
+	<Title>RevMetrix BallSpinner Database Methods</Title>
+	<Description>Database methods</Description>
+	<PackageDescription>Database methods</PackageDescription>
+	<Version>1.0.4</Version>
+	<Authors>RevMetrix</Authors>
+	<Company>RevMetrix</Company>
+	<Nullable>enable</Nullable>
+	<IsPackable>true</IsPackable>
+	<RepositoryURL>https://github.com/YCP-Rev-Metrix/BallSpinner-Cloud</RepositoryURL>
   </PropertyGroup>
 
   <ItemGroup>

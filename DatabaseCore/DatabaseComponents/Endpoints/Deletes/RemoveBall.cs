@@ -31,16 +31,15 @@ namespace DatabaseCore.DatabaseComponents
 
                 // Delete Ball from Arsenal and Ball tables
                 string deleteQuery = @"
-                    UPDATE Arsenal
-                    SET Arsenal.status = 0
-                    FROM Arsenal
-                    INNER JOIN Ball AS b ON Arsenal.ball_id = b.ballid
-                    WHERE Arsenal.userid = @UserId AND b.name = @BallName;
+                    UPDATE b
+                    SET b.status = 0
+                    FROM Ball AS b
+                    INNER JOIN Arsenal AS a ON b.ArsenalID = a.ArsenalID
+                    WHERE b.name = @BallName;
                     ";
                 
                 using var deleteCommand = new SqlCommand(deleteQuery, connection);
                 deleteCommand.Parameters.AddWithValue("@BallName", ballName);
-                deleteCommand.Parameters.AddWithValue("@UserId", userId);
 
                 int rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
                 if (rowsAffected <= 0)

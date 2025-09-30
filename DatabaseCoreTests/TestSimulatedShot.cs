@@ -27,15 +27,17 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
             var @char = (char)_random.Next(offset, offset + lettersOffset);
             builder.Append(@char);
         }
-        
-        // Testing with valid user
+
+        // Testing with valid user with invalid ball
+        Ball ball = new Ball(builder.ToString(), 2, 2, "Pancake");
         ShotInfo shotInfo = new ShotInfo
         {
             Name = builder.ToString(),
-            Speed = 99,
-            Angle = 99,
-            Position = 99,
-            Frequency = 99
+            BezierInitPoint = new Coordinate(0, 0),
+            BezierInflectionPoint = new Coordinate(0, 0),
+            BezierFinalPoint = new Coordinate(0, 0),
+            TimeStep = 0.010,
+            Comments = "Test"
         };
         List<SampleData?> data = new List<SampleData?>
         {
@@ -81,12 +83,20 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         {
             shotinfo = shotInfo,
             data = data,
+            ball = ball,
         };
         
-        string testUserName = "string";
+        // Should return false, as this user does not have this ball in the database
+        bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, TestUsername);
+        Assert.False(success);
+
+        bool ballInserted = await ServerState.UserStore.AddBall(ball, TestUsername);
+
+        Assert.True(ballInserted);
+
         // Validate user credential
-        bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
-        Assert.True(success);
+        bool trueShotInsert = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, TestUsername);
+        Assert.True(trueShotInsert);
     }
 
     [Fact]
@@ -96,10 +106,11 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         ShotInfo shotInfo = new ShotInfo
         {
             Name = "simulatedshottest",
-            Speed = 99,
-            Angle = 99,
-            Position = 99,
-            Frequency = 99
+            BezierInitPoint = new Coordinate(0,0),
+            BezierInflectionPoint = new Coordinate(0, 0),
+            BezierFinalPoint = new Coordinate(0, 0),
+            TimeStep = 0.010,
+            Comments = "Test"
         };
         List<SampleData?> data = new List<SampleData?>
         {
@@ -166,18 +177,28 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
     [Fact]
     public async void TestRemoveShot()
     {
-        string testShotName = "test"; 
-        string testUserName = "string";
-        // Validate user credential
-        bool success = await ServerState.UserStore.DeleteShotByName(testShotName, testUserName);
-        Assert.True(success);
+        var builder = new StringBuilder(5);
+
+        char offset = true ? 'a' : 'A';
+        const int lettersOffset = 26;
+
+        for (var i = 0; i < 5; i++)
+        {
+            var @char = (char)_random.Next(offset, offset + lettersOffset);
+            builder.Append(@char);
+        }
+
+        string testShotName = builder.ToString(); 
+        Ball ball = new Ball(builder.ToString(), 2, 2, "Pancake");
+        bool ballInserted = await ServerState.UserStore.AddBall(ball, TestUsername);
         ShotInfo shotInfo = new ShotInfo
         {
-            Name = "test",
-            Speed = 99,
-            Angle = 99,
-            Position = 99,
-            Frequency = 99
+            Name = testShotName,
+            BezierInitPoint = new Coordinate(0, 0),
+            BezierInflectionPoint = new Coordinate(2, 3),
+            BezierFinalPoint = new Coordinate(1, 2),
+            TimeStep = 0.010,
+            Comments = "Test"
         };
         List<SampleData?> data = new List<SampleData?>
         {
@@ -223,8 +244,13 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         {
             shotinfo = shotInfo,
             data = data,
+            ball = ball
         };
-        success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, testUserName);
+        bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, TestUsername);
+        Assert.True(success);
+
+        // Validate user credential
+        success = await ServerState.UserStore.DeleteShotByName(testShotName, TestUsername);
         Assert.True(success);
     }
 

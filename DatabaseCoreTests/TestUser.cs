@@ -1,5 +1,6 @@
 using System.Text;
 using Common.POCOs;
+using Microsoft.SqlServer.Management.HadrModel;
 using Server;
 
 namespace DatabaseCoreTests;
@@ -16,7 +17,7 @@ public class TestUser: DatabaseCoreTestSetup
         string testUserName = "string";
         string testPassword = "string";
         // Validate user credential
-        (bool success, string[]? roles) = await ServerState.UserStore.VerifyUser(testUserName, testPassword);
+        (bool success, string[]? roles) = await ServerState.UserStore.VerifyUser(TestUsername, TestPassword);
         Assert.True(success);
     }
 
@@ -94,8 +95,7 @@ public class TestUser: DatabaseCoreTestSetup
         [Fact]
         public async void TestUserId()
         {
-            string TestUserName = "string";
-            int result = await ServerState.UserStore.GetUserId(TestUserName);
+            int result = await ServerState.UserStore.GetUserId(TestUsername);
             Assert.True(result > 0);
         }
 

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace Common.POCOs;
@@ -8,26 +9,29 @@ public class ShotInfo
 {
     public ShotInfo() { }
 
-    public ShotInfo(string? name, double? speed, double? angle, double? position, double? frequency)
+    public ShotInfo(string? name, Coordinate? bezierInitPoint, Coordinate? bezierInflectionPoint, Coordinate bezierFinalPoint, double timeStep, string comments)
     {
         Name = name;
-        Speed = speed;
-        Angle = angle;
-        Position = position;
-        Frequency = frequency;
+        BezierInitPoint = bezierInitPoint;
+        bezierInflectionPoint = bezierInflectionPoint;
+        BezierFinalPoint = bezierFinalPoint;
+        TimeStep = timeStep;
+        Comments = comments;
     }
 
-    [JsonPropertyName("Name")]
-    public string? Name { get; set; }
-    [JsonPropertyName("Speed")]
-    public double? Speed { get; set; }
-    [JsonPropertyName("Angle")]
-    public double? Angle { get; set; }
-    [JsonPropertyName("Position")]
-    public double? Position { get; set; }
-    [JsonPropertyName("Frequency")]
-    public double? Frequency { get; set; }
+    
+    public string Name { get; set; }
+    
+    public Coordinate BezierInitPoint { get; set; }
+
+    public Coordinate BezierInflectionPoint { get; set; }
+
+    public Coordinate BezierFinalPoint { get; set; }
+
+    public double TimeStep { get; set; }
 
     public int? DataCount { get; set; }
+
+    public string? Comments { get; set; }
 
 }
