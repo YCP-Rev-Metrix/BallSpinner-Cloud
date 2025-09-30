@@ -8,9 +8,9 @@ internal class Program
         Console.WriteLine("Select an option:");
         Console.WriteLine("1. Build/Rebuild Prod database");
         Console.WriteLine("2. Build/Rebuild Test database");
-        Console.WriteLine("4. Quit");
+        Console.WriteLine("3. Quit");
         var input = Console.ReadLine();
-        while (input != "4")
+        while (input != "3")
         {
             if (input == "1")
             {
@@ -26,7 +26,7 @@ internal class Program
             Console.WriteLine("Select an option:");
             Console.WriteLine("1. Build/Rebuild Prod database");
             Console.WriteLine("2. Build/Rebuild Test database");
-            Console.WriteLine("4. Quit");
+            Console.WriteLine("3. Quit");
             input = Console.ReadLine();
         }
         Console.WriteLine("Quitting...");

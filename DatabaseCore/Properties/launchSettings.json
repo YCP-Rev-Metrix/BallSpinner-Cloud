@@ -4,15 +4,16 @@
       "commandName": "WSL2",
       "distributionName": "",
       "environmentVariables": {
-        "LOCAL_CONNECTION_STRING": "Server=sql_server;User Id=SA;Password=Strong1PassMAN!!!;TrustServerCertificate=True;",
-        "LOCALDB_CONNECTION_STRING": "Server=sql_server;Database=revmetrix-bs;User Id=SA; Password=Strong1PassMAN!!!;TrustServerCertificate=True;"
-      },
+        "LOCAL_CONNECTION_STRING": "Server=localhost, 1433;User Id=SA;Password=Strong1PassMAN!!!;TrustServerCertificate=True;",
+        "LOCALDB_CONNECTION_STRING": "Server=localhost, 1433;Database=revmetrix-bs;User Id=SA; Password=Strong1PassMAN!!!;TrustServerCertificate=True;"
+      }
     },
     "Mac": {
       "commandName": "Project",
       "environmentVariables": {
-        "LOCAL_CONNECTION_STRING": "Server=sql_server;User Id=SA;Password=Strong1PassMAN!!!;TrustServerCertificate=True;",
-        "LOCALDB_CONNECTION_STRING": "Server=sql_server;Database=revmetrix-bs;User Id=SA; Password=Strong1PassMAN!!!;TrustServerCertificate=True;"
+        "LOCAL_CONNECTION_STRING": "Server=localhost, 1433;User Id=SA;Password=Strong1PassMAN!!!;TrustServerCertificate=True;",
+        "LOCALDB_CONNECTION_STRING": "Server=localhost, 1433;Database=revmetrix-bs;User Id=SA; Password=Strong1PassMAN!!!;TrustServerCertificate=True;",
+        "TESTBS_CONNECTION_STRING": "Server=localhost, 1433;Database=revmetrix-bs;User Id=SA; Password=Strong1PassMAN!!!;TrustServerCertificate=True;"
       }
     }
   }
