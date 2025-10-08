@@ -1,37 +1,50 @@
-﻿namespace DatabaseCore.DatabaseComponents;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace DatabaseCore.DatabaseComponents;
 
 internal class Program
 {
     private static async Task Main(string[] args)
     {
-        
-        Console.WriteLine("Select an option:");
-        Console.WriteLine("1. Build/Rebuild Prod database");
-        Console.WriteLine("2. Build/Rebuild Test database");
-        Console.WriteLine("3. Quit");
-        var input = Console.ReadLine();
-        while (input != "3")
-        {
-            if (input == "1")
+        var dbContext = new ApplicationDbContext();
+        await dbContext.Database.MigrateAsync();
+        Host.CreateDefaultBuilder(args)
+            .ConfigureServices((context, services) =>
             {
-                Console.WriteLine("Building/Rebuilding Prod database");
-                await RevMetrixDatabaseAsync();
-            }
-            else if (input == "2")
-            {
-                Console.WriteLine("Building/Rebuilding Test database");
-                await FakeBsDatabaseAsync();
-            }
-            
-            Console.WriteLine("Select an option:");
-            Console.WriteLine("1. Build/Rebuild Prod database");
-            Console.WriteLine("2. Build/Rebuild Test database");
-            Console.WriteLine("3. Quit");
-            input = Console.ReadLine();
-        }
-        Console.WriteLine("Quitting...");
-        
+            })
+            .Build()
+            .Run();
     }
+    // private static async Task Main(string[] args)
+    // {
+    //     
+    //     Console.WriteLine("Select an option:");
+    //     Console.WriteLine("1. Build/Rebuild Prod database");
+    //     Console.WriteLine("2. Build/Rebuild Test database");
+    //     Console.WriteLine("3. Quit");
+    //     var input = Console.ReadLine();
+    //     while (input != "3")
+    //     {
+    //         if (input == "1")
+    //         {
+    //             Console.WriteLine("Building/Rebuilding Prod database");
+    //             await RevMetrixDatabaseAsync();
+    //         }
+    //         else if (input == "2")
+    //         {
+    //             Console.WriteLine("Building/Rebuilding Test database");
+    //             await FakeBsDatabaseAsync();
+    //         }
+    //         
+    //         Console.WriteLine("Select an option:");
+    //         Console.WriteLine("1. Build/Rebuild Prod database");
+    //         Console.WriteLine("2. Build/Rebuild Test database");
+    //         Console.WriteLine("3. Quit");
+    //         input = Console.ReadLine();
+    //     }
+    //     Console.WriteLine("Quitting...");
+    //     
+    // }
 
 
     private static async Task FakeBsDatabaseAsync()

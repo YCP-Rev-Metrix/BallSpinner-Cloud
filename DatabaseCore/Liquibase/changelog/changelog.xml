@@ -10,8 +10,8 @@
     <changeSet id="2" author="RevMetrix">
         <sqlFile path="scripts/app.sql"/>
     </changeSet>
-    <changeSet id="3" author="RevMetrix">
-        <sqlFile path="scripts/Fall2025DBChange.sql"/>
+    <changeSet id="3" author="RevMetrix" runOnChange="true">
+        <sqlFile path="scripts/Fall2025DBChanges.sql"/>
     </changeSet>
 
 </databaseChangeLog>
