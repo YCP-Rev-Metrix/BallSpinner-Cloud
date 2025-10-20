@@ -35,7 +35,30 @@ services:
       - ./DatabaseCore/Liquibase/changelog:/liquibase/changelog
       - ./DatabaseCore/Liquibase/scripts/SQLScript:/liquibase/scripts
     command: >
-      /bin/bash -c "sleep 60 && liquibase --url=\"jdbc:sqlserver://sql_server:1433;databaseName=revmetrix-bs;trustServerCertificate=true;\" --username=SA --password=Strong1PassMAN!!! --changeLogFile=changelog/changelog.xml update"
+      /bin/bash -c "sleep 60 && liquibase 
+      --url=\"jdbc:sqlserver://sql_server:1433;databaseName=revmetrix-bs;trustServerCertificate=true;\" 
+      --username=SA 
+      --password=Strong1PassMAN!!! 
+      --changeLogFile=changelog/changelog.xml update "
+    networks:
+      - web-network
+
+#To run do "docker-compose run liquibase-clear"
+  liquibase-clear:
+    image: liquibase/liquibase
+    container_name: liquibase
+    profiles: ["manual"]
+    depends_on:
+      - sql-server
+    volumes:
+      - ./Liquibase/changelog:/liquibase/changelog
+      - ./Liquibase/scripts/SQLScript:/liquibase/scripts
+    command: >
+      /bin/bash -c "sleep 60 && liquibase 
+      --url=\"jdbc:sqlserver://sql_server:1433;databaseName=revmetrix-bs;trustServerCertificate=true;\" 
+      --username=SA
+      --password=Strong1PassMAN!!!
+      --changeLogFile=changelog/changelog.xml clear-checksums"
     networks:
       - web-network
 

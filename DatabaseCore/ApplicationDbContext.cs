@@ -24,7 +24,7 @@ public class ApplicationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<BallTable>().ToTable("Balls", schema:"combinedDB");
         modelBuilder.Entity<UserTable>().ToTable("Users", schema:"combinedDB");
-        modelBuilder.Entity<UserTable>().ToTable("Frames", schema:"combinedDB");
-        modelBuilder.Entity<UserTable>().ToTable("Events", schema:"combinedDB");
+        modelBuilder.Entity<FrameTable>().ToTable("Frames", schema:"combinedDB");
+        modelBuilder.Entity<EventTable>().ToTable("Events", schema:"combinedDB");
     }
 }

@@ -22,7 +22,7 @@ public class UserTable
     public string Username { get; set; }
     
     [Required]
-    public byte[] PasswordHash { get; set; }
+    public byte[] HashedPassword { get; set; }
     
     [Required]
     public string Email { get; set; }

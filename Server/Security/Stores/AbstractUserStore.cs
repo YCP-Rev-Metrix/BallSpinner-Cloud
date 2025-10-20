@@ -25,4 +25,9 @@ public abstract class AbstractUserStore
     public abstract Task<bool> AddSmartDot(SmartDot smartDot, string? username);
     public abstract Task<bool> DeleteBallByName(string? ballname, string? username);
     public abstract Task<bool> DeleteShotByName(string? shotname, string? username);
+
+    //-------------------------New Shit-------------------------------------
+    //TODO Change this name
+
+    public abstract Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email);
 }
