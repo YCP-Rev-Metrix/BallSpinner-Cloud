@@ -5,6 +5,8 @@ namespace Server.Security.Stores;
 
 public abstract class AbstractUserStore
 {
+    //-------------------------Depricated Ball Spinner Application-------------------------------------
+
     public abstract Task<bool> CreateUser(string? firstname, string? lastname, string? username, string? password, 
                                                             string? email, string? phoneNumber, string[]? roles = null);
     public abstract Task<bool> DeleteUser(string username);
@@ -26,8 +28,7 @@ public abstract class AbstractUserStore
     public abstract Task<bool> DeleteBallByName(string? ballname, string? username);
     public abstract Task<bool> DeleteShotByName(string? shotname, string? username);
 
-    //-------------------------New Shit-------------------------------------
-    //TODO Change this name
+    //-------------------------Phone App-------------------------------------
 
     public abstract Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email);
 }

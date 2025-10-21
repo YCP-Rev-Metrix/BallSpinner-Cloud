@@ -30,4 +30,10 @@ public class UserTable
     [MaxLength(12)]
     [Required]
     public string PhoneNumber { get; set; }
+
+    [Required]
+    public string LastLogin { get; set; }
+
+    [Required]
+    public string Hand { get; set; }
 }
