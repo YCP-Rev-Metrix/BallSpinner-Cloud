@@ -1,4 +1,5 @@
 ﻿using Common.POCOs;
+using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
 using Microsoft.SqlServer.Management.Smo;
 
 namespace Server.Security.Stores;
@@ -29,6 +30,6 @@ public abstract class AbstractUserStore
     public abstract Task<bool> DeleteShotByName(string? shotname, string? username);
 
     //-------------------------Phone App-------------------------------------
-
+    public abstract Task<(bool success, List<UserTable> users)> GetAppUsers();
     public abstract Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email);
 }

@@ -1,5 +1,6 @@
-﻿using System.Numerics;
-using Common.POCOs;
+﻿using Common.POCOs;
+using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using System.Numerics;
 
 namespace Server.Security.Stores;
 
@@ -115,6 +116,9 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddUserCombined(firstname, lastname, username, hashedPassword, phone, email);
     }
 
-
+    public override async Task<(bool success, List<UserTable> users)> GetAppUsers()
+    {
+        return await ServerState.UserDatabase.GetAppUsers();
+    }
 }
 
