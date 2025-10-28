@@ -1,4 +1,5 @@
 ﻿using Common.POCOs;
+using Common.POCOs.MobileApp;
 using Microsoft.SqlServer.Management.Smo;
 
 namespace Server.Security.Stores;
@@ -21,8 +22,19 @@ public abstract class AbstractUserStore
     public abstract Task<SimulatedShotList> GetShotsByShotname(string? username, string? shotname);
     public abstract Task<SimulatedShotList> GetAllShots(string? username);
 
-    public abstract Task<bool> AddBall(Ball ball, string? username);
+    public abstract Task<bool> AddBalls(Ball ball, string? username);
+
+    public abstract Task<List<Ball>> GetBalls(string? username);
+    public abstract Task<bool> UpdateBall(Ball ball, string? username);
+    
+    public abstract Task<bool> AddFrames(Frame frame, string? username);
+    
+    public abstract Task<List<Frame>> GetFrames(int gameId);
     public abstract Task<Arsenal> GetArsenalbyUsername(string? username);
+    
+    public abstract Task<bool> AddEvent(Event eventObj, string? username);
+    
+    public abstract Task<List<Event>> GetEvents(string? username);
     
     public abstract Task<bool> AddSmartDot(SmartDot smartDot, string? username);
     public abstract Task<bool> DeleteBallByName(string? ballname, string? username);

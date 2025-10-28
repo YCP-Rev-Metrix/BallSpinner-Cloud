@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Common.POCOs;
+using Common.POCOs.MobileApp;
 
 namespace Server.Security.Stores;
 
@@ -14,6 +15,11 @@ public class DatabaseUserStore : AbstractUserStore
             stringRoles = string.Join(",", roles);
         }
         return await ServerState.UserDatabase.AddUser(firstname, lastname, username, hashed, salt, stringRoles, phone_number, email);
+    }
+    
+    public override async Task<bool> UpdateBall(Ball ball, string? username)
+    {
+        return await ServerState.UserStore.UpdateBall(ball, username);
     }
 
     public override async Task<bool> DeleteUser(string username) => await ServerState.UserDatabase.RemoveUser(username);
@@ -86,9 +92,34 @@ public class DatabaseUserStore : AbstractUserStore
         throw new Exception("End point needs to be fixed");
     }
 
-    public override async Task<bool> AddBall(Ball ball, string? username)
+    public override async Task<bool> AddBalls(Ball ball, string? username)
     {
-        return await ServerState.UserDatabase.AddBall(ball, username);
+        return await ServerState.UserDatabase.AddBalls(ball, username);
+    }
+    
+    public override async Task<List<Ball>> GetBalls(string? username)
+    {
+        return await ServerState.UserDatabase.GetBalls(username);
+    }
+
+    public override async Task<bool> AddFrames(Frame frame, string? username)
+    {
+        return await ServerState.UserDatabase.AddFrames(frame, username);
+    }
+    
+    public override async Task<List<Frame>> GetFrames(int gameId)
+    {
+        return await ServerState.UserDatabase.GetFrames(gameId);
+    }
+    
+    public override async Task<bool> AddEvent(Event eventObj, string? username)
+    {
+        return await ServerState.UserDatabase.AddEvent(eventObj, username);
+    }
+    
+    public override async Task<List<Event>> GetEvents(string? username)
+    {
+        return await ServerState.UserDatabase.GetEvents(username);
     }
 
     public override async Task<Arsenal> GetArsenalbyUsername(string? username)

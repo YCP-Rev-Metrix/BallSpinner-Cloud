@@ -33,8 +33,9 @@ public partial class RevMetrixDb
             var weight = reader.GetNullableValue<double>("weight");
             var diameter = reader. GetNullableValue<double>("diameter");
             string? coreType = reader["core_type"].ToString();
+            var id = reader.GetNullableValue<int>("id");
 
-            var ball = new Ball(name, diameter, weight, coreType);
+            var ball = new Ball(id, name, diameter, weight, coreType);
             arsenal.BallList.Add(ball);
         }
         return arsenal;
