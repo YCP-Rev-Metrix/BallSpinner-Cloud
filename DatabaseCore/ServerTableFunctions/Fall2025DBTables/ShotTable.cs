@@ -14,7 +14,7 @@ namespace DatabaseCore.ServerTableFunctions.Fall2025DBTables
         public int SmartDotID { get; set; }
         [Required]
         [ForeignKey("SessionID")]
-        public int SesssionID { get; set; }
+        public int SessionID { get; set; }
         [Required]
         [ForeignKey("BallID")]
         public int BallID { get; set; }

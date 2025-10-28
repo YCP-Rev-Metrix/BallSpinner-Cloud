@@ -32,4 +32,9 @@ public abstract class AbstractUserStore
     //-------------------------Phone App-------------------------------------
     public abstract Task<(bool success, List<UserTable> users)> GetAppUsers();
     public abstract Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email);
+    public abstract Task<bool> AddEstablishment(string? name, string? lanes, string? type, string? location);
+    public abstract Task<(bool success, List<EstablishmentTable> establishments)> GetAppEstablishments();
+    public abstract Task<bool> AddShot(int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment);
+    public abstract Task<(bool success, List<ShotTable> shots)> GetAppShots();
+
 }

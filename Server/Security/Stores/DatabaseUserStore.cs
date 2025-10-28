@@ -120,5 +120,27 @@ public class DatabaseUserStore : AbstractUserStore
     {
         return await ServerState.UserDatabase.GetAppUsers();
     }
+
+    public override async Task<bool> AddEstablishment(string? name, string? lanes, string? type, string? location)
+    {
+        return await ServerState.UserDatabase.AddEstablishment(name, lanes, type, location);
+
+    }
+    public override async Task<(bool success, List<EstablishmentTable> establishments)> GetAppEstablishments()
+    {
+        return await ServerState.UserDatabase.GetAppEstablishments();
+    }
+
+    public override async Task<bool> AddShot(int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment)
+    {
+        return await ServerState.UserDatabase.AddShot( type,  smartDotId,  sessionId,  ballId,  frameId,  shotNumber,  leaveType, side,  position,  comment);
+
+    }
+    public override async Task<(bool success, List<ShotTable> shots)> GetAppShots()
+    {
+        return await ServerState.UserDatabase.GetAppShots();
+
+    }
+
 }
 
