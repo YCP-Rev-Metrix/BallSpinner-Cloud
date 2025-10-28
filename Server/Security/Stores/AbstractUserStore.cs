@@ -36,5 +36,7 @@ public abstract class AbstractUserStore
     public abstract Task<(bool success, List<EstablishmentTable> establishments)> GetAppEstablishments();
     public abstract Task<bool> AddShot(int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment);
     public abstract Task<(bool success, List<ShotTable> shots)> GetAppShots();
+    public abstract Task<bool> AddGame(string gameNumber, string lanes, int score, int win, int startingLane, int sessionID, int teamResult, int individualResult);
+    public abstract Task<(bool success, List<GameTable> games)> GetAppGames();
 
 }

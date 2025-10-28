@@ -190,6 +190,58 @@ class TestAPIEndpoint(unittest.TestCase):
                 }
         
         response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+        #print(response.json())
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+
+    def test_insert_game(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+        if response.status_code != 200:
+            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+        token = response.json().get("tokenA")
+
+        url = "https://localhost:7238/api/posts/PostAppGame"
+        headers = {
+                "Authorization": f"Bearer {token}"
+                }
+        payload = {
+            "GameNumber": "testGameNumber",
+            "Lanes": "TestLanes",
+            "Score": "1",
+            "Win": "2",  
+            "StartingLane": "3", 
+            "SessionID": "4", 
+            "TeamResult": "5", 
+            "IndividualResult": "6", 
+            }
+        
+        response = requests.post(url, json=payload, headers=headers, verify=False)
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+    def test_get_all_app_games(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+        if response.status_code != 200:
+            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+        token = response.json().get("tokenA")
+
+        url = "https://localhost:7238/api/gets/GetAppGames"
+        headers = {
+                "Authorization": f"Bearer {token}"
+                }
+        
+        response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
         print(response.json())
         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
