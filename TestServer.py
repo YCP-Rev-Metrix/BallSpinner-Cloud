@@ -245,6 +245,59 @@ class TestAPIEndpoint(unittest.TestCase):
         print(response.json())
         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
+    def test_insert_session(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+        if response.status_code != 200:
+            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+        token = response.json().get("tokenA")
+
+        url = "https://localhost:7238/api/posts/PostAppSession"
+        headers = {
+                "Authorization": f"Bearer {token}"
+                }
+        payload = {
+            "SessionNumber": "1",
+            "EstablishmentID": "2",
+            "EventID": "3",
+            "DateTime": "4",  
+            "TeamOpponent": "TestTeamOpp", 
+            "IndividualOpponent": "TestIndOpp", 
+            "Score": "5", 
+            "Stats": "6",
+            "TeamRecord": "7", 
+            "IndividualRecord": "8", 
+            }
+        
+        response = requests.post(url, json=payload, headers=headers, verify=False)
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+    def test_get_all_app_session(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://localhost:7238/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+        if response.status_code != 200:
+            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+        token = response.json().get("tokenA")
+
+        url = "https://localhost:7238/api/gets/GetAppSessions"
+        headers = {
+                "Authorization": f"Bearer {token}"
+                }
+        
+        response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+        print(response.json())
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
 
     ## REGISTER TESTS
     # def test_register_with_valid_data(self):

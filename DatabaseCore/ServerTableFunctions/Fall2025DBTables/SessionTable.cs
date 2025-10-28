@@ -30,7 +30,5 @@ namespace DatabaseCore.ServerTableFunctions.Fall2025DBTables
         public int TeamRecord { get; set; }
         [Required]
         public int IndividualRecord { get; set; }
-        
-
     }
 }

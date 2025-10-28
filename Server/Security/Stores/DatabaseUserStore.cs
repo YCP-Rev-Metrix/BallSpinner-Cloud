@@ -151,6 +151,16 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.GetAppGames();
 
     }
+    public override async Task<bool> AddSession(int sessionNumber, int establishmentID, int eventID, int dateTime, string teamOpponent, string individualOpponent, int score, int stats, int teamRecord, int individualRecord)
+    {
+        return await ServerState.UserDatabase.AddSession( sessionNumber,  establishmentID,  eventID,  dateTime,  teamOpponent,  individualOpponent,  score,  stats,  teamRecord,  individualRecord);
+
+    }
+    public override async Task<(bool success, List<SessionTable> users)> GetAppSessions()
+    {
+        return await ServerState.UserDatabase.GetAppSessions();
+
+    }
 
 }
 
