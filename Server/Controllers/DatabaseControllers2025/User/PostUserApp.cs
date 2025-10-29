@@ -4,21 +4,21 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
 
-namespace Server.Controllers.DatabaseControllers.Posts;
+namespace Server.Controllers.DatabaseControllers2025.User;
 
 [ApiController]
 [Tags("Posts")]
 [Route("api/posts/[controller]")]
-public class InsertUserCombinedController : AbstractFeaturedController
+public class PostUserApp : AbstractFeaturedController
 {
     [Authorize]
-    [HttpPost(Name = "InsertUserCombined")]
+    [HttpPost(Name = "PostUserApp")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    public async Task<IActionResult> InsertUserCombined([FromBody] UserCombinedRequest request)
+    public async Task<IActionResult> InsertUserCombined([FromBody] UserAppRequest request)
     {
         // Hash the password here as needed
         byte[] data = new byte[10]; // Replace with actual hash logic
@@ -27,7 +27,7 @@ public class InsertUserCombinedController : AbstractFeaturedController
         return !success ? Problem("unable to add user to the database") : Ok("user inserted successfully");
     }
 
-    public class UserCombinedRequest
+    public class UserAppRequest
     {
         public string Firstname { get; set; }
         public string Lastname { get; set; }

@@ -1,6 +1,7 @@
-﻿using System.Numerics;
 using Common.POCOs;
 using Common.POCOs.MobileApp;
+using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using System.Numerics;
 
 namespace Server.Security.Stores;
 
@@ -146,6 +147,51 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddUserCombined(firstname, lastname, username, hashedPassword, phone, email);
     }
 
+    public override async Task<(bool success, List<UserTable> users)> GetAppUsers()
+    {
+        return await ServerState.UserDatabase.GetAppUsers();
+    }
+
+    public override async Task<bool> AddEstablishment(string? name, string? lanes, string? type, string? location)
+    {
+        return await ServerState.UserDatabase.AddEstablishment(name, lanes, type, location);
+
+    }
+    public override async Task<(bool success, List<EstablishmentTable> establishments)> GetAppEstablishments()
+    {
+        return await ServerState.UserDatabase.GetAppEstablishments();
+    }
+
+    public override async Task<bool> AddShot(int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment)
+    {
+        return await ServerState.UserDatabase.AddShot( type,  smartDotId,  sessionId,  ballId,  frameId,  shotNumber,  leaveType, side,  position,  comment);
+
+    }
+    public override async Task<(bool success, List<ShotTable> shots)> GetAppShots()
+    {
+        return await ServerState.UserDatabase.GetAppShots();
+
+    }
+    public override async Task<bool> AddGame(string gameNumber, string lanes, int score, int win, int startingLane, int sessionID, int teamResult, int individualResult)
+    {
+        return await ServerState.UserDatabase.AddGame(gameNumber, lanes, score, win, startingLane, sessionID, teamResult, individualResult);
+
+    }
+    public override async Task<(bool success, List<GameTable> games)> GetAppGames()
+    {
+        return await ServerState.UserDatabase.GetAppGames();
+
+    }
+    public override async Task<bool> AddSession(int sessionNumber, int establishmentID, int eventID, int dateTime, string teamOpponent, string individualOpponent, int score, int stats, int teamRecord, int individualRecord)
+    {
+        return await ServerState.UserDatabase.AddSession( sessionNumber,  establishmentID,  eventID,  dateTime,  teamOpponent,  individualOpponent,  score,  stats,  teamRecord,  individualRecord);
+
+    }
+    public override async Task<(bool success, List<SessionTable> users)> GetAppSessions()
+    {
+        return await ServerState.UserDatabase.GetAppSessions();
+
+    }
 
 }
 
