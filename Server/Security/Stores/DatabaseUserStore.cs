@@ -237,5 +237,10 @@ public class DatabaseUserStore : AbstractUserStore
     {
         return await ServerState.UserDatabase.AddPiEncoderData(data);
     }
+    
+    public override async Task<List<PiEncoderData>> GetPiEncoderDataBySessionId(int sessionId)
+    {
+        return await ServerState.UserDatabase.GetAllPiEncoderDataBySession(sessionId);
+    }
 }
 
