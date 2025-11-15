@@ -222,5 +222,15 @@ public class DatabaseUserStore : AbstractUserStore
     {
         return await ServerState.UserDatabase.GetAllPiDiagnosticScriptBySession(sessionId);
     }
+    
+    public override async Task<List<int>> AddPiSmartDotData(List<PiSmartDotData> smartDots)
+    {
+        return await ServerState.UserDatabase.AddPiSmartDotData(smartDots);
+    }
+    
+    public override async Task<List<PiSmartDotData>> GetPiSmartDotDataBySessionId(int smartDotId)
+    {
+        return await ServerState.UserDatabase.GetAllPiSmartDotDataBySession(smartDotId);
+    }
 }
 

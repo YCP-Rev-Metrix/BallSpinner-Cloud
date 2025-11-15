@@ -54,4 +54,6 @@ public abstract class AbstractUserStore
     public abstract Task<List<PiShot>> GetAllPiShotsBySession(int sessionId);
     public abstract Task<List<int>> AddPiDiagnosticScript(List<PiDiagnosticScript> scripts);
     public abstract Task<List<PiDiagnosticScript>> GetAllPiDiagnosticScriptsBySession(int sessionId);
+    public abstract Task<List<int>> AddPiSmartDotData(List<PiSmartDotData> smartDots);
+    public abstract Task<List<PiSmartDotData>> GetPiSmartDotDataBySessionId(int smartDotId);
 }
