@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Shit that pisses Emmet off because it gets tracked
+SQLScript/
+Migrations/
+ **/DatabaseCore.csproj
+ **/Liquibase.changelog/changelog.xml
+.idea/
+
 # User-specific files
 *.rsuser
 *.suo
