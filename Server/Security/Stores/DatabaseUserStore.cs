@@ -2,6 +2,7 @@ using Common.POCOs;
 using Common.POCOs.MobileApp;
 using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
 using System.Numerics;
+using Common.POCOs.PITeam2025;
 
 namespace Server.Security.Stores;
 
@@ -192,6 +193,34 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.GetAppSessions();
 
     }
-
+    
+    public override async Task<List<int>> AddPiSessions(List<PiSession> sessions)
+    {
+        return await ServerState.UserDatabase.AddPISessions(sessions);
+    }
+    
+    public override async Task<List<PiSession>> GetAllPiSessions(DateTime rangeStart, DateTime rangeEnd)
+    {
+        return await ServerState.UserDatabase.GetAllPiSessions(rangeStart, rangeEnd);
+    }
+    
+    public override async Task<List<int>> AddPiShots(List<PiShot> shots)
+    {
+        return await ServerState.UserDatabase.AddPiShots(shots);
+    }
+    public override async Task<List<PiShot>> GetAllPiShotsBySession(int sessionId)
+    {
+        return await ServerState.UserDatabase.GetAllPiShotBySession(sessionId);
+    }
+    
+    public override async Task<List<int>> AddPiDiagnosticScript(List<PiDiagnosticScript> scripts)
+    {
+        return await ServerState.UserDatabase.AddPiDiagnosticScripts(scripts);
+    }
+    
+    public override async Task<List<PiDiagnosticScript>> GetAllPiDiagnosticScriptsBySession(int sessionId)
+    {
+        return await ServerState.UserDatabase.GetAllPiDiagnosticScriptBySession(sessionId);
+    }
 }
 

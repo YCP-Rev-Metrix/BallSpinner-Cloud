@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Common.POCOs.PITeam2025;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DatabaseCore.DatabaseComponents;
 
@@ -24,21 +25,25 @@ public partial class RevMetrixDb
             // Should not have any null properties, return -1 if any found
             foreach(PiSession obj in piSessions)
             {
-                PropertyInfo[] properties = piSessions.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                PropertyInfo[] properties = piSessions.GetType().GetProperties();
                 foreach(PropertyInfo property in properties)
                 {
-                    object value = property.GetValue(obj);
+                    if (property.PropertyType == typeof(string))
+                    {
+                        string value = (string)property.GetValue(obj);
 
-                    if (value == null)
-                    { 
-                        List<int> error = new List<int> { -1 };
-                        return error;
+                        if (string.IsNullOrEmpty(value))
+                        { 
+                            List<int> error = new List<int> { -1 };
+                            return error;
+                        }
                     }
+                    
                 }
             }
             
             string insertPISessionQuery = @"
-            INSERT INTO [Team_PI_Tables].[PI_Sessions] (name, timeStamp, isShotMode) 
+            INSERT INTO [Team_PI_Tables].[PiSession] (name, timeStamp, isShotMode) 
             OUTPUT INSERTED.id 
             VALUES (@name, @timeStamp, @isShotMode)";
 
