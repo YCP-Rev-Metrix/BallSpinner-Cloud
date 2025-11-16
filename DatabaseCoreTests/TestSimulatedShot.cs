@@ -29,7 +29,7 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         }
 
         // Testing with valid user with invalid ball
-        Ball ball = new Ball(builder.ToString(), 2, 2, "Pancake");
+        Ball ball = new Ball(0, builder.ToString(), 2, 2, "Pancake");
         ShotInfo shotInfo = new ShotInfo
         {
             Name = builder.ToString(),
@@ -90,7 +90,7 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, TestUsername);
         Assert.False(success);
 
-        bool ballInserted = await ServerState.UserStore.AddBall(ball, TestUsername);
+        bool ballInserted = await ServerState.UserStore.AddBalls(ball, TestUsername);
 
         Assert.True(ballInserted);
 
@@ -189,8 +189,8 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         }
 
         string testShotName = builder.ToString(); 
-        Ball ball = new Ball(builder.ToString(), 2, 2, "Pancake");
-        bool ballInserted = await ServerState.UserStore.AddBall(ball, TestUsername);
+        Ball ball = new Ball(0, builder.ToString(), 2, 2, "Pancake");
+        bool ballInserted = await ServerState.UserStore.AddBalls(ball, TestUsername);
         ShotInfo shotInfo = new ShotInfo
         {
             Name = testShotName,

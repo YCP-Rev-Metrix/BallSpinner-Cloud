@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\DatabaseControllers2025\Ball\" />
+    <Folder Include="Controllers\DatabaseControllers2025\Posts\" />
+    <Folder Include="Controllers\DatabaseControllers2025\NewFolder\" />
     <Folder Include="Controllers\DatabaseControllers\Patches\" />
     <Folder Include="Logs\" />
   </ItemGroup>

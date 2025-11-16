@@ -374,3 +374,56 @@ GO;
 
 INSERT INTO TestTable (TestInt)
 VALUES (6), (34);
+--changeset RevMetrix:5
+INSERT INTO dbo.[User] (firstname, lastname, username, password, salt, email, phone, roles)
+VALUES (
+  'John', 
+  'Doe', 
+  'string',		
+  CAST('string' AS varbinary(64)),   
+  CAST('somesalt' AS varbinary(64)),     
+  'john@example.com', 
+  '777-777-7777', 
+  'user'
+);
+--changeset RevMetrix:6
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[User]') AND type = N'U')
+BEGIN
+CREATE TABLE [dbo].[User](
+	[id] [bigint] IDENTITY(1,1) NOT NULL,
+	[firstname] [varchar](50) NULL,
+	[lastname] [varchar](50) NULL,
+	[username] [varchar](50) NOT NULL,
+	[password] [varbinary](64) NOT NULL,
+	[salt] [varbinary](64) NOT NULL,
+	[email] [varchar](50) NULL,
+	[phone] [varchar](50) NULL,
+	[roles] [varchar](50) NOT NULL,
+ CONSTRAINT [User_PK] PRIMARY KEY CLUSTERED ([id] ASC),
+ CONSTRAINT [Username_UNIQUE] UNIQUE NONCLUSTERED ([username] ASC)
+) ON [PRIMARY]
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM dbo.[User] WHERE username = 'string')
+BEGIN
+INSERT INTO dbo.[User] (firstname, lastname, username, password, salt, email, phone, roles)
+VALUES (
+  'John', 
+  'Doe', 
+  'string',		
+  CAST('string' AS varbinary(64)),   -- placeholder password bytes (prefer hashing in app)
+  CAST('somesalt' AS varbinary(64)), -- placeholder salt
+  'john@example.com', 
+  '777-777-7777', 
+  'user'
+);
+END
+GO
+
+--changeset RevMetrix:7
+-- Set password to SHA256('string' + 'somesalt') and store salt as varbinary
+UPDATE dbo.[User]
+SET salt = CAST('somesalt' AS VARBINARY(64)),
+    [password] = HASHBYTES('SHA2_256', 'string' + 'somesalt')
+WHERE username = 'string';
