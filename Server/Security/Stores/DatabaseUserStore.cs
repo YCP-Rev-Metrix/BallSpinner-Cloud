@@ -199,7 +199,7 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddPISessions(sessions);
     }
     
-    public override async Task<List<PiSession>> GetAllPiSessions(DateTime rangeStart, DateTime rangeEnd)
+    public override async Task<List<PiSession>> GetAllPiSessions(int rangeStart, int rangeEnd)
     {
         return await ServerState.UserDatabase.GetAllPiSessions(rangeStart, rangeEnd);
     }

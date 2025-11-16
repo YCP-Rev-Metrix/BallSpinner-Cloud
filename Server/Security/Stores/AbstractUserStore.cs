@@ -49,7 +49,7 @@ public abstract class AbstractUserStore
     public abstract Task<List<Frame>> GetFrames(int gameId);
     public abstract Task<bool> AddBalls(Ball ball, string? username);
     public abstract Task<List<int>> AddPiSessions(List<PiSession> sessions);
-    public abstract Task<List<PiSession>> GetAllPiSessions(DateTime rangeStart, DateTime rangeEnd);
+    public abstract Task<List<PiSession>> GetAllPiSessions(int rangeStart, int rangeEnd);
     public abstract Task<List<int>> AddPiShots(List<PiShot> shots);
     public abstract Task<List<PiShot>> GetAllPiShotsBySession(int sessionId);
     public abstract Task<List<int>> AddPiDiagnosticScript(List<PiDiagnosticScript> scripts);

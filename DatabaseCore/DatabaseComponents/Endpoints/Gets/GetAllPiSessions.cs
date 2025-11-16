@@ -5,33 +5,59 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-   public async Task<List<PiSession>> GetAllPiSessions(DateTime? rangeStart, DateTime? rangeEnd)
+   public async Task<List<PiSession>> GetAllPiSessions(int rangeStart, int rangeEnd)
    {
       ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
       using var connection = new SqlConnection(ConnectionString);
       await connection.OpenAsync();
 
-      if (rangeStart == DateTime.MinValue)
+      DateTime? startDate = null;
+      DateTime? endDate = null;
+
+      // Convert yyyymmdd integer to DateTime (start of day)
+      if (rangeStart > 0)
       {
-         rangeStart = null;
+         try
+         {
+            int y = rangeStart / 10000;
+            int m = (rangeStart / 100) % 100;
+            int d = rangeStart % 100;
+            startDate = new DateTime(y, m, d, 0, 0, 0, DateTimeKind.Utc);
+         }
+         catch
+         {
+            startDate = null; // invalid input -> treat as no bound
+         }
       }
-      
-      if (rangeEnd == DateTime.MinValue)
+
+      // Convert yyyymmdd integer to DateTime (end of day)
+      if (rangeEnd > 0)
       {
-         rangeEnd = null;
+         try
+         {
+            int y = rangeEnd / 10000;
+            int m = (rangeEnd / 100) % 100;
+            int d = rangeEnd % 100;
+            // end of day inclusive
+            endDate = new DateTime(y, m, d, 23, 59, 59, 999, DateTimeKind.Utc);
+         }
+         catch
+         {
+            endDate = null; // invalid input -> treat as no bound
+         }
       }
 
       string selectQuery = @"
       SELECT b.id, b.name, b.timeStamp, b.isShotMode
       FROM [Team_PI_Tables].[PiSession] b
       WHERE (@start IS NULL OR b.timeStamp >= @start)
-        AND (@end IS NULL OR b.timeStamp <= @end);";
+      AND (@end IS NULL OR b.timeStamp <= @end);";
 
       using var command = new SqlCommand(selectQuery, connection);
       var startParam = command.Parameters.Add("@start", System.Data.SqlDbType.DateTime2);
-      startParam.Value = (object?)rangeStart ?? DBNull.Value;
+      startParam.Value = startDate.HasValue ? (object)startDate.Value : DBNull.Value;
       var endParam = command.Parameters.Add("@end", System.Data.SqlDbType.DateTime2);
-      endParam.Value = (object?)rangeEnd ?? DBNull.Value;
+      endParam.Value = endDate.HasValue ? (object)endDate.Value : DBNull.Value;
 
       using SqlDataReader reader = await command.ExecuteReaderAsync();
       
