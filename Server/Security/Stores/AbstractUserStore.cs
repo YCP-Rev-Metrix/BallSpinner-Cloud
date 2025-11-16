@@ -58,4 +58,6 @@ public abstract class AbstractUserStore
     public abstract Task<List<PiSmartDotData>> GetPiSmartDotDataBySessionId(int smartDotId);
     public abstract Task<List<int>> AddPiEncoderData(List<PiEncoderData> encoderData);
     public abstract Task<List<PiEncoderData>> GetPiEncoderDataBySessionId(int sessionId);
+    public abstract Task<List<int>> AddPiHeatData(List<PiHeatData> heatData);
+    public abstract Task<List<PiHeatData>> GetPiHeatDataBySessionId(int sessionId);
 }

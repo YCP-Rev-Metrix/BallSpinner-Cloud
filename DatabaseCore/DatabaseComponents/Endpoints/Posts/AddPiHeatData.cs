@@ -6,7 +6,7 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<List<int>> AddPiEncoderData(List<PiEncoderData> data)
+    public async Task<List<int>> AddPiHeatData(List<PiHeatData> data)
     {
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         if (string.IsNullOrEmpty(ConnectionString))
@@ -20,9 +20,9 @@ public partial class RevMetrixDb
         using SqlTransaction transaction = (SqlTransaction)await connection.BeginTransactionAsync();
         try
         {
-            // Check for null properties in each PiEncoderData object
+            // Check for null properties in each PiHeatData object
             // Should not have any null properties, return -1 if any found
-            foreach(PiEncoderData obj in data)
+            foreach(PiHeatData obj in data)
             {
                 PropertyInfo[] properties = data.GetType().GetProperties();
                 foreach(PropertyInfo property in properties)
@@ -42,35 +42,36 @@ public partial class RevMetrixDb
             }
             
             string insertQuery = @"
-            INSERT INTO [Team_PI_Tables].[EncoderData] (sessionId, time, pulses, motorId)
+            INSERT INTO [Team_PI_Tables].[HeatData]
+            (sessionId, time, value, motorId)
             OUTPUT INSERTED.id
-            VALUES (@sessionId, @time, @pulses, @motorId);";
+            VALUES (@sessionId, @time, @value, @motorId);";
             
-            using var piEncoderDataCommand = new SqlCommand(insertQuery, connection, transaction);
+            using var piHeatDataCommand = new SqlCommand(insertQuery, connection, transaction);
             List<int> insertedIds = new List<int>();
-            foreach (PiEncoderData obj in data)
+            foreach (PiHeatData obj in data)
             {
-                piEncoderDataCommand.Parameters.Clear();
-                piEncoderDataCommand.Parameters.AddWithValue("@sessionId", obj.SessionId);
-                piEncoderDataCommand.Parameters.AddWithValue("@time", obj.Time);
-                piEncoderDataCommand.Parameters.AddWithValue("@pulses", obj.Pulses);
-                piEncoderDataCommand.Parameters.AddWithValue("@motorId", obj.MotorId);
+                piHeatDataCommand.Parameters.Clear();
+                piHeatDataCommand.Parameters.AddWithValue("@sessionId", obj.SessionId);
+                piHeatDataCommand.Parameters.AddWithValue("@time", obj.Time);
+                piHeatDataCommand.Parameters.AddWithValue("@value", obj.Value);
+                piHeatDataCommand.Parameters.AddWithValue("@motorId", obj.MotorId);
                 
-                object? result = await piEncoderDataCommand.ExecuteScalarAsync();
+                object? result = await piHeatDataCommand.ExecuteScalarAsync();
                 if (result == null || result == DBNull.Value)
                 {
-                    throw new InvalidOperationException("Failed to insert Pi Encoder Data or retrieve session ID.");
+                    throw new InvalidOperationException("Failed to insert Pi Heat Data or retrieve session ID.");
                 }
                 
                 insertedIds.Add((int)result);
             }
-            
+
             await transaction.CommitAsync();
             return insertedIds;
         }
         catch (Exception e)
         {
-            throw new Exception("Error adding PiEncoderData", e);
+            throw new Exception("Error adding PiHeatData", e);
         }
     }
 }
