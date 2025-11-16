@@ -32,8 +32,8 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
     
-  <Target Name="GenerateLiquibaseScript" AfterTargets="Build">
-    <Exec Command="dotnet ef migrations script --idempotent -o --no-build &quot;Liquibase/scripts/SQLScript/Fall2025DBChanges.sql&quot; --project &quot;./DatabaseCore.csproj&quot;" />
-    <Message Text="Liquibase SQL script was regenerated." Importance="high" />
-  </Target>
+<!--  <Target Name="GenerateLiquibaseScript" AfterTargets="Build">-->
+<!--    <Exec Command="dotnet ef migrations script &#45;&#45;idempotent -o &#45;&#45;no-build &quot;Liquibase/scripts/SQLScript/Fall2025DBChanges.sql&quot; &#45;&#45;project &quot;./DatabaseCore.csproj&quot;" />-->
+<!--    <Message Text="Liquibase SQL script was regenerated." Importance="high" />-->
+<!--  </Target>-->
 </Project>
