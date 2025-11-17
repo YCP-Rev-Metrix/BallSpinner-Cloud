@@ -45,4 +45,7 @@ public class SmartDotData
     
     [Required]
     public float Light { get; set; }
+    
+    [Required]
+    public int DataSelector { get; set; }
 }

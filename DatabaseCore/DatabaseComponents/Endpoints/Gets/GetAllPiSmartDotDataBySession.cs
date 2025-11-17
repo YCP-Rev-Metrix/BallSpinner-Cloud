@@ -18,7 +18,7 @@ public partial class RevMetrixDb
         }
 
         string selectQuery = @"SELECT
-        s.id, s.sessionId, s.time, s.accelX, s.accelY, s.accelZ,
+        s.id, s.sessionId, s.time, s.dataSelector, s.accelX, s.accelY, s.accelZ,
         s.gyroX, s.gyroY, s.gyroZ, s.magnoX, s.magnoY, s.magnoZ, s.light
         FROM [Team_PI_Tables].[SmartDotData] s
         WHERE s.sessionId = @sessionId
@@ -41,6 +41,7 @@ public partial class RevMetrixDb
                         ? Convert.ToSingle(reader["time"])
                         : Convert.ToSingle(Convert.ToDouble(reader["time"]))
                     : 0.0f,
+                DataSelector = reader["dataSelector"] != DBNull.Value ? Convert.ToInt32(reader["dataSelector"]) : 0,
                 XL_X = reader["accelX"] != DBNull.Value
                     ? reader["accelX"] is float
                         ? Convert.ToSingle(reader["accelX"])

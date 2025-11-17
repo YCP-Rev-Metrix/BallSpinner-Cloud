@@ -287,3 +287,22 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251117231619_AddDataSelectorToSmartDotTable')
+BEGIN
+    ALTER TABLE [Team_PI_Tables].[SmartDotData] ADD [DataSelector] int NOT NULL DEFAULT 0;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251117231619_AddDataSelectorToSmartDotTable')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20251117231619_AddDataSelectorToSmartDotTable', N'7.0.20');
+END;
+GO
+
+COMMIT;
+GO
+
