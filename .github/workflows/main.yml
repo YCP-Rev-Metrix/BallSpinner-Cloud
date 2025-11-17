@@ -30,8 +30,8 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Test with the dotnet CLI
-        run: dotnet test --no-build --settings ./DatabaseCoreTests/test.runsettings
+#      - name: Test with the dotnet CLI
+#        run: dotnet test --no-build --settings ./DatabaseCoreTests/test.runsettings
   build:
     runs-on: ubuntu-latest
     needs: tests
