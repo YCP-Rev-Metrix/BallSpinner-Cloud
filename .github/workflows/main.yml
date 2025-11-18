@@ -61,5 +61,8 @@ jobs:
           username: ${{SECRETS.SERVER_USER}}
 
           script: |
+            
+            scp -o StrictHostKeyChecking=no -i /dev/stdin ./DatabaseCore/Liquibase/scripts/SQLScript/Fall2025DBChanges.sql ${{ secrets.DROPLET_USERNAME }}@${{ secrets.DROPLET_HOST }}:/ballspinner-api/liquibase/scripts/Fall2025DBChanges.sql
+            
             cd /root/ballSpinnerAPI
             ./redeploy.sh
