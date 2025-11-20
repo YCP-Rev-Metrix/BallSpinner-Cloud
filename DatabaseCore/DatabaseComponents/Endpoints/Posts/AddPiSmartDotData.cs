@@ -43,9 +43,9 @@ public partial class RevMetrixDb
             
             string insertQuery = @"
             INSERT INTO [Team_PI_Tables].[SmartDotData]
-            (sessionId, time, accelX, accelY, accelZ, gyroX, gyroY, gyroZ, magnoX, magnoY, magnoZ, light)
+            (sessionId, time, accelX, accelY, accelZ, gyroX, gyroY, gyroZ, magnoX, magnoY, magnoZ, light, dataSelector)
             OUTPUT INSERTED.id
-            VALUES (@sessionId, @time, @accelX, @accelY, @accelZ, @gyroX, @gyroY, @gyroZ, @magnoX, @magnoY, @magnoZ, @light);";
+            VALUES (@sessionId, @time, @accelX, @accelY, @accelZ, @gyroX, @gyroY, @gyroZ, @magnoX, @magnoY, @magnoZ, @light, @dataSelector);";
             
             using var piSmartDotDataCommand = new SqlCommand(insertQuery, connection, transaction);
             List<int> insertedIds = new List<int>();
@@ -64,6 +64,7 @@ public partial class RevMetrixDb
                 piSmartDotDataCommand.Parameters.AddWithValue("@magnoY", obj.MG_Y);
                 piSmartDotDataCommand.Parameters.AddWithValue("@magnoZ", obj.MG_Z);
                 piSmartDotDataCommand.Parameters.AddWithValue("@light", obj.LT);
+                piSmartDotDataCommand.Parameters.AddWithValue("@dataSelector", obj.DataSelector);
 
                 object? result = await piSmartDotDataCommand.ExecuteScalarAsync();
                 if (result != null && int.TryParse(result.ToString(), out int insertedId))
