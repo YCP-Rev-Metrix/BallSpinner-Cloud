@@ -68,7 +68,7 @@ public partial class RevMetrixDb
             double secondDouble = rangeStart * (1) - (y * 10000000000) - (m * 100000000) - (d * 1000000) - (h * 10000) - (min * 100);
             int sec = (int)Math.Floor(secondDouble);
             // end of day inclusive
-            startDate = new DateTime(y, m, d, h, min, sec, DateTimeKind.Utc);
+            endDate = new DateTime(y, m, d, h, min, sec, DateTimeKind.Utc);
          }
          catch
          {
