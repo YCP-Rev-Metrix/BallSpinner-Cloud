@@ -14,15 +14,30 @@ public partial class RevMetrixDb
       DateTime? startDate = null;
       DateTime? endDate = null;
 
-      // Convert yyyymmdd integer to DateTime (start of day)
+      // Convert yyyymmddhhmmss integer to DateTime (start of day)
       if (rangeStart > 0)
       {
          try
          {
-            int y = rangeStart / 10000;
-            int m = (rangeStart / 100) % 100;
-            int d = rangeStart % 100;
-            startDate = new DateTime(y, m, d, 0, 0, 0, DateTimeKind.Utc);
+            double yearDouble = rangeStart * (0.0000000001);
+            int y = (int)Math.Floor(yearDouble);
+
+            double monthDouble = rangeStart * (0.00000001) - (y * 100);
+            int m = (int)Math.Floor(monthDouble);
+            
+            double dayDouble = rangeStart * (0.000001) - (y * 10000) - (m * 100);
+            int d = (int)Math.Floor(dayDouble);
+            
+            double hourDouble = rangeStart * (0.0001) - (y * 1000000) - (m * 10000) - (d * 100);
+            int h = (int)Math.Floor(hourDouble);
+            
+            double minuteDouble = rangeStart * (0.01) - (y * 100000000) - (m * 1000000) - (d * 10000) - (h * 100);
+            int min = (int)Math.Floor(minuteDouble);
+            
+            double secondDouble = rangeStart * (1) - (y * 10000000000) - (m * 100000000) - (d * 1000000) - (h * 10000) - (min * 100);
+            int sec = (int)Math.Floor(secondDouble);
+            
+            startDate = new DateTime(y, m, d, h, min, sec, DateTimeKind.Utc);
          }
          catch
          {
@@ -35,11 +50,25 @@ public partial class RevMetrixDb
       {
          try
          {
-            int y = rangeEnd / 10000;
-            int m = (rangeEnd / 100) % 100;
-            int d = rangeEnd % 100;
+            double yearDouble = rangeStart * (0.0000000001);
+            int y = (int)Math.Floor(yearDouble);
+
+            double monthDouble = rangeStart * (0.00000001) - (y * 100);
+            int m = (int)Math.Floor(monthDouble);
+            
+            double dayDouble = rangeStart * (0.000001) - (y * 10000) - (m * 100);
+            int d = (int)Math.Floor(dayDouble);
+            
+            double hourDouble = rangeStart * (0.0001) - (y * 1000000) - (m * 10000) - (d * 100);
+            int h = (int)Math.Floor(hourDouble);
+            
+            double minuteDouble = rangeStart * (0.01) - (y * 100000000) - (m * 1000000) - (d * 10000) - (h * 100);
+            int min = (int)Math.Floor(minuteDouble);
+            
+            double secondDouble = rangeStart * (1) - (y * 10000000000) - (m * 100000000) - (d * 1000000) - (h * 10000) - (min * 100);
+            int sec = (int)Math.Floor(secondDouble);
             // end of day inclusive
-            endDate = new DateTime(y, m, d, 23, 59, 59, 999, DateTimeKind.Utc);
+            startDate = new DateTime(y, m, d, h, min, sec, DateTimeKind.Utc);
          }
          catch
          {
