@@ -306,3 +306,91 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204020317_AddedReplayIterationColumnToEncoderSmartDotHeat')
+BEGIN
+    DECLARE @var0 sysname;
+    SELECT @var0 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Team_PI_Tables].[SmartDotData]') AND [c].[name] = N'DataSelector');
+    IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [Team_PI_Tables].[SmartDotData] DROP CONSTRAINT [' + @var0 + '];');
+    ALTER TABLE [Team_PI_Tables].[SmartDotData] DROP COLUMN [DataSelector];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204020317_AddedReplayIterationColumnToEncoderSmartDotHeat')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20251204020317_AddedReplayIterationColumnToEncoderSmartDotHeat', N'7.0.20');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023329_DataSelector')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20251204023329_DataSelector', N'7.0.20');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023631_ReplayIteration')
+BEGIN
+    ALTER TABLE [Team_PI_Tables].[SmartDotData] ADD [ReplayIteration] int NOT NULL DEFAULT 0;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023631_ReplayIteration')
+BEGIN
+    ALTER TABLE [Team_PI_Tables].[HeatData] ADD [ReplayIteration] int NOT NULL DEFAULT 0;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023631_ReplayIteration')
+BEGIN
+    ALTER TABLE [Team_PI_Tables].[EncoderData] ADD [ReplayIteration] int NOT NULL DEFAULT 0;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023631_ReplayIteration')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20251204023631_ReplayIteration', N'7.0.20');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204024742_AddedReplayIteration')
+BEGIN
+    ALTER TABLE [Team_PI_Tables].[SmartDotData] ADD [DataSelector] int NOT NULL DEFAULT 0;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204024742_AddedReplayIteration')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20251204024742_AddedReplayIteration', N'7.0.20');
+END;
+GO
+
+COMMIT;
+GO
+

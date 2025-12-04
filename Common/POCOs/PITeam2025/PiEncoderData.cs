@@ -4,13 +4,14 @@ public class PiEncoderData : Poco
 {
     public PiEncoderData() {}
     
-    public PiEncoderData(int id, int sessionId, float time, float pulses, int motorId)
+    public PiEncoderData(int id, int sessionId, float time, float pulses, int motorId, int replayIteration)
     {
         Id = id;
         SessionId = sessionId;
         Time = time;
         Pulses = pulses;
         MotorId = motorId;
+        ReplayIteration = replayIteration;
     }
     
     public int Id { get; set; }

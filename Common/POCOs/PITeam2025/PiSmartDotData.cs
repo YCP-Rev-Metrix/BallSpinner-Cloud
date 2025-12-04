@@ -8,7 +8,7 @@ public class PiSmartDotData : Poco
         float xl_x, float xl_y, float xl_z,
         float gy_x, float gy_y, float gy_z,
         float mg_x, float mg_y, float mg_z,
-        float lt)
+        float lt, int replayIteration)
     {
         Id = id;
         SessionId = sessionId;
@@ -24,6 +24,7 @@ public class PiSmartDotData : Poco
         MG_Y = mg_y;
         MG_Z = mg_z;
         LT = lt;
+        ReplayIteration = replayIteration;
     }
     
     public int Id { get; set; }
