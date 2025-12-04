@@ -21,4 +21,7 @@ public class EncoderData
     
     [Required]
     public int MotorId { get; set; }
+    
+    [Required]
+    public int ReplayIteration { get; set; }
 }

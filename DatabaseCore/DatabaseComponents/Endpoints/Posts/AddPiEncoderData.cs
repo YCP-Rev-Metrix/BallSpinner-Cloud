@@ -42,9 +42,9 @@ public partial class RevMetrixDb
             }
             
             string insertQuery = @"
-            INSERT INTO [Team_PI_Tables].[EncoderData] (sessionId, time, pulses, motorId)
+            INSERT INTO [Team_PI_Tables].[EncoderData] (sessionId, time, pulses, motorId, replayIteration)
             OUTPUT INSERTED.id
-            VALUES (@sessionId, @time, @pulses, @motorId);";
+            VALUES (@sessionId, @time, @pulses, @motorId, @replayIteration);";
             
             using var piEncoderDataCommand = new SqlCommand(insertQuery, connection, transaction);
             List<int> insertedIds = new List<int>();
@@ -55,6 +55,7 @@ public partial class RevMetrixDb
                 piEncoderDataCommand.Parameters.AddWithValue("@time", obj.Time);
                 piEncoderDataCommand.Parameters.AddWithValue("@pulses", obj.Pulses);
                 piEncoderDataCommand.Parameters.AddWithValue("@motorId", obj.MotorId);
+                piEncoderDataCommand.Parameters.AddWithValue("@replayIteration", obj.ReplayIteration);
                 
                 object? result = await piEncoderDataCommand.ExecuteScalarAsync();
                 if (result == null || result == DBNull.Value)

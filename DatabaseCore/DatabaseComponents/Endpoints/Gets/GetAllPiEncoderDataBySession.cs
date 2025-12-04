@@ -17,7 +17,7 @@ public partial class RevMetrixDb
             return new List<PiEncoderData> { new PiEncoderData() } ;
         }
         
-        string selectQuery = @"SELECT e.id, e.sessionId, e.time, e.pulses, e.motorId
+        string selectQuery = @"SELECT e.id, e.sessionId, e.time, e.pulses, e.motorId, e.replayIteration
                                FROM [Team_PI_Tables].[EncoderData] e
                                WHERE e.sessionId = @sessionId
                                ORDER BY e.time ASC;";
@@ -40,6 +40,7 @@ public partial class RevMetrixDb
                     : 0.0f,
                 Pulses = reader["pulses"] != DBNull.Value ? Convert.ToInt32(reader["pulses"]) : 0,
                 MotorId = reader["motorId"] != DBNull.Value ? Convert.ToInt32(reader["motorId"]) : 0,
+                ReplayIteration = reader["replayIteration"] != DBNull.Value ? Convert.ToInt32(reader["replayIteration"]) : 0
             };
             encoderDataList.Add(e);
         }

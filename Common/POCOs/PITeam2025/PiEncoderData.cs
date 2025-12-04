@@ -18,4 +18,5 @@ public class PiEncoderData : Poco
     public float Time { get; set; }
     public float Pulses { get; set; }
     public int MotorId { get; set; }
+    public int ReplayIteration { get; set; }
 }

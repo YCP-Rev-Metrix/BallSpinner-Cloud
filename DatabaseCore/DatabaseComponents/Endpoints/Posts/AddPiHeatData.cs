@@ -43,9 +43,9 @@ public partial class RevMetrixDb
             
             string insertQuery = @"
             INSERT INTO [Team_PI_Tables].[HeatData]
-            (sessionId, time, value, motorId)
+            (sessionId, time, value, motorId, replayIteration)
             OUTPUT INSERTED.id
-            VALUES (@sessionId, @time, @value, @motorId);";
+            VALUES (@sessionId, @time, @value, @motorId, @replayIteration);";
             
             using var piHeatDataCommand = new SqlCommand(insertQuery, connection, transaction);
             List<int> insertedIds = new List<int>();
@@ -56,6 +56,7 @@ public partial class RevMetrixDb
                 piHeatDataCommand.Parameters.AddWithValue("@time", obj.Time);
                 piHeatDataCommand.Parameters.AddWithValue("@value", obj.Value);
                 piHeatDataCommand.Parameters.AddWithValue("@motorId", obj.MotorId);
+                piHeatDataCommand.Parameters.AddWithValue("@replayIteration", obj.ReplayIteration);
                 
                 object? result = await piHeatDataCommand.ExecuteScalarAsync();
                 if (result == null || result == DBNull.Value)

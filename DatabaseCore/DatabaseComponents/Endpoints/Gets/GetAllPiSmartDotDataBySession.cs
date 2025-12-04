@@ -19,7 +19,7 @@ public partial class RevMetrixDb
 
         string selectQuery = @"SELECT
         s.id, s.sessionId, s.time, s.accelX, s.accelY, s.accelZ,
-        s.gyroX, s.gyroY, s.gyroZ, s.magnoX, s.magnoY, s.magnoZ, s.light
+        s.gyroX, s.gyroY, s.gyroZ, s.magnoX, s.magnoY, s.magnoZ, s.light, s.replayIteration
         FROM [Team_PI_Tables].[SmartDotData] s
         WHERE s.sessionId = @sessionId
         ORDER BY s.time ASC;";
@@ -91,6 +91,7 @@ public partial class RevMetrixDb
                         ? Convert.ToSingle(reader["light"])
                         : Convert.ToSingle(Convert.ToDouble(reader["light"]))
                         : 0.0f,
+                ReplayIteration = reader["replayIteration"] != DBNull.Value ? Convert.ToInt32(reader["replayIteration"]) : 0
             };
             smartDotDataList.Add(data);
         }

@@ -18,4 +18,5 @@ public class PiHeatData : Poco
     public float Time { get; set; }
     public float Value { get; set; }
     public int MotorId { get; set; }
+    public int ReplayIteration { get; set; }
 }

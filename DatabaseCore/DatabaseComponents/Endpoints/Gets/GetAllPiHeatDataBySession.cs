@@ -17,7 +17,7 @@ public partial class RevMetrixDb
             return new List<PiHeatData> { new PiHeatData() } ;
         }
         
-        string selectQuery = @"SELECT h.id, h.sessionId, h.time, h.value, h.motorId
+        string selectQuery = @"SELECT h.id, h.sessionId, h.time, h.value, h.motorId, h.replayIteration
                                FROM [Team_PI_Tables].[HeatData] h
                                WHERE h.sessionId = @sessionId
                                ORDER BY h.time ASC;";
@@ -43,6 +43,7 @@ public partial class RevMetrixDb
                         : Convert.ToSingle(Convert.ToDouble(reader["value"]))
                     : 0.0f,
                 MotorId = reader["motorId"] != DBNull.Value ? Convert.ToInt32(reader["motorId"]) : 0,
+                ReplayIteration = reader["replayIteration"] != DBNull.Value ? Convert.ToInt32(reader["replayIteration"]) : 0
             };
             heatDataList.Add(h);
         }

@@ -21,4 +21,7 @@ public class HeatData
     
     [Required]
     public float MotorId { get; set; }
+    
+    [Required]
+    public int ReplayIteration { get; set; }
 }

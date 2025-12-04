@@ -47,4 +47,6 @@ public class PiSmartDotData : Poco
     public float MG_Z { get; set; }
     
     public float LT { get; set; }
+    
+    public int ReplayIteration { get; set; }
 }
