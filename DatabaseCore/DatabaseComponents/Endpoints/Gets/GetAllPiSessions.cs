@@ -5,7 +5,7 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-   public async Task<List<PiSession>> GetAllPiSessions(int rangeStart, int rangeEnd)
+   public async Task<List<PiSession>> GetAllPiSessions(String rangeStart, String rangeEnd)
    {
       ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
       using var connection = new SqlConnection(ConnectionString);
@@ -14,34 +14,27 @@ public partial class RevMetrixDb
       DateTime? startDate = null;
       DateTime? endDate = null;
 
-      // Convert yyyymmdd integer to DateTime (start of day)
-      if (rangeStart > 0)
+      // Convert yyyymmddhhmmss integer to DateTime (start of day)
+      if (rangeStart != "00000000000000")
       {
-         try
+         if (TryParseYmdhms(rangeStart, out var parsedDate))
          {
-            int y = rangeStart / 10000;
-            int m = (rangeStart / 100) % 100;
-            int d = rangeStart % 100;
-            startDate = new DateTime(y, m, d, 0, 0, 0, DateTimeKind.Utc);
+            startDate = parsedDate;
          }
-         catch
+         else
          {
             startDate = null; // invalid input -> treat as no bound
          }
       }
 
-      // Convert yyyymmdd integer to DateTime (end of day)
-      if (rangeEnd > 0)
+      // Convert yyyymmddhhmmss integer to DateTime (end of day)
+      if (rangeEnd != "00000000000000")
       {
-         try
+         if (TryParseYmdhms(rangeEnd, out var parsedDate))
          {
-            int y = rangeEnd / 10000;
-            int m = (rangeEnd / 100) % 100;
-            int d = rangeEnd % 100;
-            // end of day inclusive
-            endDate = new DateTime(y, m, d, 23, 59, 59, 999, DateTimeKind.Utc);
+            endDate = parsedDate;
          }
-         catch
+         else
          {
             endDate = null; // invalid input -> treat as no bound
          }
@@ -76,4 +69,42 @@ public partial class RevMetrixDb
       }
       return sessions;
    } 
+   
+   private static bool TryParseYmdhms(string input, out DateTime result)
+   {
+      result = default;
+      if (string.IsNullOrWhiteSpace(input) || input.Length != 14)
+         return false;
+
+    
+      for (int i = 0; i < 14; i++)
+         if (!char.IsDigit(input[i]))
+            return false;
+
+   
+      if (!int.TryParse(input.Substring(0, 4), out int year) ||
+          !int.TryParse(input.Substring(4, 2), out int month) ||
+          !int.TryParse(input.Substring(6, 2), out int day) ||
+          !int.TryParse(input.Substring(8, 2), out int hour) ||
+          !int.TryParse(input.Substring(10, 2), out int minute) ||
+          !int.TryParse(input.Substring(12, 2), out int second))
+      {
+         return false;
+      }
+
+      try
+      {
+         result = new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
+         Console.WriteLine($"Parsed DateTime: {result}");
+         return true;
+      }
+      catch
+      {
+         return false;
+      }
+   }
 }
+
+
+
+

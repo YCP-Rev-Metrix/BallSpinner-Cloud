@@ -48,4 +48,7 @@ public class SmartDotData
     
     [Required]
     public int ReplayIteration { get; set; }
+    
+    [Required]
+    public int DataSelector { get; set; }
 }

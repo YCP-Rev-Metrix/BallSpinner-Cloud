@@ -7,8 +7,8 @@ namespace Server.Controllers.DatabaseControllers.Gets;
 
 public class GetAllPiSessionsRequest
 {
-    public int? RangeStart { get; set; }
-    public int? RangeEnd { get; set; }
+    public String? RangeStart { get; set; }
+    public String? RangeEnd { get; set; }
 }
 
 [ApiController]
@@ -22,10 +22,12 @@ public class GetAllPiSessions : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RetrieveAllPiSessions([FromBody] GetAllPiSessionsRequest request)
     {
+        Console.WriteLine(request);
+        
         if (request == null) return BadRequest("request body is required");
 
-        int rangeStart = request.RangeStart ?? 0;
-        int rangeEnd = request.RangeEnd ?? 0;
+        String rangeStart = request.RangeStart ?? "00000000000000";
+        String rangeEnd = request.RangeEnd ?? "00000000000000";
 
         var sessions = await ServerState.UserStore.GetAllPiSessions(rangeStart, rangeEnd);
         return sessions == null ? Problem("unable to retrieve balls from the database") : Ok(sessions);

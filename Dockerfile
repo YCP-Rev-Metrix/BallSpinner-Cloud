@@ -18,4 +18,6 @@ RUN dotnet publish "Server.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+# Copy Liquibase files for database migrations from build stage
+COPY --from=build /src/DatabaseCore/Liquibase /app/Liquibase
 ENTRYPOINT ["dotnet", "Server.dll"]

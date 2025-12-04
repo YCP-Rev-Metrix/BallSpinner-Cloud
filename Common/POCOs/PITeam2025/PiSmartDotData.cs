@@ -4,7 +4,7 @@ public class PiSmartDotData : Poco
 {
     public PiSmartDotData() {}
 
-    public PiSmartDotData(int id, int sessionId, float time,
+    public PiSmartDotData(int id, int sessionId, float time, int dataSelector,
         float xl_x, float xl_y, float xl_z,
         float gy_x, float gy_y, float gy_z,
         float mg_x, float mg_y, float mg_z,
@@ -13,6 +13,7 @@ public class PiSmartDotData : Poco
         Id = id;
         SessionId = sessionId;
         Time = time;
+        DataSelector = dataSelector;
         XL_X = xl_x;
         XL_Y = xl_y;
         XL_Z = xl_z;
@@ -30,6 +31,8 @@ public class PiSmartDotData : Poco
     public int SessionId { get; set; }
     
     public float Time { get; set; }
+    
+    public float DataSelector { get; set; }
     
     // Acceleration Data XYZ
     public float XL_X { get; set; }
