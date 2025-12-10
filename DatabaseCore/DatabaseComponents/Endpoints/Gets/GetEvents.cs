@@ -14,7 +14,7 @@ public partial class RevMetrixDb
         
         string selectQuery = @"
             SELECT b.id, b.name, b.type, b.location, b.average, b.stats, b.standings
-            FROM [Events] b
+            FROM [combinedDB].[Events] b
             JOIN [User] u ON b.userId = u.id
             WHERE u.username = @Username;";
         

@@ -13,7 +13,7 @@ public partial class RevMetrixDb
         
         string selectQuery = @"
             SELECT id, gameId, shotOne, shotTwo, frameNumber, lane, result
-            FROM [Frames]
+            FROM [combinedDB].[Frames]
             WHERE gameId = @gameId
         ";
 
