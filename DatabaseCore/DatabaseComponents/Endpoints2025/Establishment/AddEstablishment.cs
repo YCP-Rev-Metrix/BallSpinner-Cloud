@@ -23,7 +23,7 @@ public partial class RevMetrixDb
         }
         LogWriter.LogInfo(connection1);
 
-        string insertQuery = "INSERT INTO combinedDB.[Establishments] (Name, Lanes, Type, Location) " +
+        string insertQuery = "INSERT INTO [combinedDB].[Establishments] (Name, Lanes, Type, Location) " +
                              "VALUES (@Name, @Lanes, @Type, @Location)";
 
         using var command = new SqlCommand(insertQuery, connection1);

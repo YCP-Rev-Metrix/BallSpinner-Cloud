@@ -24,7 +24,7 @@ public partial class RevMetrixDb
         }
         LogWriter.LogInfo(connection1);
 
-        string insertQuery = "INSERT INTO combinedDB.[Shots] (Type, SmartDotID, SesssionId, BallID, FrameID, ShotNumber, LeaveType, Side, Position, Comment) " +
+        string insertQuery = "INSERT INTO [combinedDB].[Shots] (Type, SmartDotID, SesssionId, BallID, FrameID, ShotNumber, LeaveType, Side, Position, Comment) " +
                              "VALUES (@Type, @SmartDotID, @SesssionID, @BallID, @FrameID, @ShotNumber, @LeaveType, @Side, @Position, @Comment)";
 
         using var command = new SqlCommand(insertQuery, connection1);

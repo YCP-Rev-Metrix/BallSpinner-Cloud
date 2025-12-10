@@ -16,7 +16,9 @@ public class GetAllPiDiagnosticScriptBySession : AbstractFeaturedController
     public async Task<IActionResult> RetrieveAllPiShotsBySession(int sessionId)
     {
         var diagnosticScripts = await ServerState.UserStore.GetAllPiDiagnosticScriptsBySession(sessionId);
-        return diagnosticScripts == null ? Problem("unable to retrieve diagnostic scripts from the database") : Ok(diagnosticScripts);
+        return diagnosticScripts == null 
+            ? Problem("unable to retrieve diagnostic scripts from the database") :
+            Ok(diagnosticScripts);
     }
     
 }

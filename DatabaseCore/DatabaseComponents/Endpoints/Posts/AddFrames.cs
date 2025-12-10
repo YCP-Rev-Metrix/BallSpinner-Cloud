@@ -30,7 +30,7 @@ public partial class RevMetrixDb
             }
 
             string insertFrameQuery = @"
-            INSERT INTO [Frames] (gameId, shotOne, shotTwo, frameNumber, lane, result)
+            INSERT INTO [combinedDB].[Frames] (gameId, shotOne, shotTwo, frameNumber, lane, result)
             OUTPUT INSERTED.id
             VALUES (@gameId, @shotOne, @shotTwo, @frameNumber, @lane, @result)";
 

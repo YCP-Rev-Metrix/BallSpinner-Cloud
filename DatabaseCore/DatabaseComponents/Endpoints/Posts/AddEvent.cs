@@ -31,7 +31,7 @@ public partial class RevMetrixDb
             }
 
             string insertEventQuery = @"
-                INSERT INTO [Events] (userId, name, type, location, average, stats, standings)
+                INSERT INTO [combinedDB].[Events] (userId, name, type, location, average, stats, standings)
                 OUTPUT INSERTED.id
                 VALUES (@userId, @name, @type, @location, @average, @stats, @standings)";
             
