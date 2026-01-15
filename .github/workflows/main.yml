@@ -53,16 +53,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy Cloud to Digial Ocean Droplet
+      - uses: actions/checkout@v4
+      
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_DROPLET_PRIVKEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+      
+      - name: Upload Liquibase files to Digital Ocean server
+        run: |
+          # Create a tarball of the Liquibase directory
+          tar -czf liquibase.tar.gz -C DatabaseCore Liquibase
+          # Upload the tarball
+          scp -i ~/.ssh/deploy_key liquibase.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+          # Extract on the server, remove old directory if exists, and rename to lowercase
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "mkdir -p /ballspinner-api && rm -rf /ballspinner-api/liquibase && tar -xzf /tmp/liquibase.tar.gz -C /ballspinner-api && mv /ballspinner-api/Liquibase /ballspinner-api/liquibase 2>/dev/null || true && rm /tmp/liquibase.tar.gz"
+      
+      - name: Deploy to Digital Ocean Droplet
         uses: appleboy/ssh-action@master
         with:
-          host: ${{SECRETS.SERVER_HOST}}
-          key: ${{SECRETS.SSH_DROPLET_PRIVKEY}}
-          username: ${{SECRETS.SERVER_USER}}
-
+          host: ${{ secrets.SERVER_HOST }}
+          key: ${{ secrets.SSH_DROPLET_PRIVKEY }}
+          username: ${{ secrets.SERVER_USER }}
           script: |
-            
-            scp -o StrictHostKeyChecking=no -i /dev/stdin ./DatabaseCore/Liquibase/scripts/SQLScript/Fall2025DBChanges.sql ${{ secrets.DROPLET_USERNAME }}@${{ secrets.DROPLET_HOST }}:/ballspinner-api/liquibase/scripts/Fall2025DBChanges.sql
-            
             cd /root/ballSpinnerAPI
             ./redeploy.sh

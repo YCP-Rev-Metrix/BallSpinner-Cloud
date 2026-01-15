@@ -14,7 +14,7 @@ public partial class RevMetrixDb
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        string selectQuery = "SELECT ID FROM combinedDB.[Establishments]"; // Adjusted to select more fields
+        string selectQuery = "SELECT ID FROM combinedDB.[Shots]"; // Adjusted to select more fields
 
         using var command = new SqlCommand(selectQuery, connection);
 
