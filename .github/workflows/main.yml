@@ -51,32 +51,39 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup SSH
+      - name: Prepare Liquibase archive
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_DROPLET_PRIVKEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+          tar -czf liquibase.tar.gz -C DatabaseCore Liquibase
       
       - name: Upload Liquibase files to Digital Ocean server
-        run: |
-          # Create a tarball of the Liquibase directory
-          tar -czf liquibase.tar.gz -C DatabaseCore Liquibase
-          # Upload the tarball
-          scp -i ~/.ssh/deploy_key liquibase.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
-          # Extract on the server, remove old directory if exists, and rename to lowercase
-          ssh -i ~/.ssh/deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "mkdir -p /ballspinner-api && rm -rf /ballspinner-api/liquibase && tar -xzf /tmp/liquibase.tar.gz -C /ballspinner-api && mv /ballspinner-api/Liquibase /ballspinner-api/liquibase 2>/dev/null || true && rm /tmp/liquibase.tar.gz"
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_DROPLET_PRIVKEY }}
+          timeout: 300s
+          source: "liquibase.tar.gz"
+          target: "/tmp"
       
-      - name: Deploy to Digital Ocean Droplet
+      - name: Extract Liquibase and deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
-          key: ${{ secrets.SSH_DROPLET_PRIVKEY }}
           username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_DROPLET_PRIVKEY }}
+          timeout: 300s
+          command_timeout: 300s
           script: |
+            mkdir -p /ballspinner-api
+            cd /ballspinner-api
+            rm -rf liquibase
+            tar -xzf /tmp/liquibase.tar.gz
+            mv Liquibase liquibase || true
+            rm -f /tmp/liquibase.tar.gz
             cd /root/ballSpinnerAPI
             ./redeploy.sh
