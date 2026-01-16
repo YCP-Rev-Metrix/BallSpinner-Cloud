@@ -91,15 +91,14 @@ jobs:
           command_timeout: 300s
           script: |
             echo "Extracting Liquibase files..."
-            mkdir -p /ballspinner-api
-            cd /ballspinner-api
+            mkdir -p /root/ballSpinnerAPI
+            cd /root/ballSpinnerAPI
             rm -rf liquibase
             tar -xzf /tmp/liquibase.tar.gz
             mv Liquibase liquibase || true
             echo "Verifying extracted files:"
-            find /ballspinner-api/liquibase -type f -name "*.sql" -o -name "*.xml" | sort
+            find /root/ballSpinnerAPI/liquibase -type f -name "*.sql" -o -name "*.xml" | sort
             echo "File structure:"
-            ls -laR /ballspinner-api/liquibase/
+            ls -laR /root/ballSpinnerAPI/liquibase/
             rm -f /tmp/liquibase.tar.gz
-            cd /root/ballSpinnerAPI
             ./redeploy.sh
