@@ -18,4 +18,5 @@ services:
 
 networks:
   web-network:
-    driver: bridge
+    external: true
+    name: ballspinnerapi_web-network
