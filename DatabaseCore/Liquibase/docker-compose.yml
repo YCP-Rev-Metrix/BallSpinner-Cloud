@@ -9,9 +9,9 @@ services:
       - /root/ballSpinnerAPI/liquibase/scripts/SQLScript:/liquibase/scripts
     command: >
       /bin/bash -c "sleep 60 && liquibase 
-      --url=\"jdbc:sqlserver://sql_server:1433;databaseName=revmetrix-bs;trustServerCertificate=true;\" 
+      --url=\"jdbc:sqlserver://sql-Server:1433;databaseName=revmetrix-bs;trustServerCertificate=true;\" 
       --username=SA 
-      --password=Strong1PassMAN!!! 
+      --password=BigPass@Word! 
       --changeLogFile=changelog/changelog.xml update "
     networks:
       - web-network
