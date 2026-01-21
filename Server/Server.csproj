@@ -12,6 +12,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\DatabaseControllers2025\Ball\**" />
+    <Compile Remove="Controllers\DatabaseControllers2025\NewFolder\**" />
+    <Compile Remove="Controllers\DatabaseControllers2025\Posts\**" />
+    <Content Remove="Controllers\DatabaseControllers2025\Ball\**" />
+    <Content Remove="Controllers\DatabaseControllers2025\NewFolder\**" />
+    <Content Remove="Controllers\DatabaseControllers2025\Posts\**" />
+    <EmbeddedResource Remove="Controllers\DatabaseControllers2025\Ball\**" />
+    <EmbeddedResource Remove="Controllers\DatabaseControllers2025\NewFolder\**" />
+    <EmbeddedResource Remove="Controllers\DatabaseControllers2025\Posts\**" />
+    <None Remove="Controllers\DatabaseControllers2025\Ball\**" />
+    <None Remove="Controllers\DatabaseControllers2025\NewFolder\**" />
+    <None Remove="Controllers\DatabaseControllers2025\Posts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.12" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
@@ -23,9 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\DatabaseControllers2025\Ball\" />
-    <Folder Include="Controllers\DatabaseControllers2025\Posts\" />
-    <Folder Include="Controllers\DatabaseControllers2025\NewFolder\" />
     <Folder Include="Controllers\DatabaseControllers\Patches\" />
     <Folder Include="Logs\" />
   </ItemGroup>

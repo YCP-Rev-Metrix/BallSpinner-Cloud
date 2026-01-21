@@ -11,7 +11,7 @@ public partial class RevMetrixDb
     {
         // If not local use Server conn string, if local use local conn string
         //ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-        ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
+        ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection1 = new SqlConnection(ConnectionString);
         try
         {
