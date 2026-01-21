@@ -14,7 +14,7 @@ public partial class RevMetrixDb
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        string selectQuery = "SELECT ID FROM combinedDB.[Games]"; // Adjusted to select more fields
+        const string selectQuery = "SELECT ID, GameNumber, Lanes, Score, Win, StartingLane, SessionID, TeamResult, IndividualResult FROM combinedDB.[Games]"; // Adjusted to select more fields
 
         using var command = new SqlCommand(selectQuery, connection);
 
@@ -26,7 +26,15 @@ public partial class RevMetrixDb
             // construct a new UserIdentification object for each row
             var game = new GameTable
             {
-                ID = (int)reader["ID"]
+                ID = (int)reader["ID"],
+                GameNumber = reader["GameNumber"].ToString() ?? string.Empty,
+                Lanes = reader["Lanes"].ToString() ?? string.Empty,
+                Score = (int)reader["Score"],
+                Win = (int)reader["Win"],
+                StartingLane = (int)reader["StartingLane"],
+                SessionID = (int)reader["SessionID"],
+                TeamResult = (int)reader["TeamResult"],
+                IndividualResult = (int)reader["IndividualResult"]
             };
 
             games.Add(game);

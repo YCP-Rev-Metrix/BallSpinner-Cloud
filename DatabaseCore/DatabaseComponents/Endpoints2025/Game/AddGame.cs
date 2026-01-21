@@ -12,8 +12,8 @@ public partial class RevMetrixDb
     public async Task<bool> AddGame(string gameNumber, string lanes, int score, int win, int startingLane, int sessionID, int teamResult, int individualResult)
     {
         // If not local use Server conn string, if local use local conn string
-        //ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-        ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
+        ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
+        //ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
         using var connection1 = new SqlConnection(ConnectionString);
         try
         {

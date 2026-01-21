@@ -10,8 +10,8 @@ public partial class RevMetrixDb
     public async Task<bool> AddEstablishment(string? name, string? lanes, string? type, string? location)
     {
         // If not local use Server conn string, if local use local conn string
-        //ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
+        //ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection1 = new SqlConnection(ConnectionString);
         try
         {
@@ -23,7 +23,7 @@ public partial class RevMetrixDb
         }
         LogWriter.LogInfo(connection1);
 
-        string insertQuery = "INSERT INTO [combinedDB].[Establishments] (Name, Lanes, Type, Location) " +
+        const string insertQuery = "INSERT INTO [combinedDB].[Establishments] (Name, Lanes, Type, Location) " +
                              "VALUES (@Name, @Lanes, @Type, @Location)";
 
         using var command = new SqlCommand(insertQuery, connection1);

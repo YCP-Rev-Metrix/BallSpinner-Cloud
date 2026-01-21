@@ -11,8 +11,8 @@ public partial class RevMetrixDb
     public async Task<bool> AddShot(int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment)
     {
         // If not local use Server conn string, if local use local conn string
-        //ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-        ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
+        ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
+        //ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
         using var connection1 = new SqlConnection(ConnectionString);
         try
         {

@@ -14,7 +14,7 @@ public partial class RevMetrixDb
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        string selectQuery = "SELECT ID FROM combinedDB.[Establishments]"; // Adjusted to select more fields
+        const string selectQuery = "SELECT ID, Name, Lanes, Type, Location FROM [combinedDB].[Establishments]";
 
         using var command = new SqlCommand(selectQuery, connection);
 
@@ -26,7 +26,11 @@ public partial class RevMetrixDb
             // construct a new UserIdentification object for each row
             var establishment = new EstablishmentTable
             {
-                ID = (int)reader["ID"]
+                ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                Name = reader["Name"] as string,
+                Lanes = reader["Lanes"] as string,
+                Type = reader["Type"] as string,
+                Location = reader["Location"] as string
             };
 
             establishments.Add(establishment);
