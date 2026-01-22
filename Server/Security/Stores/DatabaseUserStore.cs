@@ -143,9 +143,9 @@ public class DatabaseUserStore : AbstractUserStore
         return ServerState.UserDatabase.RemoveShot(shotname, username);
     }
 
-    public override async Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email)
+    public override async Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phoneNumber, string? email, string? lastLogin, string? hand)
     {
-        return await ServerState.UserDatabase.AddUserCombined(firstname, lastname, username, hashedPassword, phone, email);
+        return await ServerState.UserDatabase.AddUserCombined(firstname, lastname, username, hashedPassword, phoneNumber, email, lastLogin, hand);
     }
 
     public override async Task<(bool success, List<UserTable> users)> GetAppUsers()
