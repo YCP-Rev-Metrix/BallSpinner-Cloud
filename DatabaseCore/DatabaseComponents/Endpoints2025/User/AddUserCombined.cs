@@ -7,7 +7,7 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email)
+    public async Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email, string lastLogin, string hand)
     {
         // If not local use Server conn string, if local use local conn string
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
@@ -23,8 +23,8 @@ public partial class RevMetrixDb
         }
         LogWriter.LogInfo(connection1);
 
-        string insertQuery = "INSERT INTO combinedDB.[Users] (Username, Firstname, Lastname, HashedPassword, Email, PhoneNumber) " +
-                             "VALUES (@Username, @Firstname, @Lastname, @HashedPassword, @Email, @PhoneNumber)";
+        string insertQuery = "INSERT INTO combinedDB.[Users] (Username, Firstname, Lastname, HashedPassword, Email, PhoneNumber, LastLogin, Hand) " +
+                             "VALUES (@Username, @Firstname, @Lastname, @HashedPassword, @Email, @PhoneNumber, @LastLogin, @Hand)";
 
         using var command = new SqlCommand(insertQuery, connection1);
         if (username is null)
@@ -39,6 +39,8 @@ public partial class RevMetrixDb
         command.Parameters.Add("@HashedPassword", SqlDbType.VarBinary, -1).Value = (object?)hashedPassword ?? DBNull.Value;
         command.Parameters.Add("@Email", SqlDbType.VarChar, 100).Value = (object?)email ?? DBNull.Value;
         command.Parameters.Add("@PhoneNumber", SqlDbType.VarChar, 15).Value = (object?)phone ?? DBNull.Value;
+        command.Parameters.Add("@LastLogin", SqlDbType.VarChar).Value = (object?)lastLogin ?? DBNull.Value;
+        command.Parameters.Add("@Hand", SqlDbType.VarChar).Value = (object?)hand ?? DBNull.Value;
 
 
         // Execute the query

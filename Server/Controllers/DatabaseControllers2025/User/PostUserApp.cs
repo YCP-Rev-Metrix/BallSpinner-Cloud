@@ -1,8 +1,10 @@
 using Common.Logging;
 using Common.POCOs;
+using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
+using System.ComponentModel.DataAnnotations;
 
 namespace Server.Controllers.DatabaseControllers2025.User;
 
@@ -18,22 +20,10 @@ public class PostUserApp : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    public async Task<IActionResult> InsertUserCombined([FromBody] UserAppRequest request)
+    public async Task<IActionResult> InsertUserCombined([FromBody] UserTable request)
     {
-        // Hash the password here as needed
-        byte[] data = new byte[10]; // Replace with actual hash logic
         bool success = await ServerState.UserStore.AddUserCombined(
-            request.Firstname, request.Lastname, request.Username, data, request.Phone, request.Email);
+            request.Firstname, request.Lastname, request.Username, request.HashedPassword, request.PhoneNumber, request.Email, request.LastLogin, request.Hand);
         return !success ? Problem("unable to add user to the database") : Ok("user inserted successfully");
-    }
-
-    public class UserAppRequest
-    {
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Phone { get; set; }
-        public string Email { get; set; }
     }
 }
