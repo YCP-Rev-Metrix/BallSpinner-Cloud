@@ -1,7 +1,6 @@
 ﻿using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Amazon.S3.Util;
 
 namespace Server.Services;
 
@@ -12,18 +11,25 @@ public class SpacesVideoService
 
     public SpacesVideoService(IConfiguration config)
     {
-        var endpoint = config["Spaces:Endpoint"];
-        var region = config["Spaces:Region"];
+        var endpoint = config["Spaces:Endpoint"];    // e.g., https://sfo3.digitaloceanspaces.com
+        var region = config["Spaces:Region"];        // must be "us-east-1"
         var accessKey = config["Spaces:AccessKey"];
         var secretKey = config["Spaces:SecretKey"];
         _bucket = config["Spaces:BucketName"];
 
+        // Validate config early (do not log secrets)
+        if (string.IsNullOrWhiteSpace(endpoint)) throw new InvalidOperationException("Spaces endpoint is missing.");
+        if (string.IsNullOrWhiteSpace(region)) throw new InvalidOperationException("Spaces region is missing.");
+        if (string.IsNullOrWhiteSpace(accessKey)) throw new InvalidOperationException("Spaces access key is missing.");
+        if (string.IsNullOrWhiteSpace(secretKey)) throw new InvalidOperationException("Spaces secret key is missing.");
+        if (string.IsNullOrWhiteSpace(_bucket)) throw new InvalidOperationException("Spaces bucket name is missing.");
+
         var s3Config = new AmazonS3Config
         {
-            ServiceURL = endpoint,       // DO Spaces endpoint
-            ForcePathStyle = true,       // required for some Spaces regions
+            ServiceURL = endpoint,             // Regional endpoint only
+            ForcePathStyle = true,
             //SignatureVersion = "v4",
-            RegionEndpoint = RegionEndpoint.GetBySystemName(region)
+            RegionEndpoint = RegionEndpoint.GetBySystemName(region) // use us-east-1 for Spaces
         };
 
         _s3 = new AmazonS3Client(accessKey, secretKey, s3Config);
@@ -37,7 +43,7 @@ public class SpacesVideoService
             Key = key,
             InputStream = content,
             ContentType = contentType,
-            CannedACL = S3CannedACL.Private // keep private; use pre-signed URLs for access
+            CannedACL = S3CannedACL.Private
         };
 
         var resp = await _s3.PutObjectAsync(put, ct);
