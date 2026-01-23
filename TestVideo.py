@@ -16,7 +16,7 @@ def fail(msg, resp=None):
 
 def authorize(username: str, password: str) -> str:
     resp = requests.post(
-        f"{BASE}/posts/Authorize",
+        f"{BASE}/api/posts/Authorize",
         json={"username": username, "password": password},
         headers={"Content-Type": "application/json"},
         verify=VERIFY,
@@ -39,7 +39,7 @@ def upload_video(token: str, file_path: Path, folder: str = "videos") -> str:
     with file_path.open("rb") as f:
         files = {"file": (file_path.name, f, "video/mp4")}
         resp = requests.post(
-            f"{BASE}/videos/upload",
+            f"{BASE}/api/videos/upload",
             params={"folder": folder},
             headers=headers,
             files=files,
