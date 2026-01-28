@@ -1,5 +1,4 @@
-﻿using Amazon;
-using Amazon.S3;
+﻿using Amazon.S3;
 using Amazon.S3.Model;
 
 namespace Server.Services;
@@ -11,25 +10,25 @@ public class SpacesVideoService
 
     public SpacesVideoService(IConfiguration config)
     {
-        var endpoint = config["Spaces:Endpoint"];    // e.g., https://sfo3.digitaloceanspaces.com
-        var region = config["Spaces:Region"];        // must be "us-east-1"
-        var accessKey = config["Spaces:AccessKey"];
-        var secretKey = config["Spaces:SecretKey"];
-        _bucket = config["Spaces:BucketName"];
+        // Local testing only. Replace with user-secrets or environment variables in production.
+        var endpoint = "https://sfo3.digitaloceanspaces.com";
+        var region = "us-east-1";
+        var accessKey = "DO00DCK2A4PNNDUC7JQT";
+        var secretKey = "+Vk1rWVihl6zpyAxJZpfgFL5NhLtNYnxa0fclAjXvGE";
+        _bucket = "revmetrix-video-storage";
 
-        // Validate config early (do not log secrets)
         if (string.IsNullOrWhiteSpace(endpoint)) throw new InvalidOperationException("Spaces endpoint is missing.");
         if (string.IsNullOrWhiteSpace(region)) throw new InvalidOperationException("Spaces region is missing.");
         if (string.IsNullOrWhiteSpace(accessKey)) throw new InvalidOperationException("Spaces access key is missing.");
         if (string.IsNullOrWhiteSpace(secretKey)) throw new InvalidOperationException("Spaces secret key is missing.");
         if (string.IsNullOrWhiteSpace(_bucket)) throw new InvalidOperationException("Spaces bucket name is missing.");
+        if (endpoint.Contains(_bucket + ".", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Endpoint must be the regional endpoint (e.g., https://sfo3.digitaloceanspaces.com), not the bucket URL.");
 
         var s3Config = new AmazonS3Config
         {
-            ServiceURL = endpoint,             // Regional endpoint only
-            ForcePathStyle = true,
-            //SignatureVersion = "v4",
-            RegionEndpoint = RegionEndpoint.GetBySystemName(region) // use us-east-1 for Spaces
+            ServiceURL = endpoint,
+            ForcePathStyle = true
         };
 
         _s3 = new AmazonS3Client(accessKey, secretKey, s3Config);
@@ -73,7 +72,7 @@ public class SpacesVideoService
     {
         try
         {
-            var resp = await _s3.GetObjectMetadataAsync(_bucket, key, ct);
+            var _ = await _s3.GetObjectMetadataAsync(_bucket, key, ct);
             return true;
         }
         catch (AmazonS3Exception e) when (e.StatusCode == System.Net.HttpStatusCode.NotFound)

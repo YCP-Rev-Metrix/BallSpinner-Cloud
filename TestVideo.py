@@ -2,7 +2,7 @@ import requests
 import sys
 from pathlib import Path
 
-BASE = "https://api.revmetrix.io"  # change to "https://api.revmetrix.io" when deployed or https://localhost:7238/api
+BASE = "https://api.revmetrix.io"  # change to "https://api.revmetrix.io" when deployed or https://localhost:7238
 VERIFY = True  # set True when using a valid cert in production
 
 
@@ -57,7 +57,7 @@ def upload_video(token: str, file_path: Path, folder: str = "videos") -> str:
 def get_presigned_url(token: str, key: str, ttl_seconds: int = 600) -> str:
     headers = {"Authorization": f"Bearer {token}"}
     resp = requests.get(
-        f"{BASE}/videos/presign",
+        f"{BASE}/api/videos/presign",
         params={"key": key, "ttlSeconds": ttl_seconds},
         headers=headers,
         verify=VERIFY,
@@ -104,7 +104,6 @@ def main():
     download_from_spaces(url, output_video)
 
     print("End-to-end video flow OK")
-
 
 if __name__ == "__main__":
     main()
