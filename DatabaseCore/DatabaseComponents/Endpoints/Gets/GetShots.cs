@@ -52,6 +52,7 @@ public partial class RevMetrixDb
                         double ballWeight = reader.GetFieldValue<double>(reader.GetOrdinal("weight"));
                         double ballDiameter= reader.GetFieldValue<double>(reader.GetOrdinal("diameter"));
                         string coreType = reader.GetFieldValue<string>(reader.GetOrdinal("core_type"));
+                        var id = reader.GetNullableValue<int>("id");
                         var simulatedShot = new ShotInfo
                         {
                             Name = shotName,
@@ -64,7 +65,7 @@ public partial class RevMetrixDb
                         shots[shotName] = new SimulatedShot();
                         shots[shotName].shotinfo = simulatedShot;
                         shots[shotName].data = new List<SampleData?>();
-                        shots[shotName].ball = new Ball(ballName, ballDiameter, ballWeight, coreType);
+                        shots[shotName].ball = new Ball(id, ballName, ballDiameter, ballWeight, coreType);
                     }
 
                     var sampleData = new SampleData

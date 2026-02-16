@@ -62,6 +62,15 @@ internal abstract class Program
                 };
             });
 
+        // Spaces service registration (reads config from appsettings/environment)
+        builder.Services.AddSingleton<Server.Services.SpacesVideoService>();
+
+        // Optional: raise upload limits for large videos
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.Limits.MaxRequestBodySize = 500 * 1024 * 1024; // 500 MB
+        });
+
         WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.

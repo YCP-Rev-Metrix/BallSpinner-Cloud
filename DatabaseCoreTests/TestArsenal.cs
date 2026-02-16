@@ -35,7 +35,7 @@ public class TestArsenal: DatabaseCoreTestSetup
             CoreType = "Symmetrical"
         };
 
-        bool success = await ServerState.UserStore.AddBall(ball, TestUsername);
+        bool success = await ServerState.UserStore.AddBalls(ball, TestUsername);
         Assert.True(success);
     }
 
@@ -51,7 +51,7 @@ public class TestArsenal: DatabaseCoreTestSetup
         };
         string testUserName = "nouser";
 
-        bool success = await ServerState.UserStore.AddBall(ball, testUserName);
+        bool success = await ServerState.UserStore.AddBalls(ball, testUserName);
         Assert.False(success);
     }
     
@@ -93,7 +93,7 @@ public class TestArsenal: DatabaseCoreTestSetup
             CoreType = "Symmetrical"
         };
         // Insert the ball first
-        await ServerState.UserStore.AddBall(ball, TestUsername);
+        await ServerState.UserStore.AddBalls(ball, TestUsername);
         // Make sure the ball is deleted
         bool success = await ServerState.UserStore.DeleteBallByName(testBallName, TestUsername);
         Assert.True(success);
