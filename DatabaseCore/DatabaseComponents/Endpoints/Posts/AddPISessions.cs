@@ -9,8 +9,8 @@ public partial class RevMetrixDb
 {
     public async Task<List<int>> AddPISessions(List<PiSession> piSessions)
     {
-        //ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-        ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
+        ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
+        //ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
         if (string.IsNullOrEmpty(ConnectionString))
         {
             throw new InvalidOperationException("Connection string is not set.");

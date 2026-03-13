@@ -10,7 +10,6 @@ public class SpacesVideoService
 
     public SpacesVideoService(IConfiguration config)
     {
-        // Local testing only. Replace with user-secrets or environment variables in production.
         var endpoint = "https://sfo3.digitaloceanspaces.com";
         var region = "us-east-1";
         var accessKey = "DO00DCK2A4PNNDUC7JQT";

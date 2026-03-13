@@ -8,8 +8,8 @@ public partial class RevMetrixDb
 {
     public async Task<(bool success, byte[] salt, string roles, byte[] hashedPassword)> GetUserValidData(string? username)
     {
-        //string ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-        string ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
+        string ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
+        //string ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
 
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();

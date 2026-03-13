@@ -5,7 +5,6 @@ from pathlib import Path
 BASE = "https://api.revmetrix.io"  # change to "https://api.revmetrix.io" when deployed or https://localhost:7238
 VERIFY = True  # set True when using a valid cert in production
 
-
 def fail(msg, resp=None):
     if resp is not None:
         print(f"{msg}: status={resp.status_code}, body={resp.text}")

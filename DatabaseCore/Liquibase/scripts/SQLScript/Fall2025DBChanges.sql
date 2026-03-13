@@ -11,13 +11,19 @@ GO
 BEGIN TRANSACTION;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251021160455_AddTables')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     IF SCHEMA_ID(N'combinedDB') IS NULL EXEC(N'CREATE SCHEMA [combinedDB];');
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251021160455_AddTables')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+BEGIN
+    IF SCHEMA_ID(N'Team_PI_Tables') IS NULL EXEC(N'CREATE SCHEMA [Team_PI_Tables];');
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     CREATE TABLE [combinedDB].[Balls] (
         [Id] int NOT NULL IDENTITY,
@@ -30,7 +36,47 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251021160455_AddTables')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+BEGIN
+    CREATE TABLE [Team_PI_Tables].[DiagnosticScript] (
+        [Id] int NOT NULL IDENTITY,
+        [SessionId] int NOT NULL,
+        [Time] real NOT NULL,
+        [MotorId] int NOT NULL,
+        [Instruction] real NOT NULL,
+        CONSTRAINT [PK_DiagnosticScript] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+BEGIN
+    CREATE TABLE [Team_PI_Tables].[EncoderData] (
+        [Id] int NOT NULL IDENTITY,
+        [SessionId] int NOT NULL,
+        [Time] real NOT NULL,
+        [Pulses] real NOT NULL,
+        [MotorId] int NOT NULL,
+        [ReplayIteration] int NOT NULL,
+        CONSTRAINT [PK_EncoderData] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+BEGIN
+    CREATE TABLE [combinedDB].[Establishments] (
+        [ID] int NOT NULL IDENTITY,
+        [Name] nvarchar(max) NOT NULL,
+        [Lanes] nvarchar(max) NOT NULL,
+        [Type] nvarchar(max) NOT NULL,
+        [Location] nvarchar(max) NOT NULL,
+        CONSTRAINT [PK_Establishments] PRIMARY KEY ([ID])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     CREATE TABLE [combinedDB].[Events] (
         [Id] int NOT NULL IDENTITY,
@@ -46,7 +92,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251021160455_AddTables')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     CREATE TABLE [combinedDB].[Frames] (
         [Id] int NOT NULL IDENTITY,
@@ -61,50 +107,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251021160455_AddTables')
-BEGIN
-    CREATE TABLE [combinedDB].[Users] (
-        [Id] int NOT NULL IDENTITY,
-        [Firstname] nvarchar(50) NOT NULL,
-        [Lastname] nvarchar(50) NOT NULL,
-        [Username] nvarchar(50) NOT NULL,
-        [HashedPassword] varbinary(max) NOT NULL,
-        [Email] nvarchar(max) NOT NULL,
-        [PhoneNumber] nvarchar(12) NOT NULL,
-        [LastLogin] nvarchar(max) NOT NULL,
-        [Hand] nvarchar(max) NOT NULL,
-        CONSTRAINT [PK_Users] PRIMARY KEY ([Id])
-    );
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251021160455_AddTables')
-BEGIN
-    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20251021160455_AddTables', N'7.0.20');
-END;
-GO
-
-COMMIT;
-GO
-
-BEGIN TRANSACTION;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251029015335_UsersEstabGamesSeshShots')
-BEGIN
-    CREATE TABLE [combinedDB].[Establishments] (
-        [ID] int NOT NULL IDENTITY,
-        [Name] nvarchar(max) NOT NULL,
-        [Lanes] nvarchar(max) NOT NULL,
-        [Type] nvarchar(max) NOT NULL,
-        [Location] nvarchar(max) NOT NULL,
-        CONSTRAINT [PK_Establishments] PRIMARY KEY ([ID])
-    );
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251029015335_UsersEstabGamesSeshShots')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     CREATE TABLE [combinedDB].[Games] (
         [ID] int NOT NULL IDENTITY,
@@ -121,7 +124,36 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251029015335_UsersEstabGamesSeshShots')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+BEGIN
+    CREATE TABLE [Team_PI_Tables].[HeatData] (
+        [Id] int NOT NULL IDENTITY,
+        [SessionId] int NOT NULL,
+        [Time] real NOT NULL,
+        [Value] real NOT NULL,
+        [MotorId] real NOT NULL,
+        [ReplayIteration] int NOT NULL,
+        CONSTRAINT [PK_HeatData] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+BEGIN
+    CREATE TABLE [Team_PI_Tables].[PiSession] (
+        [Id] int NOT NULL IDENTITY,
+        [TimeStamp] datetime2 NOT NULL,
+        [Name] nvarchar(max) NOT NULL,
+        [IsShotMode] bit NOT NULL,
+        [Spin_Instruction_Points] nvarchar(max) NOT NULL,
+        [Tilt_Instruction_Points] nvarchar(max) NOT NULL,
+        [Angle_Instruction_Points] nvarchar(max) NOT NULL,
+        CONSTRAINT [PK_PiSession] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     CREATE TABLE [combinedDB].[Sessions] (
         [ID] int NOT NULL IDENTITY,
@@ -140,7 +172,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251029015335_UsersEstabGamesSeshShots')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     CREATE TABLE [combinedDB].[Shots] (
         [ID] int NOT NULL IDENTITY,
@@ -159,77 +191,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251029015335_UsersEstabGamesSeshShots')
-BEGIN
-    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20251029015335_UsersEstabGamesSeshShots', N'7.0.20');
-END;
-GO
-
-COMMIT;
-GO
-
-BEGIN TRANSACTION;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251104170247_AddPiTables')
-BEGIN
-    IF SCHEMA_ID(N'Team_PI_Tables') IS NULL EXEC(N'CREATE SCHEMA [Team_PI_Tables];');
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251104170247_AddPiTables')
-BEGIN
-    CREATE TABLE [Team_PI_Tables].[DiagnosticScript] (
-        [Id] int NOT NULL IDENTITY,
-        [SessionId] int NOT NULL,
-        [Time] real NOT NULL,
-        [MotorId] int NOT NULL,
-        [Instruction] real NOT NULL,
-        CONSTRAINT [PK_DiagnosticScript] PRIMARY KEY ([Id])
-    );
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251104170247_AddPiTables')
-BEGIN
-    CREATE TABLE [Team_PI_Tables].[EncoderData] (
-        [Id] int NOT NULL IDENTITY,
-        [SessionId] int NOT NULL,
-        [Time] real NOT NULL,
-        [Pulses] real NOT NULL,
-        [MotorId] int NOT NULL,
-        CONSTRAINT [PK_EncoderData] PRIMARY KEY ([Id])
-    );
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251104170247_AddPiTables')
-BEGIN
-    CREATE TABLE [Team_PI_Tables].[HeatData] (
-        [Id] int NOT NULL IDENTITY,
-        [SessionId] int NOT NULL,
-        [Time] real NOT NULL,
-        [Value] real NOT NULL,
-        [MotorId] real NOT NULL,
-        CONSTRAINT [PK_HeatData] PRIMARY KEY ([Id])
-    );
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251104170247_AddPiTables')
-BEGIN
-    CREATE TABLE [Team_PI_Tables].[PiSession] (
-        [Id] int NOT NULL IDENTITY,
-        [TimeStamp] datetime2 NOT NULL,
-        [Name] nvarchar(max) NOT NULL,
-        [IsShotMode] bit NOT NULL,
-        CONSTRAINT [PK_PiSession] PRIMARY KEY ([Id])
-    );
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251104170247_AddPiTables')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     CREATE TABLE [Team_PI_Tables].[ShotScript] (
         [Id] int NOT NULL IDENTITY,
@@ -243,7 +205,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251104170247_AddPiTables')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     CREATE TABLE [Team_PI_Tables].[SmartDotData] (
         [Id] int NOT NULL IDENTITY,
@@ -259,137 +221,37 @@ BEGIN
         [MagnoY] real NOT NULL,
         [MagnoZ] real NOT NULL,
         [Light] real NOT NULL,
+        [ReplayIteration] int NOT NULL,
+        [DataSelector] int NOT NULL,
         CONSTRAINT [PK_SmartDotData] PRIMARY KEY ([Id])
     );
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251104170247_AddPiTables')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+BEGIN
+    CREATE TABLE [combinedDB].[Users] (
+        [Id] int NOT NULL IDENTITY,
+        [Firstname] nvarchar(50) NOT NULL,
+        [Lastname] nvarchar(50) NOT NULL,
+        [Username] nvarchar(50) NOT NULL,
+        [HashedPassword] varbinary(max) NOT NULL,
+        [Email] nvarchar(max) NOT NULL,
+        [PhoneNumber] nvarchar(12) NOT NULL,
+        [LastLogin] nvarchar(max) NOT NULL,
+        [Hand] nvarchar(max) NOT NULL,
+        CONSTRAINT [PK_Users] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20251104170247_AddPiTables', N'7.0.20');
+    VALUES (N'20260313162418_josh_changes2', N'7.0.20');
 END;
 GO
 
 COMMIT;
 GO
 
-BEGIN TRANSACTION;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251116200753_AddedPiTables')
-BEGIN
-    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20251116200753_AddedPiTables', N'7.0.20');
-END;
-GO
-
-COMMIT;
-GO
-
-BEGIN TRANSACTION;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251117231619_AddDataSelectorToSmartDotTable')
-BEGIN
-    ALTER TABLE [Team_PI_Tables].[SmartDotData] ADD [DataSelector] int NOT NULL DEFAULT 0;
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251117231619_AddDataSelectorToSmartDotTable')
-BEGIN
-    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20251117231619_AddDataSelectorToSmartDotTable', N'7.0.20');
-END;
-GO
-
-COMMIT;
-GO
-
-BEGIN TRANSACTION;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204020317_AddedReplayIterationColumnToEncoderSmartDotHeat')
-BEGIN
-    DECLARE @var0 sysname;
-    SELECT @var0 = [d].[name]
-    FROM [sys].[default_constraints] [d]
-    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
-    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Team_PI_Tables].[SmartDotData]') AND [c].[name] = N'DataSelector');
-    IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [Team_PI_Tables].[SmartDotData] DROP CONSTRAINT [' + @var0 + '];');
-    ALTER TABLE [Team_PI_Tables].[SmartDotData] DROP COLUMN [DataSelector];
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204020317_AddedReplayIterationColumnToEncoderSmartDotHeat')
-BEGIN
-    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20251204020317_AddedReplayIterationColumnToEncoderSmartDotHeat', N'7.0.20');
-END;
-GO
-
-COMMIT;
-GO
-
-BEGIN TRANSACTION;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023329_DataSelector')
-BEGIN
-    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20251204023329_DataSelector', N'7.0.20');
-END;
-GO
-
-COMMIT;
-GO
-
-BEGIN TRANSACTION;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023631_ReplayIteration')
-BEGIN
-    ALTER TABLE [Team_PI_Tables].[SmartDotData] ADD [ReplayIteration] int NOT NULL DEFAULT 0;
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023631_ReplayIteration')
-BEGIN
-    ALTER TABLE [Team_PI_Tables].[HeatData] ADD [ReplayIteration] int NOT NULL DEFAULT 0;
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023631_ReplayIteration')
-BEGIN
-    ALTER TABLE [Team_PI_Tables].[EncoderData] ADD [ReplayIteration] int NOT NULL DEFAULT 0;
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204023631_ReplayIteration')
-BEGIN
-    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20251204023631_ReplayIteration', N'7.0.20');
-END;
-GO
-
-COMMIT;
-GO
-
-BEGIN TRANSACTION;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204024742_AddedReplayIteration')
-BEGIN
-    ALTER TABLE [Team_PI_Tables].[SmartDotData] ADD [DataSelector] int NOT NULL DEFAULT 0;
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20251204024742_AddedReplayIteration')
-BEGIN
-    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20251204024742_AddedReplayIteration', N'7.0.20');
-END;
-GO
-
-COMMIT;
-GO

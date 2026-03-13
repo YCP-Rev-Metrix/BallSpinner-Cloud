@@ -7,8 +7,8 @@ public partial class RevMetrixDb
 {
    public async Task<List<PiSession>> GetAllPiSessions(String rangeStart, String rangeEnd)
    {
-     // ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-      ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
+     ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
+      //ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
 
         using var connection = new SqlConnection(ConnectionString);
       await connection.OpenAsync();
