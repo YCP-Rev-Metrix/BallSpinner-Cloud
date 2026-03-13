@@ -17,4 +17,13 @@ public class PiSessionTable
     
     [Required]
     public bool IsShotMode { get; set; }
+
+    [Required]
+    public string Spin_Instruction_Points { get; set; }
+
+    [Required]
+    public string Tilt_Instruction_Points { get; set; }
+
+    [Required]
+    public string Angle_Instruction_Points { get; set; }
 }

@@ -10,7 +10,9 @@ public partial class RevMetrixDb
 {
     public async Task<(bool success, List<UserIdentification> users)> GetUsers()
     {
-        ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
+        //ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
+        ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
+
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 

@@ -7,8 +7,10 @@ public partial class RevMetrixDb
 {
    public async Task<List<PiSession>> GetAllPiSessions(String rangeStart, String rangeEnd)
    {
-      ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-      using var connection = new SqlConnection(ConnectionString);
+     // ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
+      ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
+
+        using var connection = new SqlConnection(ConnectionString);
       await connection.OpenAsync();
 
       DateTime? startDate = null;
@@ -63,7 +65,10 @@ public partial class RevMetrixDb
             Id = reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : null,
             Name = reader["name"] as string,
             TimeStamp = reader["timeStamp"] != DBNull.Value ? Convert.ToDateTime(reader["timeStamp"]) : null,
-            IsShotMode = reader["isShotMode"] != DBNull.Value ? Convert.ToBoolean(reader["isShotMode"]) : null
+            IsShotMode = reader["isShotMode"] != DBNull.Value ? Convert.ToBoolean(reader["isShotMode"]) : null,
+            Spin_Instruction_Points = reader["spin_Instruction_Points"] as string,
+            Tilt_Instruction_Points = reader["tilt_Instruction_Points"] as string,
+            Angle_Instruction_Points = reader["angle_Instruction_Points"] as string
          };
          sessions.Add(fetchedSessions);
       }

@@ -16,7 +16,7 @@ public class GetAllPiSessionsRequest
 [Route("api/gets/[controller]")]
 public class GetAllPiSessions : AbstractFeaturedController
 {
-    [HttpPost(Name = "GetAllPiSessions")]
+    [HttpGet(Name = "GetAllPiSessions")]
     [Consumes("application/json")]
     [ProducesResponseType(typeof(List<PiSession>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -72,81 +72,286 @@ class TestAPIEndpoint(unittest.TestCase):
         response = requests.post(url, json=payload, headers=headers, verify=False)
         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
-    def test_insert_ball(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
-        url = "https://localhost:7238/api/posts/PostBall"
-        headers = {
-            "Authorization": f"Bearer {token}"
-        }
-        payload = {
-            "Name" : "TestBall",
-            "Diameter" : "21.5",
-            "Weight" : "450",
-            "CoreType" : "Rubber"
-        }
+#     def test_insert_ball(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+#         url = "https://localhost:7238/api/posts/PostBall"
+#         headers = {
+#             "Authorization": f"Bearer {token}"
+#         }
+#         payload = {
+#             "Name" : "TestBall",
+#             "Diameter" : "21.5",
+#             "Weight" : "450",
+#             "CoreType" : "Rubber"
+#         }
 
-        response = requests.post(url, json=payload, headers=headers, verify=False)
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+#         response = requests.post(url, json=payload, headers=headers, verify=False)
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
-    def test_update_ball(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
-        url = "https://localhost:7238/api/puts/PutBall"
-        headers = {
-            "Authorization": f"Bearer {token}"
-        }
-        payload = {
-            "Id" : "1",
-            "Name" : "TestBallUpdate",
-            "Diameter" : "21.5",
-            "Weight" : "450",
-            "CoreType" : "Rubber"
-        }
+#     def test_update_ball(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+#         url = "https://localhost:7238/api/puts/PutBall"
+#         headers = {
+#             "Authorization": f"Bearer {token}"
+#         }
+#         payload = {
+#             "Id" : "1",
+#             "Name" : "TestBallUpdate",
+#             "Diameter" : "21.5",
+#             "Weight" : "450",
+#             "CoreType" : "Rubber"
+#         }
 
-        response = requests.put(url, json=payload, headers=headers, verify=False)
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+#         response = requests.put(url, json=payload, headers=headers, verify=False)
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
 
-## REGISTER TESTS
-    def test_get_all_app_users(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
+# ## REGISTER TESTS
+#     def test_get_all_app_users(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
 
-        url = "https://localhost:7238/api/gets/GetAppUsers"
-        headers = {
-                "Authorization": f"Bearer {token}"
-                }
+#         url = "https://localhost:7238/api/gets/GetAppUsers"
+#         headers = {
+#                 "Authorization": f"Bearer {token}"
+#                 }
         
-        response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
-        #print(response.json())
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+#         response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+#         #print(response.json())
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
-    def test_insert_establishment(self):
+#     def test_insert_establishment(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+
+#         url = "https://localhost:7238/api/posts/PostEstablishmentApp"
+#         headers = {
+#                 "Authorization": f"Bearer {token}"
+#                 }
+#         payload = {
+#             "Name": "TestName",
+#             "Lanes": "TestLane",
+#             "Type": "TestType",
+#             "Location": "TestLocation",  
+#             }
+        
+#         response = requests.post(url, json=payload, headers=headers, verify=False)
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+#     def test_get_all_app_establishments(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+
+#         url = "https://localhost:7238/api/gets/GetAppEstablishments"
+#         headers = {
+#                 "Authorization": f"Bearer {token}"
+#                 }
+        
+#         response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+#         #print(response.json())
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+#     def test_insert_shot(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+
+#         url = "https://localhost:7238/api/posts/PostAppShot"
+#         headers = {
+#                 "Authorization": f"Bearer {token}"
+#                 }
+#         payload = {
+#             "Type": "1",
+#             "SmartDotID": "2",
+#             "SessionID": "3",
+#             "BallID": "4",  
+#             "FrameID": "5", 
+#             "ShotNumber": "6", 
+#             "LeaveType": "7", 
+#             "Side": "testSide", 
+#             "Position": "TestPostion", 
+#             "Comment": "TestComment", 
+#             }
+        
+#         response = requests.post(url, json=payload, headers=headers, verify=False)
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+#     def test_get_all_app_shots(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+
+#         url = "https://localhost:7238/api/gets/GetAppShots"
+#         headers = {
+#                 "Authorization": f"Bearer {token}"
+#                 }
+        
+#         response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+#         #print(response.json())
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+
+#     def test_insert_game(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+
+#         url = "https://localhost:7238/api/posts/PostAppGame"
+#         headers = {
+#                 "Authorization": f"Bearer {token}"
+#                 }
+#         payload = {
+#             "GameNumber": "testGameNumber",
+#             "Lanes": "TestLanes",
+#             "Score": "1",
+#             "Win": "2",  
+#             "StartingLane": "3", 
+#             "SessionID": "4", 
+#             "TeamResult": "5", 
+#             "IndividualResult": "6", 
+#             }
+        
+#         response = requests.post(url, json=payload, headers=headers, verify=False)
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+#     def test_get_all_app_games(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+
+#         url = "https://localhost:7238/api/gets/GetAppGames"
+#         headers = {
+#                 "Authorization": f"Bearer {token}"
+#                 }
+        
+#         response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+#         print(response.json())
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+#     def test_insert_session(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+
+#         url = "https://localhost:7238/api/posts/PostAppSession"
+#         headers = {
+#                 "Authorization": f"Bearer {token}"
+#                 }
+#         payload = {
+#             "SessionNumber": "1",
+#             "EstablishmentID": "2",
+#             "EventID": "3",
+#             "DateTime": "4",  
+#             "TeamOpponent": "TestTeamOpp", 
+#             "IndividualOpponent": "TestIndOpp", 
+#             "Score": "5", 
+#             "Stats": "6",
+#             "TeamRecord": "7", 
+#             "IndividualRecord": "8", 
+#             }
+        
+#         response = requests.post(url, json=payload, headers=headers, verify=False)
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+#     def test_get_all_app_session(self):
+#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+#         url = "https://localhost:7238/api/posts/Authorize"
+#         payload = {
+#             'username': 'string',
+#             'password': 'string'
+#         }
+#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+#         if response.status_code != 200:
+#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+#         token = response.json().get("tokenA")
+
+#         url = "https://localhost:7238/api/gets/GetAppSessions"
+#         headers = {
+#                 "Authorization": f"Bearer {token}"
+#                 }
+        
+#         response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+#         print(response.json())
+#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+
+    def test_post_pi_sessions(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
         url = "https://localhost:7238/api/posts/Authorize"
         payload = {
@@ -158,21 +363,26 @@ class TestAPIEndpoint(unittest.TestCase):
             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
         token = response.json().get("tokenA")
 
-        url = "https://localhost:7238/api/posts/PostEstablishmentApp"
+        url = "https://localhost:7238/api/posts/PostPiSessions"
         headers = {
-                "Authorization": f"Bearer {token}"
-                }
-        payload = {
-            "Name": "TestName",
-            "Lanes": "TestLane",
-            "Type": "TestType",
-            "Location": "TestLocation",  
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json"
+        }
+        payload = [
+            {
+                "timeStamp": "2026-02-17T00:00:00Z",
+                "name": "testPiSession",
+                "isShotMode": True,
+                "spin_Instruction_Points": "string",
+                "tilt_Instruction_Points": "string",
+                "angle_Instruction_Points": "string"
             }
-        
+        ]
+
         response = requests.post(url, json=payload, headers=headers, verify=False)
         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
-    def test_get_all_app_establishments(self):
+    def test_get_all_pi_sessions(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
         url = "https://localhost:7238/api/posts/Authorize"
         payload = {
@@ -184,171 +394,17 @@ class TestAPIEndpoint(unittest.TestCase):
             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
         token = response.json().get("tokenA")
 
-        url = "https://localhost:7238/api/gets/GetAppEstablishments"
+        url = "https://localhost:7238/api/gets/GetAllPiSessions"
         headers = {
-                "Authorization": f"Bearer {token}"
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json"
                 }
-        
-        response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
-        #print(response.json())
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
-
-    def test_insert_shot(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
         payload = {
-            'username': 'string',
-            'password': 'string'
+            "RangeStart": "00000000000000",
+            "RangeEnd": "99999999999999"
         }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
 
-        url = "https://localhost:7238/api/posts/PostAppShot"
-        headers = {
-                "Authorization": f"Bearer {token}"
-                }
-        payload = {
-            "Type": "1",
-            "SmartDotID": "2",
-            "SessionID": "3",
-            "BallID": "4",  
-            "FrameID": "5", 
-            "ShotNumber": "6", 
-            "LeaveType": "7", 
-            "Side": "testSide", 
-            "Position": "TestPostion", 
-            "Comment": "TestComment", 
-            }
-        
-        response = requests.post(url, json=payload, headers=headers, verify=False)
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
-
-    def test_get_all_app_shots(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
-
-        url = "https://localhost:7238/api/gets/GetAppShots"
-        headers = {
-                "Authorization": f"Bearer {token}"
-                }
-        
-        response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
-        #print(response.json())
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
-
-
-    def test_insert_game(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
-
-        url = "https://localhost:7238/api/posts/PostAppGame"
-        headers = {
-                "Authorization": f"Bearer {token}"
-                }
-        payload = {
-            "GameNumber": "testGameNumber",
-            "Lanes": "TestLanes",
-            "Score": "1",
-            "Win": "2",  
-            "StartingLane": "3", 
-            "SessionID": "4", 
-            "TeamResult": "5", 
-            "IndividualResult": "6", 
-            }
-        
-        response = requests.post(url, json=payload, headers=headers, verify=False)
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
-
-    def test_get_all_app_games(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
-
-        url = "https://localhost:7238/api/gets/GetAppGames"
-        headers = {
-                "Authorization": f"Bearer {token}"
-                }
-        
-        response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
-        print(response.json())
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
-
-    def test_insert_session(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
-
-        url = "https://localhost:7238/api/posts/PostAppSession"
-        headers = {
-                "Authorization": f"Bearer {token}"
-                }
-        payload = {
-            "SessionNumber": "1",
-            "EstablishmentID": "2",
-            "EventID": "3",
-            "DateTime": "4",  
-            "TeamOpponent": "TestTeamOpp", 
-            "IndividualOpponent": "TestIndOpp", 
-            "Score": "5", 
-            "Stats": "6",
-            "TeamRecord": "7", 
-            "IndividualRecord": "8", 
-            }
-        
-        response = requests.post(url, json=payload, headers=headers, verify=False)
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
-
-    def test_get_all_app_session(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
-
-        url = "https://localhost:7238/api/gets/GetAppSessions"
-        headers = {
-                "Authorization": f"Bearer {token}"
-                }
-        
-        response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
-        print(response.json())
+        response = requests.get(url, json=payload,verify=False,headers=headers)
         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
 
