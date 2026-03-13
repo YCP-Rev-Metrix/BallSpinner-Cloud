@@ -4,18 +4,23 @@ import requests
 import warnings
 
 class TestAPIEndpoint(unittest.TestCase):
-    
+
+
+    # Local API : https://localhost:7238/api/
+    # Cloud API : https://api.revmetrix.io/api/
+
+
     # Test endpoint
     def test_endpoint_returns_200(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/tests/Test"
+        url = "https://api.revmetrix.io/api/tests/Test"
         response = requests.get(url, verify=False)
         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
     
     ## AUTHOIRZATION TESTS
     def test_authorize_with_valid_user(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
+        url = "https://api.revmetrix.io/api/posts/Authorize"
         payload = {
             "username": "string",
             "password": "string"
@@ -26,7 +31,7 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_authorize_with_invalid_user(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
+        url = "https://api.revmetrix.io/api/posts/Authorize"
         payload = {
             'username': 'invalid',
             'password': 'invalid'
@@ -36,7 +41,7 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_authorize_with_invalid_request_data(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
+        url = "https://api.revmetrix.io/api/posts/Authorize"
         payload = {
             'invalid': 'invalid',
             'invalid': 'invalid',
@@ -46,7 +51,7 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_insert_user_combined(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
+        url = "https://api.revmetrix.io/api/posts/Authorize"
         payload = {
             'username': 'string',
             'password': 'string'
@@ -56,7 +61,7 @@ class TestAPIEndpoint(unittest.TestCase):
             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
         token = response.json().get("tokenA")
 
-        url = "https://localhost:7238/api/posts/PostUserApp"
+        url = "https://api.revmetrix.io/api/posts/PostUserApp"
         headers = {
                 "Authorization": f"Bearer {token}"
                 }
@@ -353,7 +358,7 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_pi_sessions(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
+        url = "https://api.revmetrix.io/api/posts/Authorize"
         payload = {
             'username': 'string',
             'password': 'string'
@@ -363,7 +368,7 @@ class TestAPIEndpoint(unittest.TestCase):
             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
         token = response.json().get("tokenA")
 
-        url = "https://localhost:7238/api/posts/PostPiSessions"
+        url = "https://api.revmetrix.io/api/posts/PostPiSessions"
         headers = {
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
@@ -384,7 +389,7 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_get_all_pi_sessions(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://localhost:7238/api/posts/Authorize"
+        url = "https://api.revmetrix.io/api/posts/Authorize"
         payload = {
             'username': 'string',
             'password': 'string'
@@ -394,7 +399,7 @@ class TestAPIEndpoint(unittest.TestCase):
             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
         token = response.json().get("tokenA")
 
-        url = "https://localhost:7238/api/gets/GetAllPiSessions"
+        url = "https://api.revmetrix.io/api/gets/GetAllPiSessions"
         headers = {
                 "Authorization": f"Bearer {token}",
                 "Content-Type": "application/json"
