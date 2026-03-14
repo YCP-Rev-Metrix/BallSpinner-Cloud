@@ -43,7 +43,7 @@ public partial class RevMetrixDb
       }
 
         string selectQuery = @"
-        SELECT b.[id], b.[name], b.[timeStamp], b.[ssShotMode],
+        SELECT b.[id], b.[name], b.[timeStamp], b.[isShotMode],
         b.[spin_Instruction_Points], b.[tilt_Instruction_Points], b.[angle_Instruction_Points]
         FROM [Team_PI_Tables].[PiSession] b
         WHERE (@start IS NULL OR b.[timeStamp] >= @start)
