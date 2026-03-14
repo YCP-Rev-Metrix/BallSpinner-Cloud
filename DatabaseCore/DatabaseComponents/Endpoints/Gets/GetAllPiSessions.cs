@@ -42,13 +42,14 @@ public partial class RevMetrixDb
          }
       }
 
-      string selectQuery = @"
-      SELECT b.id, b.name, b.timeStamp, b.isShotMode
-      FROM [Team_PI_Tables].[PiSession] b
-      WHERE (@start IS NULL OR b.timeStamp >= @start)
-      AND (@end IS NULL OR b.timeStamp <= @end);";
+        string selectQuery = @"
+        SELECT b.[id], b.[name], b.[timeStamp], b.[ssShotMode],
+        b.[spin_Instruction_Points], b.[tilt_Instruction_Points], b.[angle_Instruction_Points]
+        FROM [Team_PI_Tables].[PiSession] b
+        WHERE (@start IS NULL OR b.[timeStamp] >= @start)
+        AND (@end IS NULL OR b.[timeStamp] <= @end);";
 
-      using var command = new SqlCommand(selectQuery, connection);
+        using var command = new SqlCommand(selectQuery, connection);
       var startParam = command.Parameters.Add("@start", System.Data.SqlDbType.DateTime2);
       startParam.Value = startDate.HasValue ? (object)startDate.Value : DBNull.Value;
       var endParam = command.Parameters.Add("@end", System.Data.SqlDbType.DateTime2);
