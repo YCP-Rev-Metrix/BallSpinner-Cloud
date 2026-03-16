@@ -32,7 +32,7 @@ public class GetAppSessions : AbstractFeaturedController
         else
         {
             // If no users were found, return a 404 Not Found
-            return NotFound("No sessions found.");
+            return Ok(new List<SessionTable>());
         }
     }
 }

@@ -49,7 +49,7 @@ class TestAPIEndpoint(unittest.TestCase):
         response = requests.post(url, data=payload,verify=False) #Testing with unsupported media type
         self.assertEqual(response.status_code, 415, f"Expected 415, but got {response.status_code}")
 
-    # def test_insert_user_combined(self):
+    # def test_insert_user_App(self):
     #     warnings.filterwarnings("ignore", message="Unverified HTTPS request")
     #     url = "https://api.revmetrix.io/api/posts/Authorize"
     #     payload = {

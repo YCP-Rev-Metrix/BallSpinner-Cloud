@@ -31,8 +31,8 @@ public class GetAppShots : AbstractFeaturedController
         }
         else
         {
-            // If no users were found, return a 404 Not Found
-            return NotFound("No shots found.");
+            // If no Shot were found, return an empty list
+            return Ok(new List<ShotTable>());
         }
     }
 }

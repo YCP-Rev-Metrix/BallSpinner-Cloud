@@ -1,6 +1,7 @@
 ﻿
 using Common.Logging;
 using Common.POCOs;
+using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace Server.Controllers.DatabaseControllers2025.User;
 public class GetAppUsers : AbstractFeaturedController
 {
     [HttpGet(Name = "GetAppUsers")]
-    [ProducesResponseType(typeof(List<UserIdentification>), StatusCodes.Status200OK)] // Assuming this is the DTO containing user information without sensitive data
+    [ProducesResponseType(typeof(List<UserTable>), StatusCodes.Status200OK)] // Assuming this is the DTO containing user information without sensitive data
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     public async Task<IActionResult> GetAllAppUsers()
@@ -30,8 +31,8 @@ public class GetAppUsers : AbstractFeaturedController
         }
         else
         {
-            // If no users were found, return a 404 Not Found
-            return NotFound("No users found.");
+            // If no users were found, return an empty list
+            return Ok(new List<UserTable>()); 
         }
     }
 }

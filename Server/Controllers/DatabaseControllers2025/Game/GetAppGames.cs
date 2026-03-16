@@ -15,7 +15,7 @@ namespace Server.Controllers.DatabaseControllers2025.Game;
 public class GetAppGames : AbstractFeaturedController
 {
     [HttpGet(Name = "GetAppGames")]
-    [ProducesResponseType(typeof(List<ShotTable>), StatusCodes.Status200OK)] // Assuming this is the DTO containing user information without sensitive data
+    [ProducesResponseType(typeof(List<GameTable>), StatusCodes.Status200OK)] // Assuming this is the DTO containing user information without sensitive data
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     public async Task<IActionResult> GetAllAppGame()
@@ -32,7 +32,7 @@ public class GetAppGames : AbstractFeaturedController
         else
         {
             // If no users were found, return a 404 Not Found
-            return NotFound("No games found.");
+            return Ok(new List<GameTable>());
         }
     }
 }

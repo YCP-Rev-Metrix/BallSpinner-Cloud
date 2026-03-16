@@ -30,7 +30,7 @@ public class GetAppEstablishments : AbstractFeaturedController
         }
         else
         {
-            // If no users were found, return a 200 OK with an empty list instead of a 404
+            // If no establishments were found, return a 200 OK with an empty list instead of a 404
             return Ok(new List<EstablishmentTable>());
         }
     }
