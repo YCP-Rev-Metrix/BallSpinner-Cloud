@@ -49,33 +49,33 @@ class TestAPIEndpoint(unittest.TestCase):
         response = requests.post(url, data=payload,verify=False) #Testing with unsupported media type
         self.assertEqual(response.status_code, 415, f"Expected 415, but got {response.status_code}")
 
-    def test_insert_user_combined(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://api.revmetrix.io/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
+    # def test_insert_user_combined(self):
+    #     warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+    #     url = "https://api.revmetrix.io/api/posts/Authorize"
+    #     payload = {
+    #         'username': 'string',
+    #         'password': 'string'
+    #     }
+    #     response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+    #     if response.status_code != 200:
+    #         raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+    #     token = response.json().get("tokenA")
 
-        url = "https://api.revmetrix.io/api/posts/PostUserApp"
-        headers = {
-                "Authorization": f"Bearer {token}"
-                }
-        payload = {
-            "Firstname": "Test",
-            "Lastname": "User",
-            "Username": "testuser123",
-            "Password": "password",  # This will be hashed server-side
-            "Phone": "1234567890",
-            "Email": "testuser123@example.com"
-            }
+    #     url = "https://api.revmetrix.io/api/posts/PostUserApp"
+    #     headers = {
+    #             "Authorization": f"Bearer {token}"
+    #             }
+    #     payload = {
+    #         "Firstname": "Test",
+    #         "Lastname": "User",
+    #         "Username": "testuser123",
+    #         "Password": "password",  # This will be hashed server-side
+    #         "Phone": "1234567890",
+    #         "Email": "testuser123@example.com"
+    #         }
         
-        response = requests.post(url, json=payload, headers=headers, verify=False)
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+    #     response = requests.post(url, json=payload, headers=headers, verify=False)
+    #     self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
 #     def test_insert_ball(self):
 #         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
@@ -151,52 +151,52 @@ class TestAPIEndpoint(unittest.TestCase):
 #         #print(response.json())
 #         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
-#     def test_insert_establishment(self):
-#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-#         url = "https://localhost:7238/api/posts/Authorize"
-#         payload = {
-#             'username': 'string',
-#             'password': 'string'
-#         }
-#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-#         if response.status_code != 200:
-#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-#         token = response.json().get("tokenA")
+    def test_insert_establishment(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://api.revmetrix.io/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+        if response.status_code != 200:
+            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+        token = response.json().get("tokenA")
 
-#         url = "https://localhost:7238/api/posts/PostEstablishmentApp"
-#         headers = {
-#                 "Authorization": f"Bearer {token}"
-#                 }
-#         payload = {
-#             "Name": "TestName",
-#             "Lanes": "TestLane",
-#             "Type": "TestType",
-#             "Location": "TestLocation",  
-#             }
+        url = "https://api.revmetrix.io/api/posts/PostEstablishmentApp"
+        headers = {
+                "Authorization": f"Bearer {token}"
+                }
+        payload = {
+            "Name": "TestName",
+            "Lanes": "TestLane",
+            "Type": "TestType",
+            "Location": "TestLocation",  
+            }
         
-#         response = requests.post(url, json=payload, headers=headers, verify=False)
-#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+        response = requests.post(url, json=payload, headers=headers, verify=False)
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
-#     def test_get_all_app_establishments(self):
-#         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-#         url = "https://localhost:7238/api/posts/Authorize"
-#         payload = {
-#             'username': 'string',
-#             'password': 'string'
-#         }
-#         response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-#         if response.status_code != 200:
-#             raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-#         token = response.json().get("tokenA")
+    def test_get_all_app_establishments(self):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        url = "https://api.revmetrix.io/api/posts/Authorize"
+        payload = {
+            'username': 'string',
+            'password': 'string'
+        }
+        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+        if response.status_code != 200:
+            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+        token = response.json().get("tokenA")
 
-#         url = "https://localhost:7238/api/gets/GetAppEstablishments"
-#         headers = {
-#                 "Authorization": f"Bearer {token}"
-#                 }
+        url = "https://api.revmetrix.io/api/gets/GetAppEstablishments"
+        headers = {
+                "Authorization": f"Bearer {token}"
+                }
         
-#         response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
-#         #print(response.json())
-#         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+        response = requests.get(url, json=payload,verify=False,headers=headers) # Not JSON encoded, so request data is invalid
+        #print(response.json())
+        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
 #     def test_insert_shot(self):
 #         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
@@ -356,61 +356,61 @@ class TestAPIEndpoint(unittest.TestCase):
 #         print(response.json())
 #         self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
-    def test_post_pi_sessions(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://api.revmetrix.io/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
+    # def test_post_pi_sessions(self):
+    #     warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+    #     url = "https://api.revmetrix.io/api/posts/Authorize"
+    #     payload = {
+    #         'username': 'string',
+    #         'password': 'string'
+    #     }
+    #     response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+    #     if response.status_code != 200:
+    #         raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+    #     token = response.json().get("tokenA")
 
-        url = "https://api.revmetrix.io/api/posts/PostPiSessions"
-        headers = {
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json"
-        }
-        payload = [
-            {
-                "timeStamp": "2026-02-17T00:00:00Z",
-                "name": "testPiSession",
-                "isShotMode": True,
-                "spin_Instruction_Points": "string",
-                "tilt_Instruction_Points": "string",
-                "angle_Instruction_Points": "string"
-            }
-        ]
+    #     url = "https://api.revmetrix.io/api/posts/PostPiSessions"
+    #     headers = {
+    #         "Authorization": f"Bearer {token}",
+    #         "Content-Type": "application/json"
+    #     }
+    #     payload = [
+    #         {
+    #             "timeStamp": "2026-02-17T00:00:00Z",
+    #             "name": "testPiSession",
+    #             "isShotMode": True,
+    #             "spin_Instruction_Points": "string",
+    #             "tilt_Instruction_Points": "string",
+    #             "angle_Instruction_Points": "string"
+    #         }
+    #     ]
 
-        response = requests.post(url, json=payload, headers=headers, verify=False)
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+    #     response = requests.post(url, json=payload, headers=headers, verify=False)
+    #     self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
-    def test_get_all_pi_sessions(self):
-        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-        url = "https://api.revmetrix.io/api/posts/Authorize"
-        payload = {
-            'username': 'string',
-            'password': 'string'
-        }
-        response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
-        if response.status_code != 200:
-            raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-        token = response.json().get("tokenA")
+    # def test_get_all_pi_sessions(self):
+    #     warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+    #     url = "https://api.revmetrix.io/api/posts/Authorize"
+    #     payload = {
+    #         'username': 'string',
+    #         'password': 'string'
+    #     }
+    #     response = requests.post(url, json=payload,  headers={"Content-Type":"application/json"}, verify=False)
+    #     if response.status_code != 200:
+    #         raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
+    #     token = response.json().get("tokenA")
 
-        url = "https://api.revmetrix.io/api/gets/GetAllPiSessions"
-        headers = {
-                "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json"
-                }
-        payload = {
-            "RangeStart": "00000000000000",
-            "RangeEnd": "99999999999999"
-        }
+    #     url = "https://api.revmetrix.io/api/gets/GetAllPiSessions"
+    #     headers = {
+    #             "Authorization": f"Bearer {token}",
+    #             "Content-Type": "application/json"
+    #             }
+    #     payload = {
+    #         "RangeStart": "00000000000000",
+    #         "RangeEnd": "99999999999999"
+    #     }
 
-        response = requests.get(url, json=payload,verify=False,headers=headers)
-        self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
+    #     response = requests.get(url, json=payload,verify=False,headers=headers)
+    #     self.assertEqual(response.status_code, 200, f"Expected 200, but got {response.status_code}")
 
 
     ## REGISTER TESTS

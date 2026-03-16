@@ -1,5 +1,4 @@
-﻿
-using Common.Logging;
+﻿using Common.Logging;
 using Common.POCOs;
 using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
 using Microsoft.AspNetCore.Authorization;
@@ -31,8 +30,8 @@ public class GetAppEstablishments : AbstractFeaturedController
         }
         else
         {
-            // If no users were found, return a 404 Not Found
-            return NotFound("No establishments found.");
+            // If no users were found, return a 200 OK with an empty list instead of a 404
+            return Ok(new List<EstablishmentTable>());
         }
     }
 }
