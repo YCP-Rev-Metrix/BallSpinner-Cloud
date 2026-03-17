@@ -1,5 +1,6 @@
 using System.Text;
 using Common.POCOs;
+using Common.POCOs.MobileApp;
 using Server;
 
 namespace DatabaseCoreTests;
@@ -27,11 +28,10 @@ public class TestArsenal: DatabaseCoreTestSetup
     [Fact]
     public async void TestInsertBall()
     {
-        Ball ball = new Ball
+        var ball = new Common.POCOs.MobileApp.Ball
         {
             Name = RandomString(5),
-            Diameter = 12,
-            Weight = 12.3,
+            Weight = "12.3",
             CoreType = "Symmetrical"
         };
 
@@ -42,11 +42,10 @@ public class TestArsenal: DatabaseCoreTestSetup
     [Fact]
     public async void TestInsertBallWithInvalidUser()
     {
-        Ball ball = new Ball
+        var ball = new Common.POCOs.MobileApp.Ball
         {
             Name = RandomString(5),
-            Diameter = 12,
-            Weight = 12.3,
+            Weight = "12.3",
             CoreType = "Symmetrical"
         };
         string testUserName = "nouser";
@@ -85,11 +84,10 @@ public class TestArsenal: DatabaseCoreTestSetup
             builder.Append(@char);
         }
         string testBallName = builder.ToString();
-        Ball ball = new Ball
+        var ball = new Common.POCOs.MobileApp.Ball
         {
             Name = testBallName,
-            Diameter = 12,
-            Weight = 12.3,
+            Weight = "12.3",
             CoreType = "Symmetrical"
         };
         // Insert the ball first
