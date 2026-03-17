@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+using Common.Logging;
 using Common.POCOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ public class PutBall : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     
-    public async Task<IActionResult> UpdateBall([FromBody] Common.POCOs.Ball ball)
+    public async Task<IActionResult> UpdateBall([FromBody] Common.POCOs.MobileApp.Ball ball)
     {
         bool success = await ServerState.UserStore.UpdateBall(ball, GetUsername());
         return !success ? Problem("unable to update ball in the database") : Ok("Ball updated successfully");

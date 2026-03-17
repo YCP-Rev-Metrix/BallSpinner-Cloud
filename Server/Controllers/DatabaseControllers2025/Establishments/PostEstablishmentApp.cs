@@ -1,6 +1,5 @@
 using Common.Logging;
-using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -18,15 +17,11 @@ public class PostEstablishmentApp : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-    public async Task<IActionResult> InsertEstablishmentApp([FromBody] EstablishmentTable request)
+    public async Task<IActionResult> InsertEstablishmentApp([FromBody] Common.POCOs.MobileApp.Establishment request)
     {
-        // Validate input
         if (request == null) return BadRequest("Request body required.");
-
         bool success = await ServerState.UserStore.AddEstablishment(
             request.Name, request.Lanes, request.Type, request.Location);
-
         return !success ? Problem("unable to add establishment to the database") : Ok("establishment inserted successfully");
     }
 }

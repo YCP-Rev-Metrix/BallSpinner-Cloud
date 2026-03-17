@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
 
-namespace Server.Controllers.DatabaseControllers.Posts;
+namespace Server.Controllers.DatabaseControllers2025.Event;
 
 [ApiController]
 [Tags("Gets")]
@@ -11,7 +11,7 @@ public class GetEventsByUsername : AbstractFeaturedController
 {
     [Authorize]
     [HttpGet(Name = "GetEventsByUsername")]
-    [ProducesResponseType(typeof(List<Common.POCOs.Ball>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<Common.POCOs.MobileApp.Event>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RetrieveEventsByUsername()
     {

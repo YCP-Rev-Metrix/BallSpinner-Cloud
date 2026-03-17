@@ -1,23 +1,21 @@
-﻿using Common.POCOs.PITeam2025;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Server.Controllers.APIControllers;
 
-namespace Server.Controllers.DatabaseControllers.Posts;
+namespace Server.Controllers.DatabaseControllers2025.Pi;
 
 [ApiController]
 [Tags("Posts")]
 [Route("api/posts/[controller]")]
-public class PostPiSmartDotData : AbstractFeaturedController
+public class PostPiEncoderData : AbstractFeaturedController
 {
-    [HttpPost(Name = "PostPiSmartDotData")]
+    [HttpPost(Name = "PostPiEncoderData")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    
-    public async Task<IActionResult> InsertPiSmartDotData([FromBody] List<PiSmartDotData> smartDotData)
+    public async Task<IActionResult> InsertPiEncoderData([FromBody] List<Common.POCOs.PITeam2025.PiEncoderData> encoderData)
     {
-        List<int> newIds = await ServerState.UserStore.AddPiSmartDotData(smartDotData);
+        List<int> newIds = await ServerState.UserStore.AddPiEncoderData(encoderData);
         return newIds.IsNullOrEmpty() ? Problem("Internal error") : Ok(newIds);
     }
 }

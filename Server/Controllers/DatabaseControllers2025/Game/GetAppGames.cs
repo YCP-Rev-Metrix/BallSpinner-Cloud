@@ -1,9 +1,6 @@
-﻿
 using Common.Logging;
-using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
 
@@ -15,24 +12,13 @@ namespace Server.Controllers.DatabaseControllers2025.Game;
 public class GetAppGames : AbstractFeaturedController
 {
     [HttpGet(Name = "GetAppGames")]
-    [ProducesResponseType(typeof(List<GameTable>), StatusCodes.Status200OK)] // Assuming this is the DTO containing user information without sensitive data
+    [ProducesResponseType(typeof(List<Common.POCOs.MobileApp.Game>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-
     public async Task<IActionResult> GetAllAppGame()
     {
-        // Attempt to get the list of users from the database
         var (success, games) = await ServerState.UserDatabase.GetAppGames();
-
-        // If the operation was successful and we have users, return them
         if (success)
-        {
-            // Return OK with the list of users
             return Ok(games);
-        }
-        else
-        {
-            // If no users were found, return a 404 Not Found
-            return Ok(new List<GameTable>());
-        }
+        return Ok(new List<Common.POCOs.MobileApp.Game>());
     }
 }

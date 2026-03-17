@@ -1,6 +1,5 @@
 using Common.Logging;
-using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -18,12 +17,12 @@ public class PostAppSession : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-    public async Task<IActionResult> InsertUserCombined([FromBody] SessionTable request)
+    public async Task<IActionResult> InsertUserCombined([FromBody] Common.POCOs.MobileApp.Session request)
     {
-        // Hash the password here as needed
         bool success = await ServerState.UserStore.AddSession(
-            request.SessionNumber, request.EstablishmentID, request.EventID, request.DateTime, request.TeamOpponent, request.IndividualOpponent, request.Score, request.Stats, request.TeamRecord, request.IndividualRecord);
+            request.SessionNumber ?? 0, request.EstablishmentId ?? 0, request.EventId ?? 0, request.DateTime ?? 0,
+            request.TeamOpponent ?? string.Empty, request.IndividualOpponent ?? string.Empty,
+            request.Score ?? 0, request.Stats ?? 0, request.TeamRecord ?? 0, request.IndividualRecord ?? 0);
         return !success ? Problem("unable to add Session to the database") : Ok("Session inserted successfully");
     }
 }

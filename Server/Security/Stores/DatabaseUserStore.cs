@@ -1,6 +1,5 @@
 using Common.POCOs;
 using Common.POCOs.MobileApp;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
 using System.Numerics;
 using Common.POCOs.PITeam2025;
 
@@ -19,7 +18,7 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddUser(firstname, lastname, username, hashed, salt, stringRoles, phone_number, email);
     }
     
-    public override async Task<bool> UpdateBall(Ball ball, string? username)
+    public override async Task<bool> UpdateBall(Common.POCOs.MobileApp.Ball ball, string? username)
     {
         return await ServerState.UserStore.UpdateBall(ball, username);
     }
@@ -94,12 +93,12 @@ public class DatabaseUserStore : AbstractUserStore
         throw new Exception("End point needs to be fixed");
     }
 
-    public override async Task<bool> AddBalls(Ball ball, string? username)
+    public override async Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string? username)
     {
         return await ServerState.UserDatabase.AddBalls(ball, username);
     }
     
-    public override async Task<List<Ball>> GetBalls(string? username)
+    public override async Task<List<Common.POCOs.MobileApp.Ball>> GetBalls(string? username)
     {
         return await ServerState.UserDatabase.GetBalls(username);
     }
@@ -148,7 +147,7 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddUserCombined(firstname, lastname, username, hashedPassword, phoneNumber, email, lastLogin, hand);
     }
 
-    public override async Task<(bool success, List<UserTable> users)> GetAppUsers()
+    public override async Task<(bool success, List<Common.POCOs.MobileApp.User> users)> GetAppUsers()
     {
         return await ServerState.UserDatabase.GetAppUsers();
     }
@@ -158,7 +157,7 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddEstablishment(name, lanes, type, location);
 
     }
-    public override async Task<(bool success, List<EstablishmentTable> establishments)> GetAppEstablishments()
+    public override async Task<(bool success, List<Common.POCOs.MobileApp.Establishment> establishments)> GetAppEstablishments()
     {
         return await ServerState.UserDatabase.GetAppEstablishments();
     }
@@ -168,7 +167,7 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddShot( type,  smartDotId,  sessionId,  ballId,  frameId,  shotNumber,  leaveType, side,  position,  comment);
 
     }
-    public override async Task<(bool success, List<ShotTable> shots)> GetAppShots()
+    public override async Task<(bool success, List<Common.POCOs.MobileApp.Shot> shots)> GetAppShots()
     {
         return await ServerState.UserDatabase.GetAppShots();
 
@@ -178,7 +177,7 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddGame(gameNumber, lanes, score, win, startingLane, sessionID, teamResult, individualResult);
 
     }
-    public override async Task<(bool success, List<GameTable> games)> GetAppGames()
+    public override async Task<(bool success, List<Common.POCOs.MobileApp.Game> games)> GetAppGames()
     {
         return await ServerState.UserDatabase.GetAppGames();
 
@@ -188,7 +187,7 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddSession( sessionNumber,  establishmentID,  eventID,  dateTime,  teamOpponent,  individualOpponent,  score,  stats,  teamRecord,  individualRecord);
 
     }
-    public override async Task<(bool success, List<SessionTable> users)> GetAppSessions()
+    public override async Task<(bool success, List<Common.POCOs.MobileApp.Session> users)> GetAppSessions()
     {
         return await ServerState.UserDatabase.GetAppSessions();
 

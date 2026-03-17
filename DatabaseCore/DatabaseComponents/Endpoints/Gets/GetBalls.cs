@@ -1,4 +1,4 @@
-﻿using Common.POCOs;
+using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
 
 namespace DatabaseCore.DatabaseComponents;
@@ -12,7 +12,7 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
         
         string selectQuery = @"
-            SELECT b.name, b.weight, b.coreType
+            SELECT b.id, b.userId, b.name, b.weight, b.coreType
             FROM [combinedDB].[Balls] b
             JOIN [User] u ON b.userId = u.id
             WHERE u.username = @Username;";
@@ -26,8 +26,10 @@ public partial class RevMetrixDb
         {
             var fetchedBall = new Ball
             {
+                Id = reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : null,
+                UserId = reader["userId"] != DBNull.Value ? Convert.ToInt32(reader["userId"]) : null,
                 Name = reader["name"] as string,
-                Weight = reader["weight"] != DBNull.Value ? Convert.ToInt32(reader["weight"]) : 0,
+                Weight = reader["weight"]?.ToString(),
                 CoreType = reader["coreType"] as string
             };
             balls.Add(fetchedBall);

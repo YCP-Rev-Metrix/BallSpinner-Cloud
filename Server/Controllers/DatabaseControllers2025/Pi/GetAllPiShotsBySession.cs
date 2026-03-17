@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
 
-namespace Server.Controllers.DatabaseControllers.Gets;
+namespace Server.Controllers.DatabaseControllers2025.Pi;
 
 [ApiController]
 [Tags("Gets")]

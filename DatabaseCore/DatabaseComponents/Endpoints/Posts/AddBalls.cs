@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+using Common.Logging;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Common.POCOs;
@@ -7,7 +7,7 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<bool> AddBalls(Ball ball, string username)
+    public async Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string username)
     {
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         if (string.IsNullOrEmpty(ConnectionString))
@@ -38,7 +38,7 @@ public partial class RevMetrixDb
             using var ballCommand = new SqlCommand(insertBallQuery, connection, transaction);
             ballCommand.Parameters.AddWithValue("@name", ball.Name ?? string.Empty);
             ballCommand.Parameters.AddWithValue("@userId", userId);
-            ballCommand.Parameters.AddWithValue("@weight", ball.Weight);
+            ballCommand.Parameters.AddWithValue("@weight", ball.Weight ?? string.Empty);
             ballCommand.Parameters.AddWithValue("@coretype", ball.CoreType ?? string.Empty);
 
             object? result = await ballCommand.ExecuteScalarAsync();

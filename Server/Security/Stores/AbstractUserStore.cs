@@ -1,5 +1,4 @@
-﻿using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.POCOs;
 using Common.POCOs.MobileApp;
 using Common.POCOs.PITeam2025;
 using Microsoft.SqlServer.Management.Smo;
@@ -10,44 +9,67 @@ public abstract class AbstractUserStore
 {
     //-------------------------Depricated Ball Spinner Application-------------------------------------
 
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<bool> CreateUser(string? firstname, string? lastname, string? username, string? password, 
                                                             string? email, string? phoneNumber, string[]? roles = null);
+    
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<bool> DeleteUser(string username);
+    
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<(bool success, string[]? roles)> GetRoles(string username);
+    
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<(bool success, string[]? roles)> VerifyUser(string? username, string? password);
 
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<bool> InsertSampleData(SampleData sampleData);
+    
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<bool> InsertSimulatedShot(SimulatedShot simulatedShot, string? username);
+    
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<int> GetUserId(string? username);
+    
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<SimulatedShotList> GetShotsByUsername(string? username);
     
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<SimulatedShotList> GetShotsByShotname(string? username, string? shotname);
+    
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<SimulatedShotList> GetAllShots(string? username);
     
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<Arsenal> GetArsenalbyUsername(string? username);
     
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<bool> AddSmartDot(SmartDot smartDot, string? username);
+    
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<bool> DeleteBallByName(string? ballname, string? username);
+    
+    [Obsolete("Deprecated as part of the Ball Spinner Application. Do not use.")]
     public abstract Task<bool> DeleteShotByName(string? shotname, string? username);
 
     //-------------------------Phone App-------------------------------------
-    public abstract Task<(bool success, List<UserTable> users)> GetAppUsers();
+    public abstract Task<(bool success, List<Common.POCOs.MobileApp.User> users)> GetAppUsers();
     public abstract Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email, string? lastLogin, string? hand);
     public abstract Task<bool> AddEstablishment(string? name, string? lanes, string? type, string? location);
-    public abstract Task<(bool success, List<EstablishmentTable> establishments)> GetAppEstablishments();
+    public abstract Task<(bool success, List<Common.POCOs.MobileApp.Establishment> establishments)> GetAppEstablishments();
     public abstract Task<bool> AddShot(int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment);
-    public abstract Task<(bool success, List<ShotTable> shots)> GetAppShots();
+    public abstract Task<(bool success, List<Common.POCOs.MobileApp.Shot> shots)> GetAppShots();
     public abstract Task<bool> AddGame(string gameNumber, string lanes, int score, int win, int startingLane, int sessionID, int teamResult, int individualResult);
-    public abstract Task<(bool success, List<GameTable> games)> GetAppGames();
+    public abstract Task<(bool success, List<Common.POCOs.MobileApp.Game> games)> GetAppGames();
     public abstract Task<bool> AddSession(int sessionNumber, int establishmentID, int eventID, int dateTime, string teamOpponent, string individualOpponent, int score, int stats, int teamRecord, int individualRecord);
-    public abstract Task<(bool success, List<SessionTable> users)> GetAppSessions();
+    public abstract Task<(bool success, List<Common.POCOs.MobileApp.Session> users)> GetAppSessions();
     public abstract Task<bool> AddEvent(Event eventObj, string? username);
     public abstract Task<List<Event>> GetEvents(string? username);
-    public abstract Task<List<Ball>> GetBalls(string? username);
-    public abstract Task<bool> UpdateBall(Ball ball, string? username);
+    public abstract Task<List<Common.POCOs.MobileApp.Ball>> GetBalls(string? username);
+    public abstract Task<bool> UpdateBall(Common.POCOs.MobileApp.Ball ball, string? username);
     public abstract Task<bool> AddFrames(Frame frame, string? username);
     public abstract Task<List<Frame>> GetFrames(int gameId);
-    public abstract Task<bool> AddBalls(Ball ball, string? username);
+    public abstract Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string? username);
     public abstract Task<List<int>> AddPiSessions(List<PiSession> sessions);
     public abstract Task<List<PiSession>> GetAllPiSessions(String rangeStart, String rangeEnd);
     public abstract Task<List<int>> AddPiShots(List<PiShot> shots);

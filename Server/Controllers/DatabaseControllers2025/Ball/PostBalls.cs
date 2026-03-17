@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
 
-namespace Server.Controllers.DatabaseControllers.Posts;
+namespace Server.Controllers.DatabaseControllers2025.Ball;
 
 
 
@@ -20,7 +20,7 @@ public class PostBalls : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     
-    public async Task<IActionResult> InsertBall([FromBody] Common.POCOs.Ball ball)
+    public async Task<IActionResult> InsertBall([FromBody] Common.POCOs.MobileApp.Ball ball)
     {
         bool success = await ServerState.UserStore.AddBalls(ball, GetUsername());
         return !success ? Problem("unable to add ball to the database") : Ok("Ball inserted successfully");

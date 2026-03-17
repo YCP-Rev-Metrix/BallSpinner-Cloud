@@ -1,14 +1,13 @@
-﻿using Common.Logging;
-using Common.POCOs;
+using Common.Logging;
+using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
 
 namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<(bool success, List<EstablishmentTable> establishments)> GetAppEstablishments()
+    public async Task<(bool success, List<Establishment> establishments)> GetAppEstablishments()
     {
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
@@ -18,15 +17,14 @@ public partial class RevMetrixDb
 
         using var command = new SqlCommand(selectQuery, connection);
 
-        var establishments = new List<EstablishmentTable>();
+        var establishments = new List<Establishment>();
         using SqlDataReader reader = await command.ExecuteReaderAsync();
 
-        while (await reader.ReadAsync()) // Use while instead of if to handle multiple rows
+        while (await reader.ReadAsync())
         {
-            // construct a new UserIdentification object for each row
-            var establishment = new EstablishmentTable
+            var establishment = new Establishment
             {
-                ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                Id = reader["ID"] != DBNull.Value ? Convert.ToInt32(reader["ID"]) : null,
                 Name = reader["Name"] as string,
                 Lanes = reader["Lanes"] as string,
                 Type = reader["Type"] as string,

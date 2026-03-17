@@ -1,9 +1,6 @@
-﻿
 using Common.Logging;
-using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
 
@@ -15,24 +12,13 @@ namespace Server.Controllers.DatabaseControllers2025.Shot;
 public class GetAppShots : AbstractFeaturedController
 {
     [HttpGet(Name = "GetAppShots")]
-    [ProducesResponseType(typeof(List<ShotTable>), StatusCodes.Status200OK)] // Assuming this is the DTO containing user information without sensitive data
+    [ProducesResponseType(typeof(List<Common.POCOs.MobileApp.Shot>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-
     public async Task<IActionResult> GetAllAppShot()
     {
-        // Attempt to get the list of users from the database
         var (success, shots) = await ServerState.UserDatabase.GetAppShots();
-
-        // If the operation was successful and we have users, return them
         if (success)
-        {
-            // Return OK with the list of users
             return Ok(shots);
-        }
-        else
-        {
-            // If no Shot were found, return an empty list
-            return Ok(new List<ShotTable>());
-        }
+        return Ok(new List<Common.POCOs.MobileApp.Shot>());
     }
 }

@@ -1,10 +1,8 @@
 using Common.Logging;
-using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
-using System.ComponentModel.DataAnnotations;
 
 namespace Server.Controllers.DatabaseControllers2025.User;
 
@@ -19,9 +17,9 @@ public class PostUserApp : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-    public async Task<IActionResult> InsertUserCombined([FromBody] UserTable request)
+    public async Task<IActionResult> InsertUserCombined([FromBody] Common.POCOs.MobileApp.User request)
     {
+        if (request?.HashedPassword == null) return BadRequest("User and HashedPassword required.");
         bool success = await ServerState.UserStore.AddUserCombined(
             request.Firstname, request.Lastname, request.Username, request.HashedPassword, request.PhoneNumber, request.Email, request.LastLogin, request.Hand);
         return !success ? Problem("unable to add user to the database") : Ok("user inserted successfully");

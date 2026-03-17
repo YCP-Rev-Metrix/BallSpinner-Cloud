@@ -1,45 +1,40 @@
-﻿using Common.Logging;
-using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.Logging;
+using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
 namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<(bool success, List<ShotTable> shots)> GetAppShots()
+    public async Task<(bool success, List<Shot> shots)> GetAppShots()
     {
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        string selectQuery = "SELECT ID, Type, SmartDotID, SessionID, BallID, FrameID ,ShotNumber, LeaveType, Side, Position, Comment FROM combinedDB.[Shots]"; // Adjusted to select more fields
+        string selectQuery = "SELECT ID, Type, SmartDotID, SessionID, BallID, FrameID, ShotNumber, LeaveType, Side, Position, Comment FROM combinedDB.[Shots]";
         
         using var command = new SqlCommand(selectQuery, connection);
 
-        var shots = new List<ShotTable>();
+        var shots = new List<Shot>();
         using SqlDataReader reader = await command.ExecuteReaderAsync();
 
-        while (await reader.ReadAsync()) // Use while instead of if to handle multiple rows
+        while (await reader.ReadAsync())
         {
-            // construct a new UserIdentification object for each row
-            var shot = new ShotTable
+            var shot = new Shot
             {
-                ID = (int)reader["ID"],
-                SmartDotID = (int)reader["SmartDotID"],
-                Type = (int)reader["Type"],
-                SessionID = (int)reader["SessionID"],
-                BallID = (int)reader["BallID"],
-                FrameID = (int)reader["FrameID"],
-                ShotNumber = (int)reader["ShotNumber"],
-                LeaveType = (int)reader["LeaveType"],
-                Side = reader["Side"] as string ?? string.Empty,
-                Position = reader["Position"] as string ?? string.Empty,
-                Comment = reader["Comment"] as string ?? string.Empty
-
+                Id = reader["ID"] != DBNull.Value ? Convert.ToInt32(reader["ID"]) : null,
+                Type = reader["Type"] != DBNull.Value ? Convert.ToInt32(reader["Type"]) : null,
+                SmartDotId = reader["SmartDotID"] != DBNull.Value ? Convert.ToInt32(reader["SmartDotID"]) : null,
+                SessionId = reader["SessionID"] != DBNull.Value ? Convert.ToInt32(reader["SessionID"]) : null,
+                BallId = reader["BallID"] != DBNull.Value ? Convert.ToInt32(reader["BallID"]) : null,
+                FrameId = reader["FrameID"] != DBNull.Value ? Convert.ToInt32(reader["FrameID"]) : null,
+                ShotNumber = reader["ShotNumber"] != DBNull.Value ? Convert.ToInt32(reader["ShotNumber"]) : null,
+                LeaveType = reader["LeaveType"] != DBNull.Value ? Convert.ToInt32(reader["LeaveType"]) : null,
+                Side = reader["Side"] as string,
+                Position = reader["Position"] as string,
+                Comment = reader["Comment"] as string
             };
 
             shots.Add(shot);

@@ -1,33 +1,30 @@
-﻿using Common.Logging;
-using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.Logging;
+using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<(bool success, List<UserTable> users)> GetAppUsers()
+    public async Task<(bool success, List<User> users)> GetAppUsers()
     {
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        string selectQuery = "SELECT ID, Firstname, Lastname, Username, HashedPassword, Email, PhoneNumber, LastLogin, Hand FROM combinedDB.[Users]"; // Adjusted to select more fields
+        string selectQuery = "SELECT ID, Firstname, Lastname, Username, HashedPassword, Email, PhoneNumber, LastLogin, Hand FROM combinedDB.[Users]";
         
         using var command = new SqlCommand(selectQuery, connection);
 
-        var users = new List<UserTable>();
+        var users = new List<User>();
         using SqlDataReader reader = await command.ExecuteReaderAsync();
 
-        while (await reader.ReadAsync()) // Use while instead of if to handle multiple rows
+        while (await reader.ReadAsync())
         {
-            // construct a new UserIdentification object for each row
-            var user = new UserTable
+            var user = new User
             {
-                Id = (int)reader["ID"],
+                Id = reader["ID"] != DBNull.Value ? Convert.ToInt32(reader["ID"]) : null,
                 Firstname = reader["Firstname"] as string,
                 Lastname = reader["Lastname"] as string,
                 Username = reader["Username"] as string,
@@ -36,7 +33,6 @@ public partial class RevMetrixDb
                 PhoneNumber = reader["PhoneNumber"] as string,
                 LastLogin = reader["LastLogin"] as string,
                 Hand = reader["Hand"] as string
-
             };
 
             users.Add(user);

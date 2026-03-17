@@ -29,6 +29,8 @@ internal abstract class Program
             {
                 Url = "https://api.revmetrix.io"
             });
+            // Use full type name so types with same name in different namespaces (e.g. Common.POCOs.Ball vs Common.POCOs.MobileApp.Ball) get unique schema IDs
+            c.CustomSchemaIds(type => type.FullName?.Replace("+", ".") ?? type.Name);
         });
 
         _ = builder.Services.AddCors(options =>

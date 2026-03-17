@@ -1,45 +1,40 @@
-﻿using Common.Logging;
-using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.Logging;
+using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
 namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<(bool success, List<SessionTable> users)> GetAppSessions()
+    public async Task<(bool success, List<Session> users)> GetAppSessions()
     {
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        string selectQuery = "SELECT ID, SessionNumber, EstablishmentID, EventID, DateTime, TeamOpponent, IndividualOpponent, Score, Stats, TeamRecord, IndividualRecord FROM combinedDB.[Sessions]"; // Adjusted to select more fields
+        string selectQuery = "SELECT ID, SessionNumber, EstablishmentID, EventID, DateTime, TeamOpponent, IndividualOpponent, Score, Stats, TeamRecord, IndividualRecord FROM combinedDB.[Sessions]";
           
         using var command = new SqlCommand(selectQuery, connection);
 
-        var sessions = new List<SessionTable>();
+        var sessions = new List<Session>();
         using SqlDataReader reader = await command.ExecuteReaderAsync();
 
-        while (await reader.ReadAsync()) // Use while instead of if to handle multiple rows
+        while (await reader.ReadAsync())
         {
-            // construct a new UserIdentification object for each row
-            var session = new SessionTable
+            var session = new Session
             {
-                ID = (int)reader["ID"],
-                SessionNumber = (int)reader["SessionNumber"],
-                EstablishmentID = (int)reader["EstablishmentID"],
-                EventID = (int)reader["EventID"],
-                DateTime = (int)reader["DateTime"],
+                Id = reader["ID"] != DBNull.Value ? Convert.ToInt32(reader["ID"]) : null,
+                SessionNumber = reader["SessionNumber"] != DBNull.Value ? Convert.ToInt32(reader["SessionNumber"]) : null,
+                EstablishmentId = reader["EstablishmentID"] != DBNull.Value ? Convert.ToInt32(reader["EstablishmentID"]) : null,
+                EventId = reader["EventID"] != DBNull.Value ? Convert.ToInt32(reader["EventID"]) : null,
+                DateTime = reader["DateTime"] != DBNull.Value ? Convert.ToInt32(reader["DateTime"]) : null,
                 TeamOpponent = reader["TeamOpponent"] as string,
                 IndividualOpponent = reader["IndividualOpponent"] as string,
-                Score = (int)reader["Score"],
-                Stats = (int)reader["Stats"],
-                TeamRecord = (int)reader["TeamRecord"],
-                IndividualRecord = (int)reader["IndividualRecord"]
-
+                Score = reader["Score"] != DBNull.Value ? Convert.ToInt32(reader["Score"]) : null,
+                Stats = reader["Stats"] != DBNull.Value ? Convert.ToInt32(reader["Stats"]) : null,
+                TeamRecord = reader["TeamRecord"] != DBNull.Value ? Convert.ToInt32(reader["TeamRecord"]) : null,
+                IndividualRecord = reader["IndividualRecord"] != DBNull.Value ? Convert.ToInt32(reader["IndividualRecord"]) : null
             };
 
             sessions.Add(session);

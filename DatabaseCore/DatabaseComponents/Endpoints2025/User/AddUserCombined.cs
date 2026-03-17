@@ -39,8 +39,8 @@ public partial class RevMetrixDb
         command.Parameters.Add("@HashedPassword", SqlDbType.VarBinary, -1).Value = (object?)hashedPassword ?? DBNull.Value;
         command.Parameters.Add("@Email", SqlDbType.VarChar, 100).Value = (object?)email ?? DBNull.Value;
         command.Parameters.Add("@PhoneNumber", SqlDbType.VarChar, 15).Value = (object?)phone ?? DBNull.Value;
-        command.Parameters.Add("@LastLogin", SqlDbType.VarChar).Value = (object?)lastLogin ?? DBNull.Value;
-        command.Parameters.Add("@Hand", SqlDbType.VarChar).Value = (object?)hand ?? DBNull.Value;
+        command.Parameters.Add("@LastLogin", SqlDbType.VarChar).Value = string.IsNullOrEmpty(lastLogin) ? string.Empty : lastLogin;
+        command.Parameters.Add("@Hand", SqlDbType.VarChar).Value = string.IsNullOrEmpty(hand) ? string.Empty : hand;
 
 
         // Execute the query

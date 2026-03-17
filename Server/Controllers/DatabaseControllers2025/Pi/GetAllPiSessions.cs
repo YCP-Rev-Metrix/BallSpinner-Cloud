@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
 
-namespace Server.Controllers.DatabaseControllers.Gets;
+namespace Server.Controllers.DatabaseControllers2025.Pi;
 
 public class GetAllPiSessionsRequest
 {
-    public String? RangeStart { get; set; }
-    public String? RangeEnd { get; set; }
+    public string? RangeStart { get; set; }
+    public string? RangeEnd { get; set; }
 }
 
 [ApiController]
@@ -26,8 +26,8 @@ public class GetAllPiSessions : AbstractFeaturedController
         
         if (request == null) return BadRequest("request body is required");
 
-        String rangeStart = request.RangeStart ?? "00000000000000";
-        String rangeEnd = request.RangeEnd ?? "00000000000000";
+        string rangeStart = request.RangeStart ?? "00000000000000";
+        string rangeEnd = request.RangeEnd ?? "00000000000000";
 
         var sessions = await ServerState.UserStore.GetAllPiSessions(rangeStart, rangeEnd);
         return sessions == null ? Problem("unable to retrieve balls from the database") : Ok(sessions);

@@ -1,6 +1,5 @@
 using Common.Logging;
-using Common.POCOs;
-using DatabaseCore.ServerTableFunctions.Fall2025DBTables;
+using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -18,15 +17,13 @@ public class PostAppGame : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-    public async Task<IActionResult> InsertGameApp([FromBody] GameTable request)
+    public async Task<IActionResult> InsertGameApp([FromBody] Common.POCOs.MobileApp.Game request)
     {
-        // Validate input
         if (request == null) return BadRequest("Request body required.");
-    bool success = await ServerState.UserStore.AddGame(
-            request.GameNumber, request.Lanes, request.Score, request.Win, 
-            request.StartingLane, request.SessionID,  request.TeamResult, request.IndividualResult);
-
+        bool success = await ServerState.UserStore.AddGame(
+            request.GameNumber ?? string.Empty, request.Lanes ?? string.Empty,
+            request.Score ?? 0, request.Win ?? 0, request.StartingLane ?? 0,
+            request.SessionId ?? 0, request.TeamResult ?? 0, request.IndividualResult ?? 0);
         return !success ? Problem("unable to add game to the database") : Ok("game inserted successfully");
     }
 }

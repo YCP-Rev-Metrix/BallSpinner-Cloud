@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
 
-namespace Server.Controllers.DatabaseControllers.Posts;
+namespace Server.Controllers.DatabaseControllers2025.Frame;
 
 [ApiController]
 [Tags("Posts")]
@@ -16,7 +16,7 @@ public class PostFrames : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     
-    public async Task<IActionResult> InsertFrames([FromBody] Frame frames)
+    public async Task<IActionResult> InsertFrames([FromBody] Common.POCOs.MobileApp.Frame frames)
     {
         bool success = await ServerState.UserStore.AddFrames(frames, GetUsername());
         return !success ? Problem("unable to add frames to the database") : Ok("Frames added successfully");
