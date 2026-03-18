@@ -70,6 +70,13 @@ public abstract class AbstractUserStore
     public abstract Task<bool> AddFrames(Frame frame, string? username);
     public abstract Task<List<Frame>> GetFrames(int gameId);
     public abstract Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string? username);
+    public abstract Task<bool> DeleteBallsByUsername(string? username);
+    public abstract Task<bool> DeleteAppEstablishments(string? username);
+    public abstract Task<bool> DeleteEventsByUsername(string? username);
+    public abstract Task<bool> DeleteAppSessions(string? username);
+    public abstract Task<bool> DeleteAppGames(string? username);
+    public abstract Task<bool> DeleteAppFrames(string? username);
+    public abstract Task<bool> DeleteAppShots(string? username);
     public abstract Task<List<int>> AddPiSessions(List<PiSession> sessions);
     public abstract Task<List<PiSession>> GetAllPiSessions(String rangeStart, String rangeEnd);
     public abstract Task<List<int>> AddPiShots(List<PiShot> shots);

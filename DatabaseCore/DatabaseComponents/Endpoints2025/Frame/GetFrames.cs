@@ -1,4 +1,4 @@
-﻿using Common.POCOs.MobileApp;
+using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
 
 namespace DatabaseCore.DatabaseComponents;
@@ -10,7 +10,7 @@ public partial class RevMetrixDb
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
-        
+
         string selectQuery = @"
             SELECT id, gameId, shotOne, shotTwo, frameNumber, lane, result
             FROM [combinedDB].[Frames]
@@ -24,15 +24,15 @@ public partial class RevMetrixDb
         List<Frame> frames = new List<Frame>();
         while (await reader.ReadAsync())
         {
-            Frame frame = new Frame
+            var frame = new Frame
             {
-                Id = reader["id"] as int?,
-                GameId = reader["gameId"] as int?,
-                ShotOne = reader["shotOne"] as int?,
-                ShotTwo = reader["shotTwo"] as int?,
-                FrameNumber = reader["frameNumber"] as int?,
-                Lane = reader["lane"] as int?,
-                Result = reader["result"] as int?
+                Id = reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : null,
+                GameId = reader["gameId"] != DBNull.Value ? Convert.ToInt32(reader["gameId"]) : null,
+                ShotOne = reader["shotOne"] != DBNull.Value ? Convert.ToInt32(reader["shotOne"]) : null,
+                ShotTwo = reader["shotTwo"] != DBNull.Value ? Convert.ToInt32(reader["shotTwo"]) : null,
+                FrameNumber = reader["frameNumber"] != DBNull.Value ? Convert.ToInt32(reader["frameNumber"]) : null,
+                Lane = reader["lane"] != DBNull.Value ? Convert.ToInt32(reader["lane"]) : null,
+                Result = reader["result"] != DBNull.Value ? Convert.ToInt32(reader["result"]) : null
             };
             frames.Add(frame);
         }

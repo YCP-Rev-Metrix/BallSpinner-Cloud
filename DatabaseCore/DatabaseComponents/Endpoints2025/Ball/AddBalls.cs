@@ -1,8 +1,7 @@
 using Common.Logging;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using Common.POCOs;
-using System.CodeDom.Compiler;
+
 namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
@@ -17,11 +16,10 @@ public partial class RevMetrixDb
 
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
-        
+
         using SqlTransaction transaction = (SqlTransaction)await connection.BeginTransactionAsync();
         try
         {
-            // Validate and fetch user ID
             int userId = await GetUserId(username);
             if (userId <= 0)
             {
@@ -29,10 +27,9 @@ public partial class RevMetrixDb
                 return false;
             }
 
-            // Insert Ball and retrieve Ball ID
             string insertBallQuery = @"
-            INSERT INTO [combinedDB].[Balls] (userId, name, weight, coreType) 
-            OUTPUT INSERTED.id 
+            INSERT INTO [combinedDB].[Balls] (userId, name, weight, coreType)
+            OUTPUT INSERTED.id
             VALUES (@userId, @name, @weight, @coretype)";
 
             using var ballCommand = new SqlCommand(insertBallQuery, connection, transaction);
@@ -46,8 +43,7 @@ public partial class RevMetrixDb
             {
                 throw new InvalidOperationException("Failed to insert ball or retrieve ball ID.");
             }
-            
-            // Commit transaction
+
             await transaction.CommitAsync();
             return true;
         }

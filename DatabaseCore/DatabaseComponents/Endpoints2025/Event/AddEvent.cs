@@ -1,7 +1,6 @@
-﻿using Common.Logging;
+using Common.Logging;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.CodeDom.Compiler;
 using Common.POCOs.MobileApp;
 
 namespace DatabaseCore.DatabaseComponents;
@@ -18,11 +17,10 @@ public partial class RevMetrixDb
 
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
-        
+
         using SqlTransaction transaction = (SqlTransaction)await connection.BeginTransactionAsync();
         try
         {
-            // Validate and fetch user ID
             int userId = await GetUserId(username);
             if (userId <= 0)
             {
@@ -34,7 +32,7 @@ public partial class RevMetrixDb
                 INSERT INTO [combinedDB].[Events] (userId, name, type, location, average, stats, standings)
                 OUTPUT INSERTED.id
                 VALUES (@userId, @name, @type, @location, @average, @stats, @standings)";
-            
+
             using var eventCommand = new SqlCommand(insertEventQuery, connection, transaction);
             eventCommand.Parameters.AddWithValue("@userId", userId);
             eventCommand.Parameters.AddWithValue("@name", eventObj.Name ?? string.Empty);
@@ -43,14 +41,13 @@ public partial class RevMetrixDb
             eventCommand.Parameters.AddWithValue("@average", eventObj.Average ?? 0);
             eventCommand.Parameters.AddWithValue("@stats", eventObj.Stats ?? 0);
             eventCommand.Parameters.AddWithValue("@standings", eventObj.Standings ?? string.Empty);
-            
+
             object? result = await eventCommand.ExecuteScalarAsync();
             if (result == null || result == DBNull.Value)
             {
                 throw new InvalidOperationException("Failed to insert event or retrieve event ID.");
             }
-            
-            // Commit transaction
+
             await transaction.CommitAsync();
             return true;
         }

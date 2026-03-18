@@ -1,9 +1,9 @@
-﻿using Common.Logging;
+using Common.Logging;
 using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace DatabaseCore.DatabaseComponents;
-
 
 public partial class RevMetrixDb
 {
@@ -17,11 +17,10 @@ public partial class RevMetrixDb
 
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
-        
+
         using SqlTransaction transaction = (SqlTransaction)await connection.BeginTransactionAsync();
         try
         {
-            // Validate and fetch user ID
             int userId = await GetUserId(username);
             if (userId <= 0)
             {
@@ -41,17 +40,17 @@ public partial class RevMetrixDb
             frameCommand.Parameters.AddWithValue("@frameNumber", frame.FrameNumber ?? (object)DBNull.Value);
             frameCommand.Parameters.AddWithValue("@lane", frame.Lane ?? (object)DBNull.Value);
             frameCommand.Parameters.AddWithValue("@result", frame.Result ?? (object)DBNull.Value);
-            
+
             object? result = await frameCommand.ExecuteScalarAsync();
             if (result == null || result == DBNull.Value)
             {
                 throw new InvalidOperationException("Failed to insert frame or retrieve frame ID.");
             }
-            
-            // Commit transaction
+
             await transaction.CommitAsync();
             return true;
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             LogWriter.LogError($"Error occurred while adding a frame for user '{username}': {ex.Message}\n{ex}");
             await transaction.RollbackAsync();

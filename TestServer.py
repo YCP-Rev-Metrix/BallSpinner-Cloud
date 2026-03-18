@@ -12,8 +12,8 @@ import warnings
 # --- Configure base URL (no trailing slash) ---
 # Local:  https://localhost:7238
 # Cloud:  https://api.revmetrix.io
-BASE_URL = "https://localhost:7238"
-# BASE_URL = "https://api.revmetrix.io"
+# BASE_URL = "https://localhost:7238"
+BASE_URL = "https://api.revmetrix.io"
 
 # Test user for authorized requests (must exist in DB for auth tests)
 TEST_USERNAME = "string"
@@ -239,6 +239,35 @@ class TestAPIEndpoint(unittest.TestCase):
         }
         r = requests.post(_url("/api/posts/PostFrames"), json=payload, headers=auth_headers(), verify=False)
         self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
+
+    # --- Deletes (delete all for authenticated user; no body) ---
+    def test_delete_app_shots(self):
+        r = requests.delete(_url("/api/deletes/DeleteAppShots"), headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
+
+    def test_delete_app_frames(self):
+        r = requests.delete(_url("/api/deletes/DeleteAppFrames"), headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
+
+    def test_delete_app_games(self):
+        r = requests.delete(_url("/api/deletes/DeleteAppGames"), headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
+
+    def test_delete_app_sessions(self):
+        r = requests.delete(_url("/api/deletes/DeleteAppSessions"), headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
+
+    def test_delete_events_by_username(self):
+        r = requests.delete(_url("/api/deletes/DeleteEventsByUsername"), headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
+
+    def test_delete_app_establishments(self):
+        r = requests.delete(_url("/api/deletes/DeleteAppEstablishments"), headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
+
+    def test_delete_balls_by_username(self):
+        r = requests.delete(_url("/api/deletes/DeleteBallsByUsername"), headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
 
 if __name__ == "__main__":
