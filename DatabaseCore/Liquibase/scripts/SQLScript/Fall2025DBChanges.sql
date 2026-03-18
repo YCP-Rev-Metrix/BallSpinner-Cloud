@@ -11,22 +11,23 @@ GO
 BEGIN TRANSACTION;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     IF SCHEMA_ID(N'combinedDB') IS NULL EXEC(N'CREATE SCHEMA [combinedDB];');
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     IF SCHEMA_ID(N'Team_PI_Tables') IS NULL EXEC(N'CREATE SCHEMA [Team_PI_Tables];');
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [combinedDB].[Balls] (
         [Id] int NOT NULL IDENTITY,
+        [MobileID] int NULL,
         [UserId] int NOT NULL,
         [Name] nvarchar(50) NOT NULL,
         [Weight] nvarchar(50) NOT NULL,
@@ -36,7 +37,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [Team_PI_Tables].[DiagnosticScript] (
         [Id] int NOT NULL IDENTITY,
@@ -49,7 +50,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [Team_PI_Tables].[EncoderData] (
         [Id] int NOT NULL IDENTITY,
@@ -63,10 +64,11 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [combinedDB].[Establishments] (
         [ID] int NOT NULL IDENTITY,
+        [MobileID] int NULL,
         [Name] nvarchar(max) NOT NULL,
         [Lanes] nvarchar(max) NOT NULL,
         [Type] nvarchar(max) NOT NULL,
@@ -76,10 +78,11 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [combinedDB].[Events] (
         [Id] int NOT NULL IDENTITY,
+        [MobileID] int NULL,
         [UserId] int NOT NULL,
         [Name] nvarchar(max) NOT NULL,
         [Type] nvarchar(max) NOT NULL,
@@ -92,10 +95,11 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [combinedDB].[Frames] (
         [Id] int NOT NULL IDENTITY,
+        [MobileID] int NULL,
         [GameId] int NOT NULL,
         [ShotOne] int NOT NULL,
         [ShotTwo] int NOT NULL,
@@ -107,10 +111,11 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [combinedDB].[Games] (
         [ID] int NOT NULL IDENTITY,
+        [MobileID] int NULL,
         [GameNumber] nvarchar(max) NOT NULL,
         [Lanes] nvarchar(max) NOT NULL,
         [Score] int NOT NULL,
@@ -124,7 +129,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [Team_PI_Tables].[HeatData] (
         [Id] int NOT NULL IDENTITY,
@@ -138,7 +143,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [Team_PI_Tables].[PiSession] (
         [Id] int NOT NULL IDENTITY,
@@ -153,10 +158,11 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [combinedDB].[Sessions] (
         [ID] int NOT NULL IDENTITY,
+        [MobileID] int NULL,
         [SessionNumber] int NOT NULL,
         [EstablishmentID] int NOT NULL,
         [EventID] int NOT NULL,
@@ -172,10 +178,11 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [combinedDB].[Shots] (
         [ID] int NOT NULL IDENTITY,
+        [MobileID] int NULL,
         [Type] int NOT NULL,
         [SmartDotID] int NOT NULL,
         [SessionID] int NOT NULL,
@@ -191,7 +198,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [Team_PI_Tables].[ShotScript] (
         [Id] int NOT NULL IDENTITY,
@@ -205,7 +212,7 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [Team_PI_Tables].[SmartDotData] (
         [Id] int NOT NULL IDENTITY,
@@ -228,10 +235,11 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     CREATE TABLE [combinedDB].[Users] (
         [Id] int NOT NULL IDENTITY,
+        [MobileID] int NULL,
         [Firstname] nvarchar(50) NOT NULL,
         [Lastname] nvarchar(50) NOT NULL,
         [Username] nvarchar(50) NOT NULL,
@@ -245,10 +253,10 @@ BEGIN
 END;
 GO
 
-IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260313162418_josh_changes2')
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260318025309_MobileID')
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-    VALUES (N'20260313162418_josh_changes2', N'7.0.20');
+    VALUES (N'20260318025309_MobileID', N'7.0.20');
 END;
 GO
 
