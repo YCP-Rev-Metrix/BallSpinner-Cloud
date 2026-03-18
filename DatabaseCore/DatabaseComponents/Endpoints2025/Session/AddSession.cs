@@ -1,48 +1,48 @@
 using Common.Logging;
+using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
 using System.Diagnostics;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<bool> AddSession(int sessionNumber, int establishmentID, int eventID, int dateTime, string teamOpponent, string individualOpponent, int score, int stats, int teamRecord, int individualRecord)
+    public async Task<bool> AddSession(Session session)
     {
-        // If not local use Server conn string, if local use local conn string
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-        //ConnectionString = Environment.GetEnvironmentVariable("LOCALDB_CONNECTION_STRING");
-        using var connection1 = new SqlConnection(ConnectionString);
+        if (string.IsNullOrEmpty(ConnectionString))
+        {
+            throw new InvalidOperationException("Connection string is not set.");
+        }
+
+        using var connection = new SqlConnection(ConnectionString);
         try
         {
-            await connection1.OpenAsync();
+            await connection.OpenAsync();
         }
         catch (Exception e)
         {
             Debug.WriteLine(e);
         }
-        LogWriter.LogInfo(connection1);
+        LogWriter.LogInfo(connection);
 
-        string insertQuery = "INSERT INTO [combinedDB].[Sessions] (SessionNumber, EstablishmentID, EventID, DateTime, TeamOpponent, IndividualOpponent, Score,Stats, TeamRecord, IndividualRecord) " +
-                             "VALUES (@SessionNumber, @EstablishmentID, @EventID, @DateTime, @TeamOpponent, @IndividualOpponent, @Score, @Stats, @TeamRecord, @IndividualRecord)";
+        string insertQuery = "INSERT INTO [combinedDB].[Sessions] (SessionNumber, EstablishmentID, EventID, DateTime, TeamOpponent, IndividualOpponent, Score, Stats, TeamRecord, IndividualRecord, MobileID) " +
+                             "VALUES (@SessionNumber, @EstablishmentID, @EventID, @DateTime, @TeamOpponent, @IndividualOpponent, @Score, @Stats, @TeamRecord, @IndividualRecord, @MobileID)";
 
-        using var command = new SqlCommand(insertQuery, connection1);
-        
-        command.Parameters.Add("@SessionNumber", SqlDbType.Int).Value = sessionNumber;
-        command.Parameters.Add("@EstablishmentID", SqlDbType.Int).Value = establishmentID;
-        command.Parameters.Add("@EventID", SqlDbType.Int).Value = eventID;
-        command.Parameters.Add("@DateTime", SqlDbType.Int).Value = dateTime;
-        command.Parameters.Add("@TeamOpponent", SqlDbType.VarChar).Value = teamOpponent;
-        command.Parameters.Add("@IndividualOpponent", SqlDbType.VarChar).Value = individualOpponent;
-        command.Parameters.Add("@Score", SqlDbType.Int).Value = score;
-        command.Parameters.Add("@Stats", SqlDbType.Int).Value = stats;
-        command.Parameters.Add("@TeamRecord", SqlDbType.Int).Value = teamRecord;
-        command.Parameters.Add("@IndividualRecord", SqlDbType.Int).Value = individualRecord;
+        using var command = new SqlCommand(insertQuery, connection);
+        command.Parameters.Add("@SessionNumber", SqlDbType.Int).Value = session.SessionNumber ?? (object)DBNull.Value;
+        command.Parameters.Add("@EstablishmentID", SqlDbType.Int).Value = session.EstablishmentId ?? (object)DBNull.Value;
+        command.Parameters.Add("@EventID", SqlDbType.Int).Value = session.EventId ?? (object)DBNull.Value;
+        command.Parameters.Add("@DateTime", SqlDbType.Int).Value = session.DateTime ?? (object)DBNull.Value;
+        command.Parameters.Add("@TeamOpponent", SqlDbType.VarChar).Value = session.TeamOpponent ?? string.Empty;
+        command.Parameters.Add("@IndividualOpponent", SqlDbType.VarChar).Value = session.IndividualOpponent ?? string.Empty;
+        command.Parameters.Add("@Score", SqlDbType.Int).Value = session.Score ?? (object)DBNull.Value;
+        command.Parameters.Add("@Stats", SqlDbType.Int).Value = session.Stats ?? (object)DBNull.Value;
+        command.Parameters.Add("@TeamRecord", SqlDbType.Int).Value = session.TeamRecord ?? (object)DBNull.Value;
+        command.Parameters.Add("@IndividualRecord", SqlDbType.Int).Value = session.IndividualRecord ?? (object)DBNull.Value;
+        command.Parameters.Add("@MobileID", SqlDbType.Int).Value = session.MobileID.HasValue ? (object)session.MobileID.Value : DBNull.Value;
 
-
-        // Execute the query
         int i = await command.ExecuteNonQueryAsync();
         return i > 0;
     }

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +8,8 @@ public class UserTable
 {
     [Key]
     public int Id { get; set; }
+
+    public int? MobileID { get; set; }
     
     [MaxLength(50)]
     [Required]

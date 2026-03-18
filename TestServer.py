@@ -119,6 +119,17 @@ class TestAPIEndpoint(unittest.TestCase):
         r = requests.post(_url("/api/posts/PostEstablishmentApp"), json=payload, headers=auth_headers(), verify=False)
         self.assertEqual(r.status_code, 200, f"Expected 200, got {r.status_code} - {r.text}")
 
+    def test_post_establishment_app_with_mobile_id(self):
+        payload = {
+            "mobileID": 90001,
+            "name": "TestEstablishmentMobileId",
+            "lanes": "1-10",
+            "type": "TestType",
+            "location": "TestLocation",
+        }
+        r = requests.post(_url("/api/posts/PostEstablishmentApp"), json=payload, headers=auth_headers(), verify=False)
+        self.assertEqual(r.status_code, 200, f"Expected 200, got {r.status_code} - {r.text}")
+
     # --- Game (MobileApp POCO) ---
     def test_get_all_app_games(self):
         r = requests.get(_url("/api/gets/GetAppGames"), headers=auth_headers(), verify=False)
@@ -139,6 +150,21 @@ class TestAPIEndpoint(unittest.TestCase):
         r = requests.post(_url("/api/posts/PostAppGame"), json=payload, headers=auth_headers(), verify=False)
         self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
 
+    def test_post_app_game_with_mobile_id(self):
+        payload = {
+            "mobileID": 90002,
+            "gameNumber": "G_MobileId",
+            "lanes": "1-2",
+            "score": 200,
+            "win": 1,
+            "startingLane": 1,
+            "sessionId": 1,
+            "teamResult": 1,
+            "individualResult": 1,
+        }
+        r = requests.post(_url("/api/posts/PostAppGame"), json=payload, headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
+
     # --- Session (MobileApp POCO) ---
     def test_get_all_app_sessions(self):
         r = requests.get(_url("/api/gets/GetAppSessions"), headers=auth_headers(), verify=False)
@@ -147,6 +173,23 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_app_session(self):
         payload = {
+            "sessionNumber": 1,
+            "establishmentId": 1,
+            "eventId": 1,
+            "dateTime": 20250101120000,
+            "teamOpponent": "TeamA",
+            "individualOpponent": "Opponent1",
+            "score": 500,
+            "stats": 0,
+            "teamRecord": 1,
+            "individualRecord": 1,
+        }
+        r = requests.post(_url("/api/posts/PostAppSession"), json=payload, headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
+
+    def test_post_app_session_with_mobile_id(self):
+        payload = {
+            "mobileID": 90003,
             "sessionNumber": 1,
             "establishmentId": 1,
             "eventId": 1,
@@ -183,6 +226,23 @@ class TestAPIEndpoint(unittest.TestCase):
         r = requests.post(_url("/api/posts/PostAppShot"), json=payload, headers=auth_headers(), verify=False)
         self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
 
+    def test_post_app_shot_with_mobile_id(self):
+        payload = {
+            "mobileID": 90004,
+            "type": 1,
+            "smartDotId": 1,
+            "sessionId": 1,
+            "ballId": 1,
+            "frameId": 1,
+            "shotNumber": 1,
+            "leaveType": 0,
+            "side": "left",
+            "position": "10",
+            "comment": "Test shot",
+        }
+        r = requests.post(_url("/api/posts/PostAppShot"), json=payload, headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
+
     # --- Ball (MobileApp POCO) ---
     def test_get_balls_by_username(self):
         r = requests.get(_url("/api/gets/GetBallsByUsername"), headers=auth_headers(), verify=False)
@@ -192,6 +252,16 @@ class TestAPIEndpoint(unittest.TestCase):
     def test_post_ball(self):
         payload = {
             "name": "TestBall",
+            "weight": "14",
+            "coreType": "Reactive",
+        }
+        r = requests.post(_url("/api/posts/PostBalls"), json=payload, headers=auth_headers(), verify=False)
+        self.assertEqual(r.status_code, 200, f"Expected 200, got {r.status_code} - {r.text}")
+
+    def test_post_ball_with_mobile_id(self):
+        payload = {
+            "mobileID": 90005,
+            "name": "TestBallMobileId",
             "weight": "14",
             "coreType": "Reactive",
         }
@@ -217,6 +287,20 @@ class TestAPIEndpoint(unittest.TestCase):
         r = requests.post(_url("/api/posts/PostEvent"), json=payload, headers=auth_headers(), verify=False)
         self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
 
+    def test_post_event_with_mobile_id(self):
+        payload = {
+            "mobileID": 90006,
+            "userId": 1,
+            "name": "Test Event MobileId",
+            "type": "Tournament",
+            "location": "Test City",
+            "average": 200,
+            "stats": 0,
+            "standings": None,
+        }
+        r = requests.post(_url("/api/posts/PostEvent"), json=payload, headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
+
     # --- Frame (MobileApp POCO) ---
     def test_get_frames_by_game_id(self):
         r = requests.get(
@@ -230,6 +314,19 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_frames(self):
         payload = {
+            "gameId": 1,
+            "shotOne": 0,
+            "shotTwo": 0,
+            "frameNumber": 1,
+            "lane": 1,
+            "result": 10,
+        }
+        r = requests.post(_url("/api/posts/PostFrames"), json=payload, headers=auth_headers(), verify=False)
+        self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
+
+    def test_post_frames_with_mobile_id(self):
+        payload = {
+            "mobileID": 90007,
             "gameId": 1,
             "shotOne": 0,
             "shotTwo": 0,
@@ -268,6 +365,37 @@ class TestAPIEndpoint(unittest.TestCase):
     def test_delete_balls_by_username(self):
         r = requests.delete(_url("/api/deletes/DeleteBallsByUsername"), headers=auth_headers(), verify=False)
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
+
+    # --- MobileID round-trip: POST with mobileId, GET and verify item can have mobileID ---
+    def test_get_app_establishments_may_include_mobile_id(self):
+        r = requests.get(_url("/api/gets/GetAppEstablishments"), headers=auth_headers(), verify=False)
+        self.assertEqual(r.status_code, 200, f"Expected 200, got {r.status_code}")
+        data = r.json()
+        self.assertIsInstance(data, list, "GetAppEstablishments should return a list")
+        for item in data:
+            self.assertIsInstance(item, dict, "Each item should be a dict")
+            if "mobileID" in item:
+                self.assertTrue(item["mobileID"] is None or isinstance(item["mobileID"], int), "mobileID should be null or int")
+
+    def test_get_balls_may_include_mobile_id(self):
+        r = requests.get(_url("/api/gets/GetBallsByUsername"), headers=auth_headers(), verify=False)
+        self.assertEqual(r.status_code, 200, f"Expected 200, got {r.status_code}")
+        data = r.json()
+        self.assertIsInstance(data, list, "GetBallsByUsername should return a list")
+        for item in data:
+            self.assertIsInstance(item, dict, "Each item should be a dict")
+            if "mobileID" in item:
+                self.assertTrue(item["mobileID"] is None or isinstance(item["mobileID"], int), "mobileID should be null or int")
+
+    def test_get_events_may_include_mobile_id(self):
+        r = requests.get(_url("/api/gets/GetEventsByUsername"), headers=auth_headers(), verify=False)
+        self.assertEqual(r.status_code, 200, f"Expected 200, got {r.status_code}")
+        data = r.json()
+        self.assertIsInstance(data, list, "GetEventsByUsername should return a list")
+        for item in data:
+            self.assertIsInstance(item, dict, "Each item should be a dict")
+            if "mobileID" in item:
+                self.assertTrue(item["mobileID"] is None or isinstance(item["mobileID"], int), "mobileID should be null or int")
 
 
 if __name__ == "__main__":

@@ -18,6 +18,7 @@ public class Game : Poco
     }
 
     public int? Id { get; set; }
+    public int? MobileID { get; set; }
     public string? GameNumber { get; set; }
     public string? Lanes { get; set; }
     public int? Score { get; set; }

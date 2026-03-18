@@ -20,10 +20,7 @@ public class PostAppShot : AbstractFeaturedController
     public async Task<IActionResult> InsertShotApp([FromBody] Common.POCOs.MobileApp.Shot request)
     {
         if (request == null) return BadRequest("Request body required.");
-        bool success = await ServerState.UserStore.AddShot(
-            request.Type ?? 0, request.SmartDotId ?? 0, request.SessionId ?? 0, request.BallId ?? 0,
-            request.FrameId ?? 0, request.ShotNumber ?? 0, request.LeaveType ?? 0,
-            request.Side ?? string.Empty, request.Position ?? string.Empty, request.Comment ?? string.Empty);
+        bool success = await ServerState.UserStore.AddShot(request);
         return !success ? Problem("unable to add shot to the database") : Ok("shot inserted successfully");
     }
 }

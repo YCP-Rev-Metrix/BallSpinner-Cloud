@@ -1,4 +1,4 @@
-﻿namespace Common.POCOs.MobileApp;
+namespace Common.POCOs.MobileApp;
 
 public class Event : Poco
 {
@@ -17,6 +17,7 @@ public class Event : Poco
     }
     
     public int? Id { get; set; }
+    public int? MobileID { get; set; }
     public int UserId { get; set; }
     
     public string? Name { get; set; }

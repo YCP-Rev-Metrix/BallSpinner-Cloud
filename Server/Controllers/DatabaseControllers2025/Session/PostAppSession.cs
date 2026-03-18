@@ -19,10 +19,7 @@ public class PostAppSession : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> InsertUserCombined([FromBody] Common.POCOs.MobileApp.Session request)
     {
-        bool success = await ServerState.UserStore.AddSession(
-            request.SessionNumber ?? 0, request.EstablishmentId ?? 0, request.EventId ?? 0, request.DateTime ?? 0,
-            request.TeamOpponent ?? string.Empty, request.IndividualOpponent ?? string.Empty,
-            request.Score ?? 0, request.Stats ?? 0, request.TeamRecord ?? 0, request.IndividualRecord ?? 0);
+        bool success = await ServerState.UserStore.AddSession(request);
         return !success ? Problem("unable to add Session to the database") : Ok("Session inserted successfully");
     }
 }

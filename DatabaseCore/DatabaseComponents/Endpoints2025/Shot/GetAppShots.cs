@@ -13,7 +13,7 @@ public partial class RevMetrixDb
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        string selectQuery = "SELECT ID, Type, SmartDotID, SessionID, BallID, FrameID, ShotNumber, LeaveType, Side, Position, Comment FROM combinedDB.[Shots]";
+        string selectQuery = "SELECT ID, Type, SmartDotID, SessionID, BallID, FrameID, ShotNumber, LeaveType, Side, Position, Comment, MobileID FROM combinedDB.[Shots]";
         
         using var command = new SqlCommand(selectQuery, connection);
 
@@ -25,6 +25,7 @@ public partial class RevMetrixDb
             var shot = new Shot
             {
                 Id = reader["ID"] != DBNull.Value ? Convert.ToInt32(reader["ID"]) : null,
+                MobileID = reader["MobileID"] != DBNull.Value && reader["MobileID"] != null ? Convert.ToInt32(reader["MobileID"]) : null,
                 Type = reader["Type"] != DBNull.Value ? Convert.ToInt32(reader["Type"]) : null,
                 SmartDotId = reader["SmartDotID"] != DBNull.Value ? Convert.ToInt32(reader["SmartDotID"]) : null,
                 SessionId = reader["SessionID"] != DBNull.Value ? Convert.ToInt32(reader["SessionID"]) : null,

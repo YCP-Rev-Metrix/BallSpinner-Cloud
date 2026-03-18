@@ -14,6 +14,7 @@ public class Establishment : Poco
     }
 
     public int? Id { get; set; }
+    public int? MobileID { get; set; }
     public string? Name { get; set; }
     public string? Lanes { get; set; }
     public string? Type { get; set; }

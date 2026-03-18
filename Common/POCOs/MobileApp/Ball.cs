@@ -14,6 +14,7 @@ public class Ball : Poco
     }
 
     public int? Id { get; set; }
+    public int? MobileID { get; set; }
     public int? UserId { get; set; }
     public string? Name { get; set; }
     public string? Weight { get; set; }

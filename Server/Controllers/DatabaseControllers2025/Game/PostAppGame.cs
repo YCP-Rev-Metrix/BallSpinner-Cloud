@@ -20,10 +20,7 @@ public class PostAppGame : AbstractFeaturedController
     public async Task<IActionResult> InsertGameApp([FromBody] Common.POCOs.MobileApp.Game request)
     {
         if (request == null) return BadRequest("Request body required.");
-        bool success = await ServerState.UserStore.AddGame(
-            request.GameNumber ?? string.Empty, request.Lanes ?? string.Empty,
-            request.Score ?? 0, request.Win ?? 0, request.StartingLane ?? 0,
-            request.SessionId ?? 0, request.TeamResult ?? 0, request.IndividualResult ?? 0);
+        bool success = await ServerState.UserStore.AddGame(request);
         return !success ? Problem("unable to add game to the database") : Ok("game inserted successfully");
     }
 }

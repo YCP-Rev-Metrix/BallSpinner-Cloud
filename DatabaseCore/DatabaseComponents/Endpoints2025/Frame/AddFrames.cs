@@ -29,12 +29,13 @@ public partial class RevMetrixDb
             }
 
             string insertFrameQuery = @"
-            INSERT INTO [combinedDB].[Frames] (gameId, shotOne, shotTwo, frameNumber, lane, result)
+            INSERT INTO [combinedDB].[Frames] (gameId, shotOne, shotTwo, frameNumber, lane, result, mobileId)
             OUTPUT INSERTED.id
-            VALUES (@gameId, @shotOne, @shotTwo, @frameNumber, @lane, @result)";
+            VALUES (@gameId, @shotOne, @shotTwo, @frameNumber, @lane, @result, @mobileId)";
 
             using var frameCommand = new SqlCommand(insertFrameQuery, connection, transaction);
             frameCommand.Parameters.AddWithValue("@gameId", frame.GameId ?? (object)DBNull.Value);
+            frameCommand.Parameters.AddWithValue("@mobileId", frame.MobileID.HasValue ? (object)frame.MobileID.Value : DBNull.Value);
             frameCommand.Parameters.AddWithValue("@shotOne", frame.ShotOne ?? (object)DBNull.Value);
             frameCommand.Parameters.AddWithValue("@shotTwo", frame.ShotTwo ?? (object)DBNull.Value);
             frameCommand.Parameters.AddWithValue("@frameNumber", frame.FrameNumber ?? (object)DBNull.Value);

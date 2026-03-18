@@ -1,4 +1,5 @@
 using Common.Logging;
+using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Diagnostics;
@@ -7,33 +8,35 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<bool> AddEstablishment(string? name, string? lanes, string? type, string? location)
+    public async Task<bool> AddEstablishment(Establishment establishment)
     {
-        // If not local use Server conn string, if local use local conn string
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-        //ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
-        using var connection1 = new SqlConnection(ConnectionString);
+        if (string.IsNullOrEmpty(ConnectionString))
+        {
+            throw new InvalidOperationException("Connection string is not set.");
+        }
+
+        using var connection = new SqlConnection(ConnectionString);
         try
         {
-            await connection1.OpenAsync();
+            await connection.OpenAsync();
         }
         catch (Exception e)
         {
             Debug.WriteLine(e);
         }
-        LogWriter.LogInfo(connection1);
+        LogWriter.LogInfo(connection);
 
-        const string insertQuery = "INSERT INTO [combinedDB].[Establishments] (Name, Lanes, Type, Location) " +
-                             "VALUES (@Name, @Lanes, @Type, @Location)";
+        const string insertQuery = "INSERT INTO [combinedDB].[Establishments] (Name, Lanes, Type, Location, MobileID) " +
+                             "VALUES (@Name, @Lanes, @Type, @Location, @MobileID)";
 
-        using var command = new SqlCommand(insertQuery, connection1);
+        using var command = new SqlCommand(insertQuery, connection);
+        command.Parameters.Add("@Name", SqlDbType.VarChar, 50).Value = establishment.Name ?? (object)DBNull.Value;
+        command.Parameters.Add("@Lanes", SqlDbType.VarChar, 50).Value = establishment.Lanes ?? (object)DBNull.Value;
+        command.Parameters.Add("@Type", SqlDbType.VarChar, 50).Value = establishment.Type ?? (object)DBNull.Value;
+        command.Parameters.Add("@Location", SqlDbType.VarChar, 50).Value = establishment.Location ?? (object)DBNull.Value;
+        command.Parameters.Add("@MobileID", SqlDbType.Int).Value = establishment.MobileID.HasValue ? (object)establishment.MobileID.Value : DBNull.Value;
 
-        command.Parameters.Add("@Name", SqlDbType.VarChar, 50).Value = name;
-        command.Parameters.Add("@Lanes", SqlDbType.VarChar, 50).Value = lanes;
-        command.Parameters.Add("@Type", SqlDbType.VarChar, 50).Value = type;
-        command.Parameters.Add("@Location", SqlDbType.VarChar, 50).Value = location;
-
-        // Execute the query
         int i = await command.ExecuteNonQueryAsync();
         return i > 0;
     }

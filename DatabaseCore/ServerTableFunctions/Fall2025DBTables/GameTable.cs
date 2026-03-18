@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +8,9 @@ namespace DatabaseCore.ServerTableFunctions.Fall2025DBTables
     {
         [Key]
         public int ID { get; set; }
+
+        public int? MobileID { get; set; }
+
         [Required]
         public string GameNumber { get; set; }
         [Required]

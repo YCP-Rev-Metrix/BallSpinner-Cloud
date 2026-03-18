@@ -28,12 +28,13 @@ public partial class RevMetrixDb
             }
 
             string insertBallQuery = @"
-            INSERT INTO [combinedDB].[Balls] (userId, name, weight, coreType)
+            INSERT INTO [combinedDB].[Balls] (userId, name, weight, coreType, mobileId)
             OUTPUT INSERTED.id
-            VALUES (@userId, @name, @weight, @coretype)";
+            VALUES (@userId, @name, @weight, @coretype, @mobileId)";
 
             using var ballCommand = new SqlCommand(insertBallQuery, connection, transaction);
             ballCommand.Parameters.AddWithValue("@name", ball.Name ?? string.Empty);
+            ballCommand.Parameters.AddWithValue("@mobileId", ball.MobileID.HasValue ? (object)ball.MobileID.Value : DBNull.Value);
             ballCommand.Parameters.AddWithValue("@userId", userId);
             ballCommand.Parameters.AddWithValue("@weight", ball.Weight ?? string.Empty);
             ballCommand.Parameters.AddWithValue("@coretype", ball.CoreType ?? string.Empty);

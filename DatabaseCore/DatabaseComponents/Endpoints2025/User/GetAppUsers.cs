@@ -13,7 +13,7 @@ public partial class RevMetrixDb
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        string selectQuery = "SELECT ID, Firstname, Lastname, Username, HashedPassword, Email, PhoneNumber, LastLogin, Hand FROM combinedDB.[Users]";
+        string selectQuery = "SELECT ID, Firstname, Lastname, Username, HashedPassword, Email, PhoneNumber, LastLogin, Hand, MobileID FROM combinedDB.[Users]";
         
         using var command = new SqlCommand(selectQuery, connection);
 
@@ -25,6 +25,7 @@ public partial class RevMetrixDb
             var user = new User
             {
                 Id = reader["ID"] != DBNull.Value ? Convert.ToInt32(reader["ID"]) : null,
+                MobileID = reader["MobileID"] != DBNull.Value && reader["MobileID"] != null ? Convert.ToInt32(reader["MobileID"]) : null,
                 Firstname = reader["Firstname"] as string,
                 Lastname = reader["Lastname"] as string,
                 Username = reader["Username"] as string,

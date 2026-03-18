@@ -1,4 +1,4 @@
-﻿namespace Common.POCOs.MobileApp;
+namespace Common.POCOs.MobileApp;
 
 public class Frame : Poco
 {
@@ -16,6 +16,7 @@ public class Frame : Poco
     }
     
     public int? Id { get; set; }
+    public int? MobileID { get; set; }
     public int? GameId { get; set; }
     
     public int? ShotOne { get; set; }

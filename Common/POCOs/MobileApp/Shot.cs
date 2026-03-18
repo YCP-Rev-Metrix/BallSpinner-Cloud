@@ -20,6 +20,7 @@ public class Shot : Poco
     }
 
     public int? Id { get; set; }
+    public int? MobileID { get; set; }
     public int? Type { get; set; }
     public int? SmartDotId { get; set; }
     public int? SessionId { get; set; }

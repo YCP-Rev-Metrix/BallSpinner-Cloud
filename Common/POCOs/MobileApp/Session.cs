@@ -20,6 +20,7 @@ public class Session : Poco
     }
 
     public int? Id { get; set; }
+    public int? MobileID { get; set; }
     public int? SessionNumber { get; set; }
     public int? EstablishmentId { get; set; }
     public int? EventId { get; set; }

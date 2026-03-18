@@ -12,7 +12,7 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
 
         string selectQuery = @"
-            SELECT id, gameId, shotOne, shotTwo, frameNumber, lane, result
+            SELECT id, gameId, shotOne, shotTwo, frameNumber, lane, result, mobileId
             FROM [combinedDB].[Frames]
             WHERE gameId = @gameId
         ";
@@ -27,6 +27,7 @@ public partial class RevMetrixDb
             var frame = new Frame
             {
                 Id = reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : null,
+                MobileID = reader["mobileId"] != DBNull.Value && reader["mobileId"] != null ? Convert.ToInt32(reader["mobileId"]) : null,
                 GameId = reader["gameId"] != DBNull.Value ? Convert.ToInt32(reader["gameId"]) : null,
                 ShotOne = reader["shotOne"] != DBNull.Value ? Convert.ToInt32(reader["shotOne"]) : null,
                 ShotTwo = reader["shotTwo"] != DBNull.Value ? Convert.ToInt32(reader["shotTwo"]) : null,

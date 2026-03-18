@@ -12,7 +12,7 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
 
         string selectQuery = @"
-            SELECT b.id, b.name, b.type, b.location, b.average, b.stats, b.standings
+            SELECT b.id, b.name, b.type, b.location, b.average, b.stats, b.standings, b.mobileId
             FROM [combinedDB].[Events] b
             JOIN [User] u ON b.userId = u.id
             WHERE u.username = @Username;";
@@ -27,6 +27,7 @@ public partial class RevMetrixDb
             var eventObj = new Event
             {
                 Id = reader["id"] != DBNull.Value ? Convert.ToInt32(reader["id"]) : null,
+                MobileID = reader["mobileId"] != DBNull.Value && reader["mobileId"] != null ? Convert.ToInt32(reader["mobileId"]) : null,
                 Name = reader["name"] as string,
                 Type = reader["type"] as string,
                 Location = reader["location"] as string,

@@ -160,40 +160,36 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.GetAppUsers();
     }
 
-    public override async Task<bool> AddEstablishment(string? name, string? lanes, string? type, string? location)
+    public override async Task<bool> AddEstablishment(Common.POCOs.MobileApp.Establishment establishment)
     {
-        return await ServerState.UserDatabase.AddEstablishment(name, lanes, type, location);
-
+        return await ServerState.UserDatabase.AddEstablishment(establishment);
     }
     public override async Task<(bool success, List<Common.POCOs.MobileApp.Establishment> establishments)> GetAppEstablishments()
     {
         return await ServerState.UserDatabase.GetAppEstablishments();
     }
 
-    public override async Task<bool> AddShot(int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment)
+    public override async Task<bool> AddShot(Common.POCOs.MobileApp.Shot shot)
     {
-        return await ServerState.UserDatabase.AddShot( type,  smartDotId,  sessionId,  ballId,  frameId,  shotNumber,  leaveType, side,  position,  comment);
-
+        return await ServerState.UserDatabase.AddShot(shot);
     }
     public override async Task<(bool success, List<Common.POCOs.MobileApp.Shot> shots)> GetAppShots()
     {
         return await ServerState.UserDatabase.GetAppShots();
 
     }
-    public override async Task<bool> AddGame(string gameNumber, string lanes, int score, int win, int startingLane, int sessionID, int teamResult, int individualResult)
+    public override async Task<bool> AddGame(Common.POCOs.MobileApp.Game game)
     {
-        return await ServerState.UserDatabase.AddGame(gameNumber, lanes, score, win, startingLane, sessionID, teamResult, individualResult);
-
+        return await ServerState.UserDatabase.AddGame(game);
     }
     public override async Task<(bool success, List<Common.POCOs.MobileApp.Game> games)> GetAppGames()
     {
         return await ServerState.UserDatabase.GetAppGames();
 
     }
-    public override async Task<bool> AddSession(int sessionNumber, int establishmentID, int eventID, int dateTime, string teamOpponent, string individualOpponent, int score, int stats, int teamRecord, int individualRecord)
+    public override async Task<bool> AddSession(Common.POCOs.MobileApp.Session session)
     {
-        return await ServerState.UserDatabase.AddSession( sessionNumber,  establishmentID,  eventID,  dateTime,  teamOpponent,  individualOpponent,  score,  stats,  teamRecord,  individualRecord);
-
+        return await ServerState.UserDatabase.AddSession(session);
     }
     public override async Task<(bool success, List<Common.POCOs.MobileApp.Session> users)> GetAppSessions()
     {

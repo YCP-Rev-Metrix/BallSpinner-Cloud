@@ -55,13 +55,13 @@ public abstract class AbstractUserStore
     //-------------------------Phone App-------------------------------------
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.User> users)> GetAppUsers();
     public abstract Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email, string? lastLogin, string? hand);
-    public abstract Task<bool> AddEstablishment(string? name, string? lanes, string? type, string? location);
+    public abstract Task<bool> AddEstablishment(Common.POCOs.MobileApp.Establishment establishment);
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.Establishment> establishments)> GetAppEstablishments();
-    public abstract Task<bool> AddShot(int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment);
+    public abstract Task<bool> AddShot(Common.POCOs.MobileApp.Shot shot);
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.Shot> shots)> GetAppShots();
-    public abstract Task<bool> AddGame(string gameNumber, string lanes, int score, int win, int startingLane, int sessionID, int teamResult, int individualResult);
+    public abstract Task<bool> AddGame(Common.POCOs.MobileApp.Game game);
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.Game> games)> GetAppGames();
-    public abstract Task<bool> AddSession(int sessionNumber, int establishmentID, int eventID, int dateTime, string teamOpponent, string individualOpponent, int score, int stats, int teamRecord, int individualRecord);
+    public abstract Task<bool> AddSession(Common.POCOs.MobileApp.Session session);
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.Session> users)> GetAppSessions();
     public abstract Task<bool> AddEvent(Event eventObj, string? username);
     public abstract Task<List<Event>> GetEvents(string? username);

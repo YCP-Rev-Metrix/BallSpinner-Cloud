@@ -29,12 +29,13 @@ public partial class RevMetrixDb
             }
 
             string insertEventQuery = @"
-                INSERT INTO [combinedDB].[Events] (userId, name, type, location, average, stats, standings)
+                INSERT INTO [combinedDB].[Events] (userId, name, type, location, average, stats, standings, mobileId)
                 OUTPUT INSERTED.id
-                VALUES (@userId, @name, @type, @location, @average, @stats, @standings)";
+                VALUES (@userId, @name, @type, @location, @average, @stats, @standings, @mobileId)";
 
             using var eventCommand = new SqlCommand(insertEventQuery, connection, transaction);
             eventCommand.Parameters.AddWithValue("@userId", userId);
+            eventCommand.Parameters.AddWithValue("@mobileId", eventObj.MobileID.HasValue ? (object)eventObj.MobileID.Value : DBNull.Value);
             eventCommand.Parameters.AddWithValue("@name", eventObj.Name ?? string.Empty);
             eventCommand.Parameters.AddWithValue("@type", eventObj.Type ?? string.Empty);
             eventCommand.Parameters.AddWithValue("@location", eventObj.Location ?? string.Empty);
