@@ -103,13 +103,13 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.GetBalls(username);
     }
 
-    public override async Task<bool> DeleteBallsByUsername(string? username) => await ServerState.UserDatabase.DeleteBallsByUsername(username);
-    public override async Task<bool> DeleteAppEstablishments(string? username) => await ServerState.UserDatabase.DeleteAppEstablishments(username);
-    public override async Task<bool> DeleteEventsByUsername(string? username) => await ServerState.UserDatabase.DeleteEventsByUsername(username);
-    public override async Task<bool> DeleteAppSessions(string? username) => await ServerState.UserDatabase.DeleteAppSessions(username);
-    public override async Task<bool> DeleteAppGames(string? username) => await ServerState.UserDatabase.DeleteAppGames(username);
-    public override async Task<bool> DeleteAppFrames(string? username) => await ServerState.UserDatabase.DeleteAppFrames(username);
-    public override async Task<bool> DeleteAppShots(string? username) => await ServerState.UserDatabase.DeleteAppShots(username);
+    public override async Task<bool> DeleteBallsByUsername(string? username, int? mobileID) => await ServerState.UserDatabase.DeleteBallsByUsername(username, mobileID);
+    public override async Task<bool> DeleteAppEstablishments(string? username, int? mobileID) => await ServerState.UserDatabase.DeleteAppEstablishments(username, mobileID);
+    public override async Task<bool> DeleteEventsByUsername(string? username, int? mobileID) => await ServerState.UserDatabase.DeleteEventsByUsername(username, mobileID);
+    public override async Task<bool> DeleteAppSessions(string? username, int? mobileID) => await ServerState.UserDatabase.DeleteAppSessions(username, mobileID);
+    public override async Task<bool> DeleteAppGames(string? username, int? mobileID) => await ServerState.UserDatabase.DeleteAppGames(username, mobileID);
+    public override async Task<bool> DeleteAppFrames(string? username, int? mobileID) => await ServerState.UserDatabase.DeleteAppFrames(username, mobileID);
+    public override async Task<bool> DeleteAppShots(string? username, int? mobileID) => await ServerState.UserDatabase.DeleteAppShots(username, mobileID);
 
     public override async Task<bool> AddFrames(Frame frame, string? username)
     {

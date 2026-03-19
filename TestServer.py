@@ -18,6 +18,9 @@ BASE_URL = "https://api.revmetrix.io"
 # Test user for authorized requests (must exist in DB for auth tests)
 TEST_USERNAME = "string"
 TEST_PASSWORD = "string"
+# MobileID for the same test user (used by delete endpoints).
+# If you don't know it yet, keep this at 0; the server falls back to username-only matching.
+TEST_MOBILE_ID = 1
 
 
 def _url(path: str) -> str:
@@ -339,31 +342,66 @@ class TestAPIEndpoint(unittest.TestCase):
 
     # --- Deletes (delete all for authenticated user; no body) ---
     def test_delete_app_shots(self):
-        r = requests.delete(_url("/api/deletes/DeleteAppShots"), headers=auth_headers(), verify=False)
+        r = requests.delete(
+            _url("/api/deletes/DeleteAppShots"),
+            json={"username": TEST_USERNAME, "mobileID": TEST_MOBILE_ID},
+            headers=auth_headers(),
+            verify=False,
+        )
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
     def test_delete_app_frames(self):
-        r = requests.delete(_url("/api/deletes/DeleteAppFrames"), headers=auth_headers(), verify=False)
+        r = requests.delete(
+            _url("/api/deletes/DeleteAppFrames"),
+            json={"username": TEST_USERNAME, "mobileID": TEST_MOBILE_ID},
+            headers=auth_headers(),
+            verify=False,
+        )
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
     def test_delete_app_games(self):
-        r = requests.delete(_url("/api/deletes/DeleteAppGames"), headers=auth_headers(), verify=False)
+        r = requests.delete(
+            _url("/api/deletes/DeleteAppGames"),
+            json={"username": TEST_USERNAME, "mobileID": TEST_MOBILE_ID},
+            headers=auth_headers(),
+            verify=False,
+        )
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
     def test_delete_app_sessions(self):
-        r = requests.delete(_url("/api/deletes/DeleteAppSessions"), headers=auth_headers(), verify=False)
+        r = requests.delete(
+            _url("/api/deletes/DeleteAppSessions"),
+            json={"username": TEST_USERNAME, "mobileID": TEST_MOBILE_ID},
+            headers=auth_headers(),
+            verify=False,
+        )
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
     def test_delete_events_by_username(self):
-        r = requests.delete(_url("/api/deletes/DeleteEventsByUsername"), headers=auth_headers(), verify=False)
+        r = requests.delete(
+            _url("/api/deletes/DeleteEventsByUsername"),
+            json={"username": TEST_USERNAME, "mobileID": TEST_MOBILE_ID},
+            headers=auth_headers(),
+            verify=False,
+        )
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
     def test_delete_app_establishments(self):
-        r = requests.delete(_url("/api/deletes/DeleteAppEstablishments"), headers=auth_headers(), verify=False)
+        r = requests.delete(
+            _url("/api/deletes/DeleteAppEstablishments"),
+            json={"username": TEST_USERNAME, "mobileID": TEST_MOBILE_ID},
+            headers=auth_headers(),
+            verify=False,
+        )
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
     def test_delete_balls_by_username(self):
-        r = requests.delete(_url("/api/deletes/DeleteBallsByUsername"), headers=auth_headers(), verify=False)
+        r = requests.delete(
+            _url("/api/deletes/DeleteBallsByUsername"),
+            json={"username": TEST_USERNAME, "mobileID": TEST_MOBILE_ID},
+            headers=auth_headers(),
+            verify=False,
+        )
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
     # --- MobileID round-trip: POST with mobileId, GET and verify item can have mobileID ---

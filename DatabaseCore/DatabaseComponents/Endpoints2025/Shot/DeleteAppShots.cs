@@ -4,9 +4,9 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<bool> DeleteAppShots(string? username)
+    public async Task<bool> DeleteAppShots(string? username, int? mobileID)
     {
-        int userId = await GetUserId(username);
+        int userId = await GetUserId(username, mobileID);
         if (userId <= 0) return false;
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         if (string.IsNullOrEmpty(ConnectionString)) return false;

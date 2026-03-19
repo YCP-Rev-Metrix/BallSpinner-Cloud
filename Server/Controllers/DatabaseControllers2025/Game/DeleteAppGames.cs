@@ -14,11 +14,11 @@ public class DeleteAppGames : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteAllGamesForUser()
+    public async Task<IActionResult> DeleteAllGamesForUser([FromBody] DeleteAccountRequest request)
     {
-        var username = GetUsername();
-        if (string.IsNullOrEmpty(username)) return Unauthorized();
-        bool success = await ServerState.UserStore.DeleteAppGames(username);
+        var username = request?.Username;
+        if (string.IsNullOrEmpty(username)) return BadRequest("username is required.");
+        bool success = await ServerState.UserStore.DeleteAppGames(username, request?.MobileID);
         return success ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
     }
 }

@@ -14,11 +14,11 @@ public class DeleteAppEstablishments : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteAllEstablishmentsForUser()
+    public async Task<IActionResult> DeleteAllEstablishmentsForUser([FromBody] DeleteAccountRequest request)
     {
-        var username = GetUsername();
-        if (string.IsNullOrEmpty(username)) return Unauthorized();
-        bool success = await ServerState.UserStore.DeleteAppEstablishments(username);
+        var username = request?.Username;
+        if (string.IsNullOrEmpty(username)) return BadRequest("username is required.");
+        bool success = await ServerState.UserStore.DeleteAppEstablishments(username, request?.MobileID);
         return success ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
     }
 }
