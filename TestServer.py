@@ -479,6 +479,14 @@ class TestAPIEndpoint(unittest.TestCase):
         )
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
+    def test_delete_orphaned_app_data(self):
+        r = requests.delete(
+            _url("/api/deletes/DeleteOrphanedAppData"),
+            headers=auth_headers(),
+            verify=False,
+        )
+        self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
+
     def test_delete_flow_removes_user_sessions_games_frames_and_shots(self):
         headers = auth_headers()
 
