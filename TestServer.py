@@ -8,6 +8,8 @@ Or:  python TestServer.py
 import unittest
 import requests
 import warnings
+import time
+import base64
 
 # --- Configure base URL (no trailing slash) ---
 # Local:  https://localhost:7238
@@ -21,6 +23,10 @@ TEST_PASSWORD = "string"
 # MobileID for the same test user (used by delete endpoints).
 # If you don't know it yet, keep this at 0; the server falls back to username-only matching.
 TEST_MOBILE_ID = 1
+TEST_MARKER = "PYTEST_CLOUD"
+
+# Keep test-generated numeric values very high to avoid collisions with real app data.
+HIGH_NUM_BASE = 1_900_000_000 + int(time.time()) % 10_000
 
 
 def _url(path: str) -> str:
@@ -50,6 +56,45 @@ def auth_headers() -> dict:
 
 
 class TestAPIEndpoint(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+        cls._run_cloud_cleanup()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._run_cloud_cleanup()
+
+    @classmethod
+    def _run_cloud_cleanup(cls):
+        try:
+            headers = auth_headers()
+        except Exception:
+            return
+
+        for endpoint in (
+            "/api/deletes/DeleteAppShots",
+            "/api/deletes/DeleteAppFrames",
+            "/api/deletes/DeleteAppGames",
+            "/api/deletes/DeleteAppSessions",
+            "/api/deletes/DeleteEventsByUsername",
+            "/api/deletes/DeleteBallsByUsername",
+            "/api/deletes/DeleteAppEstablishments",
+        ):
+            try:
+                requests.delete(
+                    _url(endpoint),
+                    json={"username": TEST_USERNAME, "mobileID": TEST_MOBILE_ID},
+                    headers=headers,
+                    verify=False,
+                )
+            except requests.RequestException:
+                pass
+
+    @staticmethod
+    def _high(offset: int) -> int:
+        return HIGH_NUM_BASE + offset
+
     def setUp(self):
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
 
@@ -92,12 +137,13 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_user_app(self):
         # PostUserApp expects MobileApp.User; hashedPassword must be base64 or hex bytes - server may expect pre-hashed
+        marker_suffix = str(int(time.time()))
         payload = {
             "firstname": "TestFirst",
             "lastname": "TestLast",
-            "username": "testuser_py_" + str(__import__("time").time()),
+            "username": f"{TEST_MARKER}_user_{marker_suffix}",
             "hashedPassword": "AQIDBA==",  # minimal base64 bytes; replace with real hash if server requires
-            "email": "testpy@example.com",
+            "email": f"{TEST_MARKER}_{marker_suffix}@example.com",
             "phoneNumber": "5551234567",
             "lastLogin": None,
             "hand": None,
@@ -124,7 +170,7 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_establishment_app_with_mobile_id(self):
         payload = {
-            "mobileID": 90001,
+            "mobileID": self._high(1),
             "name": "TestEstablishmentMobileId",
             "lanes": "1-10",
             "type": "TestType",
@@ -143,10 +189,10 @@ class TestAPIEndpoint(unittest.TestCase):
         payload = {
             "gameNumber": "G001",
             "lanes": "1-2",
-            "score": 200,
+            "score": self._high(10),
             "win": 1,
-            "startingLane": 1,
-            "sessionId": 1,
+            "startingLane": self._high(11),
+            "sessionId": self._high(12),
             "teamResult": 1,
             "individualResult": 1,
         }
@@ -155,13 +201,13 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_app_game_with_mobile_id(self):
         payload = {
-            "mobileID": 90002,
+            "mobileID": self._high(2),
             "gameNumber": "G_MobileId",
             "lanes": "1-2",
-            "score": 200,
+            "score": self._high(20),
             "win": 1,
-            "startingLane": 1,
-            "sessionId": 1,
+            "startingLane": self._high(21),
+            "sessionId": self._high(22),
             "teamResult": 1,
             "individualResult": 1,
         }
@@ -176,13 +222,13 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_app_session(self):
         payload = {
-            "sessionNumber": 1,
-            "establishmentId": 1,
-            "eventId": 1,
-            "dateTime": 20250101120000,
+            "sessionNumber": self._high(23),
+            "establishmentId": self._high(24),
+            "eventId": self._high(25),
+            "dateTime": self._high(26),
             "teamOpponent": "TeamA",
             "individualOpponent": "Opponent1",
-            "score": 500,
+            "score": self._high(27),
             "stats": 0,
             "teamRecord": 1,
             "individualRecord": 1,
@@ -192,14 +238,14 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_app_session_with_mobile_id(self):
         payload = {
-            "mobileID": 90003,
-            "sessionNumber": 1,
-            "establishmentId": 1,
-            "eventId": 1,
-            "dateTime": 20250101120000,
+            "mobileID": self._high(3),
+            "sessionNumber": self._high(30),
+            "establishmentId": self._high(31),
+            "eventId": self._high(32),
+            "dateTime": self._high(33),
             "teamOpponent": "TeamA",
             "individualOpponent": "Opponent1",
-            "score": 500,
+            "score": self._high(34),
             "stats": 0,
             "teamRecord": 1,
             "individualRecord": 1,
@@ -216,11 +262,11 @@ class TestAPIEndpoint(unittest.TestCase):
     def test_post_app_shot(self):
         payload = {
             "type": 1,
-            "smartDotId": 1,
-            "sessionId": 1,
-            "ballId": 1,
-            "frameId": 1,
-            "shotNumber": 1,
+            "smartDotId": self._high(35),
+            "sessionId": self._high(36),
+            "ballId": self._high(37),
+            "frameId": self._high(38),
+            "shotNumber": self._high(39),
             "leaveType": 0,
             "side": "left",
             "position": "10",
@@ -231,13 +277,13 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_app_shot_with_mobile_id(self):
         payload = {
-            "mobileID": 90004,
+            "mobileID": self._high(4),
             "type": 1,
-            "smartDotId": 1,
-            "sessionId": 1,
-            "ballId": 1,
-            "frameId": 1,
-            "shotNumber": 1,
+            "smartDotId": self._high(40),
+            "sessionId": self._high(41),
+            "ballId": self._high(42),
+            "frameId": self._high(43),
+            "shotNumber": self._high(44),
             "leaveType": 0,
             "side": "left",
             "position": "10",
@@ -263,7 +309,7 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_ball_with_mobile_id(self):
         payload = {
-            "mobileID": 90005,
+            "mobileID": self._high(5),
             "name": "TestBallMobileId",
             "weight": "14",
             "coreType": "Reactive",
@@ -279,11 +325,11 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_event(self):
         payload = {
-            "userId": 1,
+            "userId": self._high(50),
             "name": "Test Event",
             "type": "Tournament",
             "location": "Test City",
-            "average": 200,
+            "average": self._high(51),
             "stats": 0,
             "standings": None,
         }
@@ -292,12 +338,12 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_event_with_mobile_id(self):
         payload = {
-            "mobileID": 90006,
-            "userId": 1,
+            "mobileID": self._high(6),
+            "userId": self._high(60),
             "name": "Test Event MobileId",
             "type": "Tournament",
             "location": "Test City",
-            "average": 200,
+            "average": self._high(61),
             "stats": 0,
             "standings": None,
         }
@@ -317,28 +363,57 @@ class TestAPIEndpoint(unittest.TestCase):
 
     def test_post_frames(self):
         payload = {
-            "gameId": 1,
-            "shotOne": 0,
-            "shotTwo": 0,
-            "frameNumber": 1,
-            "lane": 1,
-            "result": 10,
+            "gameId": self._high(65),
+            "shotOne": self._high(66),
+            "shotTwo": self._high(67),
+            "frameNumber": self._high(68),
+            "lane": self._high(69),
+            "result": self._high(70),
         }
         r = requests.post(_url("/api/posts/PostFrames"), json=payload, headers=auth_headers(), verify=False)
         self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
 
     def test_post_frames_with_mobile_id(self):
         payload = {
-            "mobileID": 90007,
-            "gameId": 1,
-            "shotOne": 0,
-            "shotTwo": 0,
-            "frameNumber": 1,
-            "lane": 1,
-            "result": 10,
+            "mobileID": self._high(7),
+            "gameId": self._high(70),
+            "shotOne": self._high(71),
+            "shotTwo": self._high(72),
+            "frameNumber": self._high(73),
+            "lane": self._high(74),
+            "result": self._high(75),
         }
         r = requests.post(_url("/api/posts/PostFrames"), json=payload, headers=auth_headers(), verify=False)
         self.assertIn(r.status_code, (200, 400, 404), f"Got {r.status_code} - {r.text}")
+
+    def test_authorize_combined_phone_user(self):
+        unique_username = f"{TEST_MARKER}_phone_auth_{self._high(500)}"
+        combined_password_bytes = b"PhoneAuthPwBytes"
+        combined_password = base64.b64encode(combined_password_bytes).decode("ascii")
+
+        create_payload = {
+            "mobileID": self._high(501),
+            "firstname": "Phone",
+            "lastname": "User",
+            "username": unique_username,
+            "hashedPassword": combined_password,
+            "email": f"{TEST_MARKER}_{self._high(500)}@example.com",
+            "phoneNumber": "5550000000",
+            "lastLogin": None,
+            "hand": None,
+        }
+        create_resp = requests.post(_url("/api/posts/PostUserApp"), json=create_payload, headers=auth_headers(), verify=False)
+        self.assertEqual(create_resp.status_code, 200, f"Expected 200 creating combined user, got {create_resp.status_code} - {create_resp.text}")
+
+        auth_resp = requests.post(
+            _url("/api/posts/Authorize"),
+            json={"username": unique_username, "password": combined_password},
+            headers={"Content-Type": "application/json"},
+            verify=False,
+        )
+        self.assertEqual(auth_resp.status_code, 200, f"Expected 200 authorizing combined user, got {auth_resp.status_code} - {auth_resp.text}")
+        token = auth_resp.json().get("tokenA")
+        self.assertTrue(token, "Expected tokenA in authorize response for combined user")
 
     # --- Deletes (delete all for authenticated user; no body) ---
     def test_delete_app_shots(self):

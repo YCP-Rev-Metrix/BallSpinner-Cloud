@@ -2,6 +2,8 @@ using Common.POCOs;
 using Common.POCOs.MobileApp;
 using System.Numerics;
 using Common.POCOs.PITeam2025;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Server.Security.Stores;
 
@@ -40,10 +42,40 @@ public class DatabaseUserStore : AbstractUserStore
             byte[] hashedPassword = ServerState.SecurityHandler.SaltHashPassword(password, result.salt);
             return hashedPassword.SequenceEqual(result.hashedPassword) ? ((bool success, string[]? roles))(true, roles) : ((bool success, string[]? roles))(false, roles);
         }
-        else
+
+        // Fallback for mobile app users stored in combinedDB.[Users].
+        (bool combinedSuccess, byte[]? combinedHashedPassword) = await ServerState.UserDatabase.GetCombinedUserValidData(username);
+        if (!combinedSuccess || combinedHashedPassword == null) return (false, null);
+
+        // Support commonly observed formats for combined users:
+        // 1) pre-hashed bytes sent by client and re-sent as base64 in password field
+        // 2) plaintext bytes stored directly (legacy mobile behavior)
+        // 3) unsalted SHA256(password) bytes
+        bool passwordMatches = false;
+
+        try
         {
-            return (false, null);
+            byte[] base64Bytes = Convert.FromBase64String(password ?? string.Empty);
+            if (AreByteArraysEqual(base64Bytes, combinedHashedPassword)) passwordMatches = true;
         }
+        catch (FormatException)
+        {
+            // Not base64; continue with other checks.
+        }
+
+        if (!passwordMatches)
+        {
+            byte[] plaintextBytes = Encoding.ASCII.GetBytes(password ?? string.Empty);
+            if (AreByteArraysEqual(plaintextBytes, combinedHashedPassword)) passwordMatches = true;
+        }
+
+        if (!passwordMatches)
+        {
+            byte[] sha = SHA256.HashData(Encoding.ASCII.GetBytes(password ?? string.Empty));
+            if (AreByteArraysEqual(sha, combinedHashedPassword)) passwordMatches = true;
+        }
+
+        return passwordMatches ? (true, new[] { "user" }) : (false, null);
     }
 
     public static bool AreByteArraysEqual(byte[] array1, byte[] array2)
