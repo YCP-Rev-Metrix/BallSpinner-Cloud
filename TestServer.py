@@ -404,6 +404,81 @@ class TestAPIEndpoint(unittest.TestCase):
         )
         self.assertIn(r.status_code, (200, 401, 500), f"Got {r.status_code} - {r.text}")
 
+    def test_delete_flow_removes_user_sessions_games_frames_and_shots(self):
+        headers = auth_headers()
+
+        def _get_json(path: str):
+            resp = requests.get(_url(path), headers=headers, verify=False)
+            self.assertEqual(resp.status_code, 200, f"Expected 200 from {path}, got {resp.status_code} - {resp.text}")
+            data = resp.json()
+            self.assertIsInstance(data, list, f"{path} should return a list")
+            return data
+
+        # Build ownership chain for this user from events -> sessions -> games -> frames/shots.
+        events = _get_json("/api/gets/GetEventsByUsername")
+        user_event_ids = {e.get("id") for e in events if isinstance(e, dict) and e.get("id") is not None}
+
+        sessions_before = _get_json("/api/gets/GetAppSessions")
+        user_sessions_before = [s for s in sessions_before if isinstance(s, dict) and s.get("eventID") in user_event_ids]
+        user_session_ids = {s.get("id") for s in user_sessions_before if s.get("id") is not None}
+
+        games_before = _get_json("/api/gets/GetAppGames")
+        user_games_before = [g for g in games_before if isinstance(g, dict) and g.get("sessionID") in user_session_ids]
+        user_game_ids = {g.get("id") for g in user_games_before if g.get("id") is not None}
+
+        frames_before = _get_json("/api/gets/GetFramesByGameId?gameId=1")
+        user_frames_before = [f for f in frames_before if isinstance(f, dict) and f.get("gameId") in user_game_ids]
+
+        shots_before = _get_json("/api/gets/GetAppShots")
+        user_shots_before = [
+            s for s in shots_before
+            if isinstance(s, dict) and (s.get("sessionID") in user_session_ids or s.get("frameID") in {f.get("id") for f in user_frames_before})
+        ]
+
+        # Run delete chain from leaf -> root.
+        for endpoint in (
+            "/api/deletes/DeleteAppShots",
+            "/api/deletes/DeleteAppFrames",
+            "/api/deletes/DeleteAppGames",
+            "/api/deletes/DeleteAppSessions",
+        ):
+            delete_resp = requests.delete(
+                _url(endpoint),
+                json={"username": TEST_USERNAME, "mobileID": TEST_MOBILE_ID},
+                headers=headers,
+                verify=False,
+            )
+            self.assertEqual(delete_resp.status_code, 200, f"{endpoint} failed: {delete_resp.status_code} - {delete_resp.text}")
+
+        sessions_after = _get_json("/api/gets/GetAppSessions")
+        user_sessions_after = [s for s in sessions_after if isinstance(s, dict) and s.get("eventID") in user_event_ids]
+
+        games_after = _get_json("/api/gets/GetAppGames")
+        user_session_ids_after = {s.get("id") for s in user_sessions_after if s.get("id") is not None}
+        user_games_after = [g for g in games_after if isinstance(g, dict) and g.get("sessionID") in user_session_ids_after]
+
+        frames_after = _get_json("/api/gets/GetFramesByGameId?gameId=1")
+        user_game_ids_after = {g.get("id") for g in user_games_after if g.get("id") is not None}
+        user_frames_after = [f for f in frames_after if isinstance(f, dict) and f.get("gameId") in user_game_ids_after]
+
+        shots_after = _get_json("/api/gets/GetAppShots")
+        user_frame_ids_after = {f.get("id") for f in user_frames_after if f.get("id") is not None}
+        user_shots_after = [
+            s for s in shots_after
+            if isinstance(s, dict) and (s.get("sessionID") in user_session_ids_after or s.get("frameID") in user_frame_ids_after)
+        ]
+
+        # If there was nothing to delete this test is still valid, but this helps with diagnosis.
+        self.assertGreaterEqual(len(user_sessions_before), 0)
+        self.assertGreaterEqual(len(user_games_before), 0)
+        self.assertGreaterEqual(len(user_frames_before), 0)
+        self.assertGreaterEqual(len(user_shots_before), 0)
+
+        self.assertEqual(len(user_sessions_after), 0, "User sessions still exist after DeleteAppSessions")
+        self.assertEqual(len(user_games_after), 0, "User games still exist after DeleteAppGames")
+        self.assertEqual(len(user_frames_after), 0, "User frames still exist after DeleteAppFrames")
+        self.assertEqual(len(user_shots_after), 0, "User shots still exist after DeleteAppShots")
+
     # --- MobileID round-trip: POST with mobileId, GET and verify item can have mobileID ---
     def test_get_app_establishments_may_include_mobile_id(self):
         r = requests.get(_url("/api/gets/GetAppEstablishments"), headers=auth_headers(), verify=False)

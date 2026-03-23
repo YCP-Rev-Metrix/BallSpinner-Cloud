@@ -13,15 +13,10 @@ public partial class RevMetrixDb
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
-
-        string selectQuery = "SELECT id FROM [User] WHERE username = @Username"; // Adjusted to select more fields
-        
-        using var command = new SqlCommand(selectQuery, connection);
-        
-        command.Parameters.AddWithValue("@Username", username);
-            
-        var result = command.ExecuteScalarAsync();
-        return result.Result == DBNull.Value ? 0 : Convert.ToInt32(result.Result);
+        // Prefer combinedDB users (cloud app tables reference this), then fall back to legacy [User].
+        int combinedDbUserId = await TryGetUserId(connection, "[combinedDB].[Users]", username);
+        if (combinedDbUserId > 0) return combinedDbUserId;
+        return await TryGetUserId(connection, "[User]", username);
     }
 
     // Overload used by delete endpoints: match the user row by both username and mobileId when possible.
@@ -35,30 +30,33 @@ public partial class RevMetrixDb
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        // Other tables in this codebase use `mobileId` (lower camel) column naming.
+        // Prefer combinedDB users (cloud app tables reference this), then fall back to legacy [User].
+        int combinedDbUserId = await TryGetUserId(connection, "[combinedDB].[Users]", username, mobileID.Value);
+        if (combinedDbUserId > 0) return combinedDbUserId;
+        int legacyUserId = await TryGetUserId(connection, "[User]", username, mobileID.Value);
+        if (legacyUserId > 0) return legacyUserId;
+        return await GetUserId(username);
+    }
+
+    private static async Task<int> TryGetUserId(SqlConnection connection, string tableName, string? username, int? mobileID = null)
+    {
         try
         {
-            string selectQuery = "SELECT id FROM [User] WHERE username = @Username AND mobileId = @MobileID";
+            string selectQuery = mobileID.HasValue
+                ? $"SELECT id FROM {tableName} WHERE username = @Username AND mobileId = @MobileID"
+                : $"SELECT id FROM {tableName} WHERE username = @Username";
 
             using var command = new SqlCommand(selectQuery, connection);
             command.Parameters.AddWithValue("@Username", username);
-            command.Parameters.AddWithValue("@MobileID", mobileID.Value);
+            if (mobileID.HasValue) command.Parameters.AddWithValue("@MobileID", mobileID.Value);
 
             var result = await command.ExecuteScalarAsync();
-            if (result == null || result == DBNull.Value)
-            {
-                // If mobileId didn't match (e.g. older rows / not populated), fall back to username-only
-                // so replace flows don't hard-fail.
-                return await GetUserId(username);
-            }
-
-            return Convert.ToInt32(result);
+            return result == null || result == DBNull.Value ? 0 : Convert.ToInt32(result);
         }
         catch (SqlException)
         {
-            // If the DB hasn't been updated with the mobileId column yet,
-            // keep deletes working via username-only.
-            return await GetUserId(username);
+            // Allows compatibility with environments where either table/column isn't present.
+            return 0;
         }
     }
 }
