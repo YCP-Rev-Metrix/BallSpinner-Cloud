@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+using Common.Logging;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -8,23 +8,25 @@ public partial class RevMetrixDb
 {
     public async Task<bool> AddRefreshToken(byte[] token, string? username, DateTime expiration)
     {
-        // Look into user table, get id that matches with username
-        // add row to token table (token, id, expiration)
         string ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        string insertQuery = "INSERT INTO [RefreshToken] (token, userid, expiration) " +
-            "VALUES (@Token, (SELECT id FROM [User] WHERE username = @Username), @Expiration);";
+        // RefreshToken table references legacy [User]. Combined-only app users may not exist there.
+        // In that case, allow auth to succeed without storing a refresh token row.
+        const string selectUserIdQuery = "SELECT id FROM [User] WHERE username = @Username";
+        using var selectCommand = new SqlCommand(selectUserIdQuery, connection);
+        selectCommand.Parameters.Add("@Username", SqlDbType.VarChar).Value = username;
+        object? userIdResult = await selectCommand.ExecuteScalarAsync();
+        if (userIdResult == null || userIdResult == DBNull.Value) return true;
 
-        using var command = new SqlCommand(insertQuery, connection);
-        // Set the parameter values
-        command.Parameters.Add("@Username", SqlDbType.VarChar).Value = username;
-        command.Parameters.Add("@Token", SqlDbType.VarBinary, 32).Value = token;
-        command.Parameters.Add("@Expiration", SqlDbType.DateTime).Value = expiration;
+        const string insertQuery = "INSERT INTO [RefreshToken] (token, userid, expiration) VALUES (@Token, @UserId, @Expiration);";
+        using var insertCommand = new SqlCommand(insertQuery, connection);
+        insertCommand.Parameters.Add("@UserId", SqlDbType.Int).Value = Convert.ToInt32(userIdResult);
+        insertCommand.Parameters.Add("@Token", SqlDbType.VarBinary, 32).Value = token;
+        insertCommand.Parameters.Add("@Expiration", SqlDbType.DateTime).Value = expiration;
 
-        // Execute the query
-        int i = await command.ExecuteNonQueryAsync();
-        return i != -1;
+        int i = await insertCommand.ExecuteNonQueryAsync();
+        return i > 0;
     }
 }
