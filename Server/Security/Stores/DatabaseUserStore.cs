@@ -130,9 +130,9 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddBalls(ball, username);
     }
     
-    public override async Task<List<Common.POCOs.MobileApp.Ball>> GetBalls(string? username)
+    public override async Task<List<Common.POCOs.MobileApp.Ball>> GetBalls(string? username, int? mobileID = null)
     {
-        return await ServerState.UserDatabase.GetBalls(username);
+        return await ServerState.UserDatabase.GetBalls(username, mobileID);
     }
 
     public override async Task<bool> DeleteBallsByUsername(string? username, int? mobileID) => await ServerState.UserDatabase.DeleteBallsByUsername(username, mobileID);
@@ -158,9 +158,9 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.AddEvent(eventObj, username);
     }
     
-    public override async Task<List<Event>> GetEvents(string? username)
+    public override async Task<List<Event>> GetEvents(string? username, int? mobileID = null)
     {
-        return await ServerState.UserDatabase.GetEvents(username);
+        return await ServerState.UserDatabase.GetEvents(username, mobileID);
     }
 
     public override async Task<Arsenal> GetArsenalbyUsername(string? username)

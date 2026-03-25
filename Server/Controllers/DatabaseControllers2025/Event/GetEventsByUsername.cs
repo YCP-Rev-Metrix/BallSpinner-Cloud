@@ -15,7 +15,14 @@ public class GetEventsByUsername : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RetrieveEventsByUsername()
     {
-        var events = await ServerState.UserStore.GetEvents(GetUsername());
+        int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
+        var events = await ServerState.UserStore.GetEvents(GetUsername(), mobileId);
         return events == null ? Problem("unable to retrieve events from the database") : Ok(events);
+    }
+
+    private static int? TryParseQueryInt(Microsoft.Extensions.Primitives.StringValues values)
+    {
+        if (values.Count == 0) return null;
+        return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }
