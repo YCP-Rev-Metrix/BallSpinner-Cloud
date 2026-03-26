@@ -19,7 +19,15 @@ public class PostAppSession : AbstractFeaturedController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> InsertUserCombined([FromBody] Common.POCOs.MobileApp.Session request)
     {
-        bool success = await ServerState.UserStore.AddSession(request);
+        if (request == null) return BadRequest("Request body required.");
+        int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
+        bool success = await ServerState.UserDatabase.AddSessionForUser(request, GetUsername(), mobileId);
         return !success ? Problem("unable to add Session to the database") : Ok("Session inserted successfully");
+    }
+
+    private static int? TryParseQueryInt(Microsoft.Extensions.Primitives.StringValues values)
+    {
+        if (values.Count == 0) return null;
+        return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }

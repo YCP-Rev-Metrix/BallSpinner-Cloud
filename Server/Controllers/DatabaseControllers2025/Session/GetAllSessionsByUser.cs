@@ -1,5 +1,3 @@
-using Common.Logging;
-using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -9,13 +7,12 @@ namespace Server.Controllers.DatabaseControllers2025.Session;
 [ApiController]
 [Tags("Gets")]
 [Route("api/gets/[controller]")]
-public class GetAppSessions : AbstractFeaturedController
+public class GetAllSessionsByUser : AbstractFeaturedController
 {
     [Authorize]
-    [HttpGet(Name = "GetAppSessions")]
+    [HttpGet(Name = "GetAllSessionsByUser")]
     [ProducesResponseType(typeof(List<Common.POCOs.MobileApp.Session>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetAllAppUsers()
+    public async Task<IActionResult> Get()
     {
         int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
         var sessions = await ServerState.UserDatabase.GetSessionsByUser(GetUsername(), mobileId);
@@ -28,3 +25,4 @@ public class GetAppSessions : AbstractFeaturedController
         return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }
+

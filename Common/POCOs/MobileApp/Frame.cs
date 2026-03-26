@@ -4,9 +4,10 @@ public class Frame : Poco
 {
     public Frame() {}
 
-    public Frame(int? id, int? gameId, int? shotOne, int? shotTwo, int? frameNumber, int? lane, int? result)
+    public Frame(int? id, int mobileID, int? gameId, int? shotOne, int? shotTwo, int? frameNumber, int? lane, int? result)
     {
         Id = id;
+        MobileID = mobileID;
         GameId = gameId;
         ShotOne = shotOne;
         ShotTwo = shotTwo;

@@ -4,9 +4,10 @@ public class Ball : Poco
 {
     public Ball() { }
 
-    public Ball(int? id, int userId, string name, string weight, string coreType)
+    public Ball(int? id, int mobileID, int userId, string name, string weight, string coreType)
     {
         Id = id;
+        MobileID = mobileID;
         UserId = userId;
         Name = name;
         Weight = weight;

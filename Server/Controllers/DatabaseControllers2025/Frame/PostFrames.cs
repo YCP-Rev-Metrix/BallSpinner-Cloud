@@ -1,4 +1,4 @@
-﻿using Common.POCOs.MobileApp;
+using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -18,7 +18,15 @@ public class PostFrames : AbstractFeaturedController
     
     public async Task<IActionResult> InsertFrames([FromBody] Common.POCOs.MobileApp.Frame frames)
     {
-        bool success = await ServerState.UserStore.AddFrames(frames, GetUsername());
+        if (frames == null) return BadRequest("Request body required.");
+        int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
+        bool success = await ServerState.UserDatabase.AddFrameForUser(frames, GetUsername(), mobileId);
         return !success ? Problem("unable to add frames to the database") : Ok("Frames added successfully");
+    }
+
+    private static int? TryParseQueryInt(Microsoft.Extensions.Primitives.StringValues values)
+    {
+        if (values.Count == 0) return null;
+        return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }

@@ -1,5 +1,3 @@
-using Common.Logging;
-using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -9,13 +7,12 @@ namespace Server.Controllers.DatabaseControllers2025.Establishments;
 [ApiController]
 [Tags("Gets")]
 [Route("api/gets/[controller]")]
-public class GetAppEstablishments : AbstractFeaturedController
+public class GetAllEstablishmentsByUser : AbstractFeaturedController
 {
     [Authorize]
-    [HttpGet(Name = "GetAppEstablishments")]
+    [HttpGet(Name = "GetAllEstablishmentsByUser")]
     [ProducesResponseType(typeof(List<Common.POCOs.MobileApp.Establishment>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetAllAppEstablishment()
+    public async Task<IActionResult> Get()
     {
         int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
         var establishments = await ServerState.UserDatabase.GetEstablishmentsByUser(GetUsername(), mobileId);
@@ -28,3 +25,4 @@ public class GetAppEstablishments : AbstractFeaturedController
         return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }
+

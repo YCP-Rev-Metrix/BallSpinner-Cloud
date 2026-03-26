@@ -7,17 +7,16 @@ namespace Server.Controllers.DatabaseControllers2025.Frame;
 [ApiController]
 [Tags("Gets")]
 [Route("api/gets/[controller]")]
-public class GetFramesByGameId : AbstractFeaturedController
+public class GetAllFramesByUser : AbstractFeaturedController
 {
     [Authorize]
-    [HttpGet(Name = "GetFramesByGameId")]
+    [HttpGet(Name = "GetAllFramesByUser")]
     [ProducesResponseType(typeof(List<Common.POCOs.MobileApp.Frame>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> RetrieveFramesByGameID(int gameId)
+    public async Task<IActionResult> Get()
     {
         int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
-        var frames = await ServerState.UserDatabase.GetFramesByGameIdForUser(GetUsername(), mobileId, gameId);
-        return frames == null ? Problem("unable to retrieve frames from the database") : Ok(frames);
+        var frames = await ServerState.UserDatabase.GetFramesByUser(GetUsername(), mobileId);
+        return Ok(frames ?? new List<Common.POCOs.MobileApp.Frame>());
     }
 
     private static int? TryParseQueryInt(Microsoft.Extensions.Primitives.StringValues values)
@@ -26,3 +25,4 @@ public class GetFramesByGameId : AbstractFeaturedController
         return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }
+

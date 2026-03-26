@@ -20,7 +20,14 @@ public class PostAppShot : AbstractFeaturedController
     public async Task<IActionResult> InsertShotApp([FromBody] Common.POCOs.MobileApp.Shot request)
     {
         if (request == null) return BadRequest("Request body required.");
-        bool success = await ServerState.UserStore.AddShot(request);
+        int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
+        bool success = await ServerState.UserDatabase.AddShotForUser(request, GetUsername(), mobileId);
         return !success ? Problem("unable to add shot to the database") : Ok("shot inserted successfully");
+    }
+
+    private static int? TryParseQueryInt(Microsoft.Extensions.Primitives.StringValues values)
+    {
+        if (values.Count == 0) return null;
+        return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }

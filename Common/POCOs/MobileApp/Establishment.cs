@@ -4,9 +4,10 @@ public class Establishment : Poco
 {
     public Establishment() { }
 
-    public Establishment(int? id, string name, string lanes, string type, string location)
+    public Establishment(int? id, int mobileID, string name, string lanes, string type, string location)
     {
         Id = id;
+        MobileID = mobileID;
         Name = name;
         Lanes = lanes;
         Type = type;

@@ -6,7 +6,7 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string username)
+    public async Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string username, int? mobileID = null)
     {
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         if (string.IsNullOrEmpty(ConnectionString))
@@ -20,7 +20,9 @@ public partial class RevMetrixDb
         using SqlTransaction transaction = (SqlTransaction)await connection.BeginTransactionAsync();
         try
         {
-            int userId = await GetUserId(username);
+            int userId = mobileID.HasValue && mobileID.Value > 0
+                ? await GetUserId(username, mobileID)
+                : await GetUserId(username);
             if (userId <= 0)
             {
                 LogWriter.LogError($"Invalid user ID for username: {username}");

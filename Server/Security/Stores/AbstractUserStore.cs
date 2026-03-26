@@ -63,13 +63,13 @@ public abstract class AbstractUserStore
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.Game> games)> GetAppGames();
     public abstract Task<bool> AddSession(Common.POCOs.MobileApp.Session session);
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.Session> users)> GetAppSessions();
-    public abstract Task<bool> AddEvent(Event eventObj, string? username);
+    public abstract Task<bool> AddEvent(Event eventObj, string? username, int? mobileID = null);
     public abstract Task<List<Event>> GetEvents(string? username, int? mobileID = null);
     public abstract Task<List<Common.POCOs.MobileApp.Ball>> GetBalls(string? username, int? mobileID = null);
     public abstract Task<bool> UpdateBall(Common.POCOs.MobileApp.Ball ball, string? username);
     public abstract Task<bool> AddFrames(Frame frame, string? username);
     public abstract Task<List<Frame>> GetFrames(int gameId);
-    public abstract Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string? username);
+    public abstract Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string? username, int? mobileID = null);
     public abstract Task<bool> DeleteBallsByUsername(string? username, int? mobileID);
     public abstract Task<bool> DeleteAppEstablishments(string? username, int? mobileID);
     public abstract Task<bool> DeleteEventsByUsername(string? username, int? mobileID);

@@ -4,9 +4,10 @@ public class User : Poco
 {
     public User() { }
 
-    public User(int? id, string firstname, string lastname, string username, byte[] hashedPassword, string email, string phoneNumber, string? lastLogin, string? hand)
+    public User(int? id, int mobileID, string firstname, string lastname, string username, byte[] hashedPassword, string email, string phoneNumber, string? lastLogin, string? hand)
     {
         Id = id;
+        MobileID = mobileID;
         Firstname = firstname;
         Lastname = lastname;
         Username = username;

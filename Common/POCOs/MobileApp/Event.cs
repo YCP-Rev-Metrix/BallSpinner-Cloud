@@ -4,9 +4,10 @@ public class Event : Poco
 {
     public Event() {}
 
-    public Event(int? id, int userId, string name, string type, string location, int average, int? stats, string standings)
+    public Event(int? id, int mobileID, int userId, string name, string type, string location, int average, int? stats, string standings)
     {
         Id = id;
+        MobileID = mobileID;
         UserId = userId;
         Name = name;
         Type = type;

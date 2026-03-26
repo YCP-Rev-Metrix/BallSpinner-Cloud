@@ -4,9 +4,10 @@ public class Shot : Poco
 {
     public Shot() { }
 
-    public Shot(int? id, int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment)
+    public Shot(int? id, int mobileID, int type, int smartDotId, int sessionId, int ballId, int frameId, int shotNumber, int leaveType, string side, string position, string comment)
     {
         Id = id;
+        MobileID = mobileID;
         Type = type;
         SmartDotId = smartDotId;
         SessionId = sessionId;

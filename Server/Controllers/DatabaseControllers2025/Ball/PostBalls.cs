@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+using Common.Logging;
 using Common.POCOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +22,15 @@ public class PostBalls : AbstractFeaturedController
     
     public async Task<IActionResult> InsertBall([FromBody] Common.POCOs.MobileApp.Ball ball)
     {
-        bool success = await ServerState.UserStore.AddBalls(ball, GetUsername());
+        if (ball == null) return BadRequest("Request body required.");
+        int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
+        bool success = await ServerState.UserStore.AddBalls(ball, GetUsername(), mobileId);
         return !success ? Problem("unable to add ball to the database") : Ok("Ball inserted successfully");
+    }
+
+    private static int? TryParseQueryInt(Microsoft.Extensions.Primitives.StringValues values)
+    {
+        if (values.Count == 0) return null;
+        return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }

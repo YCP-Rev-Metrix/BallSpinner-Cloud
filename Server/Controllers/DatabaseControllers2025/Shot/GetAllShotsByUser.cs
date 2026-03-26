@@ -1,5 +1,3 @@
-using Common.Logging;
-using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -9,13 +7,12 @@ namespace Server.Controllers.DatabaseControllers2025.Shot;
 [ApiController]
 [Tags("Gets")]
 [Route("api/gets/[controller]")]
-public class GetAppShots : AbstractFeaturedController
+public class GetAllShotsByUser : AbstractFeaturedController
 {
     [Authorize]
-    [HttpGet(Name = "GetAppShots")]
+    [HttpGet(Name = "GetAllShotsByUser")]
     [ProducesResponseType(typeof(List<Common.POCOs.MobileApp.Shot>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetAllAppShot()
+    public async Task<IActionResult> Get()
     {
         int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
         var shots = await ServerState.UserDatabase.GetShotsByUser(GetUsername(), mobileId);
@@ -28,3 +25,4 @@ public class GetAppShots : AbstractFeaturedController
         return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }
+

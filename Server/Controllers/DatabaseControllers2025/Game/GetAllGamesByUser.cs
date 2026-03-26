@@ -1,5 +1,3 @@
-using Common.Logging;
-using Common.POCOs.MobileApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers.APIControllers;
@@ -9,13 +7,12 @@ namespace Server.Controllers.DatabaseControllers2025.Game;
 [ApiController]
 [Tags("Gets")]
 [Route("api/gets/[controller]")]
-public class GetAppGames : AbstractFeaturedController
+public class GetAllGamesByUser : AbstractFeaturedController
 {
     [Authorize]
-    [HttpGet(Name = "GetAppGames")]
+    [HttpGet(Name = "GetAllGamesByUser")]
     [ProducesResponseType(typeof(List<Common.POCOs.MobileApp.Game>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetAllAppGame()
+    public async Task<IActionResult> Get()
     {
         int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
         var games = await ServerState.UserDatabase.GetGamesByUser(GetUsername(), mobileId);
@@ -28,3 +25,4 @@ public class GetAppGames : AbstractFeaturedController
         return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }
+

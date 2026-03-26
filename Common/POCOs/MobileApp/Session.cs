@@ -4,9 +4,10 @@ public class Session : Poco
 {
     public Session() { }
 
-    public Session(int? id, int sessionNumber, int establishmentId, int eventId, int dateTime, string teamOpponent, string individualOpponent, int score, int stats, int teamRecord, int individualRecord)
+    public Session(int? id, int mobileID, int sessionNumber, int establishmentId, int eventId, int dateTime, string teamOpponent, string individualOpponent, int score, int stats, int teamRecord, int individualRecord)
     {
         Id = id;
+        MobileID = mobileID;
         SessionNumber = sessionNumber;
         EstablishmentId = establishmentId;
         EventId = eventId;

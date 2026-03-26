@@ -125,9 +125,9 @@ public class DatabaseUserStore : AbstractUserStore
         throw new Exception("End point needs to be fixed");
     }
 
-    public override async Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string? username)
+    public override async Task<bool> AddBalls(Common.POCOs.MobileApp.Ball ball, string? username, int? mobileID = null)
     {
-        return await ServerState.UserDatabase.AddBalls(ball, username);
+        return await ServerState.UserDatabase.AddBalls(ball, username, mobileID);
     }
     
     public override async Task<List<Common.POCOs.MobileApp.Ball>> GetBalls(string? username, int? mobileID = null)
@@ -153,9 +153,9 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.GetFrames(gameId);
     }
     
-    public override async Task<bool> AddEvent(Event eventObj, string? username)
+    public override async Task<bool> AddEvent(Event eventObj, string? username, int? mobileID = null)
     {
-        return await ServerState.UserDatabase.AddEvent(eventObj, username);
+        return await ServerState.UserDatabase.AddEvent(eventObj, username, mobileID);
     }
     
     public override async Task<List<Event>> GetEvents(string? username, int? mobileID = null)

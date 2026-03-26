@@ -20,7 +20,14 @@ public class PostAppGame : AbstractFeaturedController
     public async Task<IActionResult> InsertGameApp([FromBody] Common.POCOs.MobileApp.Game request)
     {
         if (request == null) return BadRequest("Request body required.");
-        bool success = await ServerState.UserStore.AddGame(request);
+        int? mobileId = TryParseQueryInt(Request.Query["mobileID"]) ?? TryParseQueryInt(Request.Query["mobileId"]);
+        bool success = await ServerState.UserDatabase.AddGameForUser(request, GetUsername(), mobileId);
         return !success ? Problem("unable to add game to the database") : Ok("game inserted successfully");
+    }
+
+    private static int? TryParseQueryInt(Microsoft.Extensions.Primitives.StringValues values)
+    {
+        if (values.Count == 0) return null;
+        return int.TryParse(values[0], out var v) && v > 0 ? v : null;
     }
 }

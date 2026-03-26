@@ -4,9 +4,10 @@ public class Game : Poco
 {
     public Game() { }
 
-    public Game(int? id, string gameNumber, string lanes, int score, int win, int startingLane, int sessionId, int teamResult, int individualResult)
+    public Game(int? id, int mobileID, string gameNumber, string lanes, int score, int win, int startingLane, int sessionId, int teamResult, int individualResult)
     {
         Id = id;
+        MobileID = mobileID;
         GameNumber = gameNumber;
         Lanes = lanes;
         Score = score;
