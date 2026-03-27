@@ -48,11 +48,13 @@ Run: python -m pytest TestServer.py -v
 Or:  python TestServer.py
 """
 import atexit
-import unittest
-import requests
-import warnings
-import time
 import base64
+import json
+import time
+import unittest
+import warnings
+
+import requests
 
 # --- Configure base URL (no trailing slash) ---
 # Local:  https://localhost:7238
@@ -93,22 +95,89 @@ def _url(path: str) -> str:
     return BASE_URL.rstrip("/") + ("/" + path.lstrip("/") if not path.startswith("http") else path)
 
 
+def _jwt_expiry_utc(token: str) -> float | None:
+    """Return JWT `exp` as Unix seconds, or None if missing or invalid."""
+    try:
+        payload_b64 = token.split(".")[1]
+        padding = "=" * (-len(payload_b64) % 4)
+        data = json.loads(base64.urlsafe_b64decode(payload_b64 + padding))
+        exp = data.get("exp")
+        return float(exp) if exp is not None else None
+    except (IndexError, ValueError, TypeError, json.JSONDecodeError):
+        return None
+
+
+def _normalize_token_b(raw) -> bytes | None:
+    if raw is None:
+        return None
+    if isinstance(raw, str):
+        return base64.b64decode(raw)
+    if isinstance(raw, list):
+        return bytes(raw)
+    return None
+
+
+# Cached credentials: reuse JWT until shortly before exp, then POST Refresh with tokenB (same as production apps).
+_auth_jwt: str | None = None
+_auth_refresh: bytes | None = None
+_auth_exp_utc: float | None = None
+_AUTH_MARGIN_SEC = 120
+
+
 def get_auth_token() -> str:
-    """Get JWT for TEST_USERNAME/TEST_PASSWORD. Raises on failure."""
+    """Return a valid JWT for TEST_USERNAME/TEST_PASSWORD (cached; refresh or re-authorize when needed)."""
+    global _auth_jwt, _auth_refresh, _auth_exp_utc
+
     if not VERIFY_TLS:
         warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+
+    now = time.time()
+    if (
+        _auth_jwt
+        and _auth_exp_utc is not None
+        and now < _auth_exp_utc - _AUTH_MARGIN_SEC
+    ):
+        return _auth_jwt
+
+    if _auth_refresh:
+        rr = requests.post(
+            _url("/api/posts/Refresh"),
+            json={"token": base64.b64encode(_auth_refresh).decode("ascii")},
+            headers={"Content-Type": "application/json"},
+            verify=VERIFY_TLS,
+            timeout=REQUEST_TIMEOUT_SEC,
+        )
+        if rr.status_code == 200:
+            body = rr.json()
+            token = body.get("tokenA")
+            if token:
+                _auth_jwt = token
+                _auth_refresh = _normalize_token_b(body.get("tokenB")) or _auth_refresh
+                _auth_exp_utc = _jwt_expiry_utc(token)
+                if _auth_exp_utc is None:
+                    _auth_exp_utc = now + 3600
+                return _auth_jwt
+        _auth_refresh = None
+
     r = requests.post(
         _url("/api/posts/Authorize"),
         json={"username": TEST_USERNAME, "password": TEST_PASSWORD},
         headers={"Content-Type": "application/json"},
         verify=VERIFY_TLS,
+        timeout=REQUEST_TIMEOUT_SEC,
     )
     if r.status_code != 200:
         raise AssertionError(f"Authorize failed: {r.status_code} - {r.text}")
-    token = r.json().get("tokenA")
+    body = r.json()
+    token = body.get("tokenA")
     if not token:
         raise AssertionError("No tokenA in response")
-    return token
+    _auth_jwt = token
+    _auth_refresh = _normalize_token_b(body.get("tokenB"))
+    _auth_exp_utc = _jwt_expiry_utc(token)
+    if _auth_exp_utc is None:
+        _auth_exp_utc = now + 3600
+    return _auth_jwt
 
 
 def auth_headers() -> dict:

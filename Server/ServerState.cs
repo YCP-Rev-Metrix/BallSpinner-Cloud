@@ -1,4 +1,4 @@
-﻿using DatabaseCore.DatabaseComponents;
+using DatabaseCore.DatabaseComponents;
 using Server.Security.Handlers;
 using Server.Security.Stores;
 
@@ -23,9 +23,14 @@ public static class ServerState
     public static readonly RevMetrixDb UserDatabase = new("revmetrix-bs");
 
     /// <summary>
-    /// Provides functionality surrounding JWTs and refresh tokens
+    /// Provides functionality surrounding JWTs and refresh tokens.
+    /// Access token (JWT) lifetime: clients send it on every API call but only need to log in or refresh periodically.
+    /// Refresh token lifetime: after this, the user must authenticate with password again (unless you extend both).
     /// </summary>
-    public static readonly AbstractTokenStore TokenStore = new DatabaseTokenStore(TimeSpan.FromMinutes(60), TimeSpan.FromHours(24), TimeSpan.FromMinutes(5));
+    public static readonly AbstractTokenStore TokenStore = new DatabaseTokenStore(
+        TimeSpan.FromHours(24),
+        TimeSpan.FromDays(30),
+        TimeSpan.FromMinutes(5));
 
     /// <summary>
     /// Provides functionality surrounding Users such as role management & user authentication

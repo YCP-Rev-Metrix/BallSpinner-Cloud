@@ -1,3 +1,4 @@
+using Common.Logging;
 using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -9,25 +10,36 @@ public partial class RevMetrixDb
     public async Task<bool> AddSessionForUser(Session session, string? username, int? mobileID = null)
     {
         if (session == null) return false;
-        if (!session.EventId.HasValue || session.EventId.Value <= 0) return false;
+        if (!session.EventId.HasValue || session.EventId.Value <= 0)
+        {
+            LogWriter.LogWarn(
+                $"AddSessionForUser: invalid or missing eventId (username={username}, mobileID={mobileID}).");
+            return false;
+        }
 
         int userId = mobileID.HasValue && mobileID.Value > 0
             ? await GetUserId(username, mobileID)
             : await GetUserId(username);
-        if (userId <= 0) return false;
+        if (userId <= 0)
+        {
+            LogWriter.LogWarn(
+                $"AddSessionForUser: no user row for username={username}, mobileID={mobileID} (combinedDB.Users / [User]).");
+            return false;
+        }
 
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        // Ensure the referenced Event belongs to the authenticated user
-        const string ownsEventQuery = @"SELECT COUNT(1) FROM [combinedDB].[Events] WHERE ID = @EventId AND UserId = @UserId;";
-        using (var ownsEventCmd = new SqlCommand(ownsEventQuery, connection))
+        // Clients often send device-local event id (matches Events.mobileId) rather than cloud Events.id.
+        // Accept either: resolve to the canonical cloud id first by primary key, then by mobileId + user.
+        int? cloudEventId = await ResolveOwnedEventCloudIdAsync(connection, session.EventId.Value, userId);
+        if (!cloudEventId.HasValue)
         {
-            ownsEventCmd.Parameters.Add("@EventId", SqlDbType.Int).Value = session.EventId.Value;
-            ownsEventCmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
-            int owns = Convert.ToInt32(await ownsEventCmd.ExecuteScalarAsync());
-            if (owns <= 0) return false;
+            LogWriter.LogWarn(
+                $"AddSessionForUser: event not found or not owned by user (eventId from client={session.EventId.Value}, userId={userId}, username={username}). " +
+                "Expected cloud Events.id or Events.mobileId for this user.");
+            return false;
         }
 
         const string insertQuery = @"
@@ -39,7 +51,7 @@ public partial class RevMetrixDb
         using var command = new SqlCommand(insertQuery, connection);
         command.Parameters.Add("@SessionNumber", SqlDbType.Int).Value = session.SessionNumber ?? (object)DBNull.Value;
         command.Parameters.Add("@EstablishmentID", SqlDbType.Int).Value = session.EstablishmentId ?? (object)DBNull.Value;
-        command.Parameters.Add("@EventID", SqlDbType.Int).Value = session.EventId.Value;
+        command.Parameters.Add("@EventID", SqlDbType.Int).Value = cloudEventId.Value;
         command.Parameters.Add("@DateTime", SqlDbType.Int).Value = session.DateTime ?? (object)DBNull.Value;
         command.Parameters.Add("@TeamOpponent", SqlDbType.VarChar).Value = session.TeamOpponent ?? string.Empty;
         command.Parameters.Add("@IndividualOpponent", SqlDbType.VarChar).Value = session.IndividualOpponent ?? string.Empty;
@@ -49,7 +61,54 @@ public partial class RevMetrixDb
         command.Parameters.Add("@IndividualRecord", SqlDbType.Int).Value = session.IndividualRecord ?? (object)DBNull.Value;
         command.Parameters.Add("@MobileID", SqlDbType.Int).Value = session.MobileID.HasValue ? (object)session.MobileID.Value : DBNull.Value;
 
-        return await command.ExecuteNonQueryAsync() > 0;
+        try
+        {
+            int rows = await command.ExecuteNonQueryAsync();
+            if (rows <= 0)
+            {
+                LogWriter.LogWarn(
+                    $"AddSessionForUser: INSERT affected 0 rows (cloudEventId={cloudEventId.Value}, userId={userId}).");
+            }
+
+            return rows > 0;
+        }
+        catch (SqlException ex)
+        {
+            LogWriter.LogError(
+                $"AddSessionForUser: SQL error — {ex.Message} (cloudEventId={cloudEventId.Value}, userId={userId}, establishmentId={session.EstablishmentId}).");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Maps client-supplied event reference to cloud Events row <c>id</c> for this user.
+    /// Tries primary key first, then <c>mobileId</c> (device-local id stored when the event was posted).
+    /// </summary>
+    private static async Task<int?> ResolveOwnedEventCloudIdAsync(SqlConnection connection, int eventIdFromClient, int userId)
+    {
+        const string byIdQuery =
+            @"SELECT TOP 1 id FROM [combinedDB].[Events] WHERE id = @EventId AND userId = @UserId;";
+        using (var cmd = new SqlCommand(byIdQuery, connection))
+        {
+            cmd.Parameters.Add("@EventId", SqlDbType.Int).Value = eventIdFromClient;
+            cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+            object? o = await cmd.ExecuteScalarAsync();
+            if (o != null && o != DBNull.Value)
+                return Convert.ToInt32(o);
+        }
+
+        const string byMobileQuery =
+            @"SELECT TOP 1 id FROM [combinedDB].[Events] WHERE mobileId = @MobileEventId AND userId = @UserId ORDER BY id DESC;";
+        using (var cmd = new SqlCommand(byMobileQuery, connection))
+        {
+            cmd.Parameters.Add("@MobileEventId", SqlDbType.Int).Value = eventIdFromClient;
+            cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+            object? o = await cmd.ExecuteScalarAsync();
+            if (o != null && o != DBNull.Value)
+                return Convert.ToInt32(o);
+        }
+
+        return null;
     }
 }
 

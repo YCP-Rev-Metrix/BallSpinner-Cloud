@@ -8,8 +8,9 @@ or:
 """
 
 import unittest
-import requests
 import warnings
+
+import requests
 
 # --- Configure base URL (no trailing slash) ---
 # Local:  https://localhost:7238
@@ -21,29 +22,19 @@ BASE_URL = "https://api.revmetrix.io"
 TEST_USERNAME = "string"
 TEST_PASSWORD = "string"
 
+import TestServer
+
+# Cached auth in TestServer uses its module globals — keep them aligned with this file.
+TestServer.BASE_URL = BASE_URL
+TestServer.VERIFY_TLS = False
+TestServer.TEST_USERNAME = TEST_USERNAME
+TestServer.TEST_PASSWORD = TEST_PASSWORD
+
+from TestServer import auth_headers
+
 
 def _url(path: str) -> str:
     return BASE_URL.rstrip("/") + ("/" + path.lstrip("/") if not path.startswith("http") else path)
-
-
-def get_auth_token() -> str:
-    warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-    response = requests.post(
-        _url("/api/posts/Authorize"),
-        json={"username": TEST_USERNAME, "password": TEST_PASSWORD},
-        headers={"Content-Type": "application/json"},
-        verify=False,
-    )
-    if response.status_code != 200:
-        raise AssertionError(f"Authorize failed: {response.status_code} - {response.text}")
-    token = response.json().get("tokenA")
-    if not token:
-        raise AssertionError("No tokenA in authorize response")
-    return token
-
-
-def auth_headers() -> dict:
-    return {"Authorization": f"Bearer {get_auth_token()}", "Content-Type": "application/json"}
 
 
 class TestKillOrphanedPhoneAppSql(unittest.TestCase):
