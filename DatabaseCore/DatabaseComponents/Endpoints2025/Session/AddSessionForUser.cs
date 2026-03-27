@@ -1,6 +1,7 @@
 using Common.Logging;
 using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 using System.Data;
 
 namespace DatabaseCore.DatabaseComponents;
@@ -36,10 +37,22 @@ public partial class RevMetrixDb
         int? cloudEventId = await ResolveOwnedEventCloudIdAsync(connection, session.EventId.Value, userId);
         if (!cloudEventId.HasValue)
         {
+            cloudEventId = await TrySingleOwnedEventFallbackAsync(connection, userId);
+            if (!cloudEventId.HasValue)
+            {
+                int eventCount = await CountEventsForUserAsync(connection, userId);
+                LogWriter.LogWarn(
+                    eventCount == 0
+                        ? $"AddSessionForUser: no Events rows for user (userId={userId}, username={username}). " +
+                          $"Post events before sessions, or send Events.id / Events.MobileID as eventId (client sent {session.EventId.Value})."
+                        : $"AddSessionForUser: event not found or not owned by user (eventId from client={session.EventId.Value}, userId={userId}, username={username}). " +
+                          $"User has {eventCount} event(s); expected cloud Events.Id or Events.MobileID to match one of them.");
+                return false;
+            }
+
             LogWriter.LogWarn(
-                $"AddSessionForUser: event not found or not owned by user (eventId from client={session.EventId.Value}, userId={userId}, username={username}). " +
-                "Expected cloud Events.id or Events.mobileId for this user.");
-            return false;
+                $"AddSessionForUser: eventId from client ({session.EventId.Value}) did not match any Event; " +
+                $"using sole event id {cloudEventId.Value} for userId={userId}. Prefer sending cloud id or Events.MobileID.");
         }
 
         const string insertQuery = @"
@@ -109,6 +122,36 @@ public partial class RevMetrixDb
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// When the client sends a placeholder id (e.g. 1) and this user has exactly one event, use that row.
+    /// </summary>
+    private static async Task<int?> TrySingleOwnedEventFallbackAsync(SqlConnection connection, int userId)
+    {
+        const string query = @"
+            SELECT id
+            FROM [combinedDB].[Events]
+            WHERE userId = @UserId;";
+        var ids = new List<int>();
+        using (var cmd = new SqlCommand(query, connection))
+        {
+            cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+                ids.Add(reader.GetInt32(0));
+        }
+
+        return ids.Count == 1 ? ids[0] : null;
+    }
+
+    private static async Task<int> CountEventsForUserAsync(SqlConnection connection, int userId)
+    {
+        const string query = @"SELECT COUNT(1) FROM [combinedDB].[Events] WHERE userId = @UserId;";
+        using var cmd = new SqlCommand(query, connection);
+        cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+        object? o = await cmd.ExecuteScalarAsync();
+        return o != null && o != DBNull.Value ? Convert.ToInt32(o) : 0;
     }
 }
 
