@@ -182,9 +182,9 @@ public class DatabaseUserStore : AbstractUserStore
         return ServerState.UserDatabase.RemoveShot(shotname, username);
     }
 
-    public override async Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phoneNumber, string? email, string? lastLogin, string? hand)
+    public override async Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phoneNumber, string? email, string? lastLogin, string? hand, int? mobileID = null)
     {
-        return await ServerState.UserDatabase.AddUserCombined(firstname, lastname, username, hashedPassword, phoneNumber, email, lastLogin, hand);
+        return await ServerState.UserDatabase.AddUserCombined(firstname, lastname, username, hashedPassword, phoneNumber, email, lastLogin, hand, mobileID);
     }
 
     public override async Task<(bool success, List<Common.POCOs.MobileApp.User> users)> GetAppUsers()

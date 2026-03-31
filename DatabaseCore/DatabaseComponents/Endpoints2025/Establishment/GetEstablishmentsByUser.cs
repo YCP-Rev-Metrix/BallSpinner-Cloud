@@ -8,25 +8,18 @@ public partial class RevMetrixDb
 {
     public async Task<List<Establishment>> GetEstablishmentsByUser(string? username, int? mobileID = null)
     {
-        int userId = mobileID.HasValue && mobileID.Value > 0
-            ? await GetUserId(username, mobileID)
-            : await GetUserId(username);
-        if (userId <= 0) return new List<Establishment>();
-
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        // Establishments table does not have a UserId column; scope via Sessions -> Events ownership.
+        // Establishments are shared venue data (bowling alleys), not user-owned records.
+        // Return all so the client can always resolve a posted establishment's cloud ID by mobileID,
+        // even before any session has linked to it.
         const string selectQuery = @"
-            SELECT DISTINCT est.ID, est.Name, est.Lanes, est.Type, est.Location, est.MobileID
-            FROM [combinedDB].[Establishments] est
-            INNER JOIN [combinedDB].[Sessions] s ON s.EstablishmentID = est.ID
-            INNER JOIN [combinedDB].[Events] e ON e.ID = s.EventID
-            WHERE e.UserId = @UserId;";
+            SELECT ID, Name, Lanes, Type, Location, MobileID
+            FROM [combinedDB].[Establishments];";
 
         using var command = new SqlCommand(selectQuery, connection);
-        command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
 
         var establishments = new List<Establishment>();
         using SqlDataReader reader = await command.ExecuteReaderAsync();

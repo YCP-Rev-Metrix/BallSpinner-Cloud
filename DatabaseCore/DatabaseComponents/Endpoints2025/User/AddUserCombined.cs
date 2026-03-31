@@ -7,7 +7,7 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email, string lastLogin, string hand)
+    public async Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email, string lastLogin, string hand, int? mobileID = null)
     {
         // If not local use Server conn string, if local use local conn string
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
@@ -23,8 +23,8 @@ public partial class RevMetrixDb
         }
         LogWriter.LogInfo(connection1);
 
-        string insertQuery = "INSERT INTO combinedDB.[Users] (Username, Firstname, Lastname, HashedPassword, Email, PhoneNumber, LastLogin, Hand) " +
-                             "VALUES (@Username, @Firstname, @Lastname, @HashedPassword, @Email, @PhoneNumber, @LastLogin, @Hand)";
+        string insertQuery = "INSERT INTO combinedDB.[Users] (Username, Firstname, Lastname, HashedPassword, Email, PhoneNumber, LastLogin, Hand, MobileID) " +
+                             "VALUES (@Username, @Firstname, @Lastname, @HashedPassword, @Email, @PhoneNumber, @LastLogin, @Hand, @MobileID)";
 
         using var command = new SqlCommand(insertQuery, connection1);
         if (username is null)
@@ -41,7 +41,7 @@ public partial class RevMetrixDb
         command.Parameters.Add("@PhoneNumber", SqlDbType.VarChar, 15).Value = (object?)phone ?? DBNull.Value;
         command.Parameters.Add("@LastLogin", SqlDbType.VarChar).Value = string.IsNullOrEmpty(lastLogin) ? string.Empty : lastLogin;
         command.Parameters.Add("@Hand", SqlDbType.VarChar).Value = string.IsNullOrEmpty(hand) ? string.Empty : hand;
-
+        command.Parameters.Add("@MobileID", SqlDbType.Int).Value = mobileID.HasValue ? (object)mobileID.Value : DBNull.Value;
 
         // Execute the query
         int i = await command.ExecuteNonQueryAsync();

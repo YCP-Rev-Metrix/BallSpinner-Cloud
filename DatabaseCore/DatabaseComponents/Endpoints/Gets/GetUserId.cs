@@ -2,7 +2,6 @@ using Common.Logging;
 using Common.POCOs;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using Common.POCOs;
 
 namespace DatabaseCore.DatabaseComponents;
 

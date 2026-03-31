@@ -21,7 +21,7 @@ public class PostUserApp : AbstractFeaturedController
     {
         if (request?.HashedPassword == null) return BadRequest("User and HashedPassword required.");
         bool success = await ServerState.UserStore.AddUserCombined(
-            request.Firstname, request.Lastname, request.Username, request.HashedPassword, request.PhoneNumber, request.Email, request.LastLogin, request.Hand);
+            request.Firstname, request.Lastname, request.Username, request.HashedPassword, request.PhoneNumber, request.Email, request.LastLogin, request.Hand, request.MobileID);
         return !success ? Problem("unable to add user to the database") : Ok("user inserted successfully");
     }
 }
