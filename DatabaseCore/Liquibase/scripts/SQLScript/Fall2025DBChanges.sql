@@ -286,3 +286,169 @@ GO
 COMMIT;
 GO
 
+-- Migration: drop and recreate Balls, Events, Establishments with updated mobile app model fields.
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260402000000_MobileAppModelUpdate')
+BEGIN
+    DROP TABLE IF EXISTS [combinedDB].[Shots];
+    DROP TABLE IF EXISTS [combinedDB].[Frames];
+    DROP TABLE IF EXISTS [combinedDB].[Games];
+    DROP TABLE IF EXISTS [combinedDB].[Sessions];
+    DROP TABLE IF EXISTS [combinedDB].[Balls];
+    DROP TABLE IF EXISTS [combinedDB].[Events];
+    DROP TABLE IF EXISTS [combinedDB].[Establishments];
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260402000000_MobileAppModelUpdate')
+BEGIN
+    CREATE TABLE [combinedDB].[Balls] (
+        [Id]           int            NOT NULL IDENTITY,
+        [MobileID]     int            NULL,
+        [UserId]       int            NOT NULL,
+        [Name]         nvarchar(50)   NOT NULL,
+        [BallMFG]      nvarchar(100)  NULL,
+        [BallMFGName]  nvarchar(100)  NULL,
+        [SerialNumber] nvarchar(100)  NULL,
+        [Weight]       int            NULL,
+        [Core]         nvarchar(100)  NULL,
+        [ColorString]  nvarchar(50)   NULL,
+        [Coverstock]   nvarchar(100)  NULL,
+        [Comment]      nvarchar(500)  NULL,
+        [Enabled]      bit            NOT NULL DEFAULT 1,
+        CONSTRAINT [PK_Balls] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260402000000_MobileAppModelUpdate')
+BEGIN
+    CREATE TABLE [combinedDB].[Events] (
+        [Id]                  int            NOT NULL IDENTITY,
+        [MobileID]            int            NULL,
+        [UserId]              int            NOT NULL,
+        [LongName]            nvarchar(200)  NULL,
+        [NickName]            nvarchar(100)  NULL,
+        [Type]                nvarchar(50)   NULL,
+        [Location]            nvarchar(100)  NULL,
+        [StartDate]           nvarchar(20)   NULL,
+        [EndDate]             nvarchar(20)   NULL,
+        [WeekDay]             nvarchar(20)   NULL,
+        [StartTime]           nvarchar(10)   NULL,
+        [NumGamesPerSession]  int            NOT NULL DEFAULT 0,
+        [Average]             int            NULL,
+        [Schedule]            nvarchar(500)  NULL,
+        [Stats]               int            NULL,
+        [Standings]           nvarchar(500)  NULL,
+        [Enabled]             bit            NOT NULL DEFAULT 1,
+        CONSTRAINT [PK_Events] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260402000000_MobileAppModelUpdate')
+BEGIN
+    CREATE TABLE [combinedDB].[Establishments] (
+        [ID]          int            NOT NULL IDENTITY,
+        [MobileID]    int            NULL,
+        [FullName]    nvarchar(100)  NULL,
+        [NickName]    nvarchar(100)  NULL,
+        [GPSLocation] nvarchar(200)  NULL,
+        [HomeHouse]   bit            NOT NULL DEFAULT 0,
+        [Reason]      nvarchar(200)  NULL,
+        [Address]     nvarchar(200)  NULL,
+        [PhoneNumber] nvarchar(20)   NULL,
+        [Lanes]       nvarchar(50)   NULL,
+        [Type]        nvarchar(50)   NULL,
+        [Location]    nvarchar(100)  NULL,
+        [Enabled]     bit            NOT NULL DEFAULT 1,
+        CONSTRAINT [PK_Establishments] PRIMARY KEY ([ID])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260402000000_MobileAppModelUpdate')
+BEGIN
+    CREATE TABLE [combinedDB].[Sessions] (
+        [ID]                 int            NOT NULL IDENTITY,
+        [MobileID]           int            NULL,
+        [SessionNumber]      int            NOT NULL,
+        [EstablishmentID]    int            NOT NULL,
+        [EventID]            int            NOT NULL,
+        [DateTime]           int            NOT NULL,
+        [TeamOpponent]       nvarchar(max)  NOT NULL,
+        [IndividualOpponent] nvarchar(max)  NOT NULL,
+        [Score]              int            NOT NULL,
+        [Stats]              int            NOT NULL,
+        [TeamRecord]         int            NOT NULL,
+        [IndividualRecord]   int            NOT NULL,
+        CONSTRAINT [PK_Sessions] PRIMARY KEY ([ID])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260402000000_MobileAppModelUpdate')
+BEGIN
+    CREATE TABLE [combinedDB].[Games] (
+        [ID]               int            NOT NULL IDENTITY,
+        [MobileID]         int            NULL,
+        [GameNumber]       nvarchar(max)  NOT NULL,
+        [Lanes]            nvarchar(max)  NOT NULL,
+        [Score]            int            NOT NULL,
+        [Win]              int            NOT NULL,
+        [StartingLane]     int            NOT NULL,
+        [SessionID]        int            NOT NULL,
+        [TeamResult]       int            NOT NULL,
+        [IndividualResult] int            NOT NULL,
+        CONSTRAINT [PK_Games] PRIMARY KEY ([ID])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260402000000_MobileAppModelUpdate')
+BEGIN
+    CREATE TABLE [combinedDB].[Frames] (
+        [Id]          int  NOT NULL IDENTITY,
+        [MobileID]    int  NULL,
+        [GameId]      int  NOT NULL,
+        [ShotOne]     int  NOT NULL,
+        [ShotTwo]     int  NOT NULL,
+        [FrameNumber] int  NOT NULL,
+        [Lane]        int  NOT NULL,
+        [Result]      int  NOT NULL,
+        CONSTRAINT [PK_Frames] PRIMARY KEY ([Id])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260402000000_MobileAppModelUpdate')
+BEGIN
+    CREATE TABLE [combinedDB].[Shots] (
+        [ID]          int            NOT NULL IDENTITY,
+        [MobileID]    int            NULL,
+        [Type]        int            NOT NULL,
+        [SmartDotID]  int            NOT NULL,
+        [SessionID]   int            NOT NULL,
+        [BallID]      int            NOT NULL,
+        [FrameID]     int            NOT NULL,
+        [ShotNumber]  int            NOT NULL,
+        [LeaveType]   int            NOT NULL,
+        [Side]        nvarchar(max)  NOT NULL,
+        [Position]    nvarchar(max)  NOT NULL,
+        [Comment]     nvarchar(max)  NOT NULL,
+        CONSTRAINT [PK_Shots] PRIMARY KEY ([ID])
+    );
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260402000000_MobileAppModelUpdate')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20260402000000_MobileAppModelUpdate', N'7.0.20');
+END;
+GO
+
+COMMIT;
+GO
