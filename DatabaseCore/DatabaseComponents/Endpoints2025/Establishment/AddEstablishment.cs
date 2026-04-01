@@ -7,7 +7,7 @@ namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<int?> AddEstablishment(Establishment establishment)
+    public async Task<int?> AddEstablishment(Establishment establishment, string? username, int? mobileID = null)
     {
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         if (string.IsNullOrEmpty(ConnectionString))
@@ -19,14 +19,19 @@ public partial class RevMetrixDb
         await connection.OpenAsync();
         LogWriter.LogInfo(connection);
 
+        int userId = mobileID.HasValue && mobileID.Value > 0
+            ? await GetUserId(username, mobileID)
+            : await GetUserId(username);
+
         const string insertQuery = @"
             INSERT INTO [combinedDB].[Establishments]
-                (fullName, nickName, gpsLocation, homeHouse, reason, address, phoneNumber, lanes, type, location, enabled, MobileID)
+                (UserId, fullName, nickName, gpsLocation, homeHouse, reason, address, phoneNumber, lanes, type, location, enabled, MobileID)
             OUTPUT INSERTED.ID
             VALUES
-                (@fullName, @nickName, @gpsLocation, @homeHouse, @reason, @address, @phoneNumber, @lanes, @type, @location, @enabled, @MobileID)";
+                (@userId, @fullName, @nickName, @gpsLocation, @homeHouse, @reason, @address, @phoneNumber, @lanes, @type, @location, @enabled, @MobileID)";
 
         using var command = new SqlCommand(insertQuery, connection);
+        command.Parameters.Add("@userId", SqlDbType.Int).Value = userId > 0 ? (object)userId : DBNull.Value;
         command.Parameters.Add("@fullName", SqlDbType.VarChar, 100).Value = establishment.FullName ?? (object)DBNull.Value;
         command.Parameters.Add("@nickName", SqlDbType.VarChar, 100).Value = establishment.NickName ?? (object)DBNull.Value;
         command.Parameters.Add("@gpsLocation", SqlDbType.VarChar, 200).Value = establishment.GPSLocation ?? (object)DBNull.Value;

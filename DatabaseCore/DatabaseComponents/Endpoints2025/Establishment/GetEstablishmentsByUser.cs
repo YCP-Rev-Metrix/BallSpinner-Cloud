@@ -8,19 +8,23 @@ public partial class RevMetrixDb
 {
     public async Task<List<Establishment>> GetEstablishmentsByUser(string? username, int? mobileID = null)
     {
+        int userId = mobileID.HasValue && mobileID.Value > 0
+            ? await GetUserId(username, mobileID)
+            : await GetUserId(username);
+        if (userId <= 0) return new List<Establishment>();
+
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         using var connection = new SqlConnection(ConnectionString);
         await connection.OpenAsync();
 
-        // Establishments are shared venue data (bowling alleys), not user-owned records.
-        // Return all so the client can always resolve a posted establishment's cloud ID by mobileID,
-        // even before any session has linked to it.
         const string selectQuery = @"
-            SELECT ID, fullName, nickName, gpsLocation, homeHouse, reason, address, phoneNumber,
+            SELECT ID, UserId, fullName, nickName, gpsLocation, homeHouse, reason, address, phoneNumber,
                    lanes, type, location, enabled, MobileID
-            FROM [combinedDB].[Establishments];";
+            FROM [combinedDB].[Establishments]
+            WHERE UserId = @UserId;";
 
         using var command = new SqlCommand(selectQuery, connection);
+        command.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
 
         var establishments = new List<Establishment>();
         using SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -29,6 +33,7 @@ public partial class RevMetrixDb
             establishments.Add(new Establishment
             {
                 Id = reader["ID"] != DBNull.Value ? Convert.ToInt32(reader["ID"]) : null,
+                UserId = reader["UserId"] != DBNull.Value ? Convert.ToInt32(reader["UserId"]) : null,
                 MobileID = reader["MobileID"] != DBNull.Value ? Convert.ToInt32(reader["MobileID"]) : null,
                 FullName = reader["fullName"] as string,
                 NickName = reader["nickName"] as string,

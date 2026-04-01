@@ -192,9 +192,9 @@ public class DatabaseUserStore : AbstractUserStore
         return await ServerState.UserDatabase.GetAppUsers();
     }
 
-    public override async Task<int?> AddEstablishment(Common.POCOs.MobileApp.Establishment establishment)
+    public override async Task<int?> AddEstablishment(Common.POCOs.MobileApp.Establishment establishment, string? username, int? mobileID = null)
     {
-        return await ServerState.UserDatabase.AddEstablishment(establishment);
+        return await ServerState.UserDatabase.AddEstablishment(establishment, username, mobileID);
     }
     public override async Task<(bool success, List<Common.POCOs.MobileApp.Establishment> establishments)> GetAppEstablishments()
     {

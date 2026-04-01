@@ -328,7 +328,7 @@ class TestMobileAppAPI(unittest.TestCase):
         self.assertIsInstance(cloud_id, int, "Expected cloud 'id' for event")
         return event_mobile, cloud_id
 
-    def _create_session_and_get_cloud_id(self, event_cloud_id: int) -> tuple[int, int]:
+    def _create_session_and_get_cloud_id(self, event_cloud_id: int, establishment_cloud_id: int = 0) -> tuple[int, int]:
         headers = self._auth()
         session_mobile = self._high(930)
         post_r = self._post_json(
@@ -336,7 +336,7 @@ class TestMobileAppAPI(unittest.TestCase):
             {
                 "mobileID": session_mobile,
                 "sessionNumber": 1,
-                "establishmentId": 0,
+                "establishmentId": establishment_cloud_id,
                 "eventId": event_cloud_id,
                 "dateTime": self._high(33),
                 "teamOpponent": "TeamA",
@@ -525,31 +525,64 @@ class TestMobileAppAPI(unittest.TestCase):
         self.assertIn(r.status_code, (200, 400), f"Expected 200 or 400, got {r.status_code} - {r.text}")
 
     # --- Establishment ---
-    def test_post_establishment_app(self):
-        payload = {
-            "mobileID": self._high(1),
-            "fullName": "TestEstablishment",
-            "lanes": "1-10",
-            "type": "TestType",
-            "location": "TestLocation",
-        }
-        r = requests.post(_url("/api/posts/PostEstablishmentApp"), json=payload, headers=auth_headers(), params=self._mobile_params(), verify=VERIFY_TLS)
-        self.assertEqual(r.status_code, 200, f"Expected 200, got {r.status_code} - {r.text}")
+    def _create_establishment_and_get_cloud_id(self) -> tuple[int, int]:
+        """POST an establishment and return (establishment_mobile_id, establishment_cloud_id)."""
+        est_mobile = self._high(970)
+        unique_name = f"{TEST_MARKER}_est_{int(time.time())}_{est_mobile}"
+        r = requests.post(
+            _url("/api/posts/PostEstablishmentApp"),
+            json={
+                "mobileID": est_mobile,
+                "fullName": unique_name,
+                "nickName": "TestLane",
+                "gpsLocation": "0.0,0.0",
+                "homeHouse": False,
+                "reason": "Test",
+                "address": "123 Test St",
+                "phoneNumber": "5550001234",
+                "lanes": "1-10",
+                "type": "TestType",
+                "location": "TestLocation",
+                "enabled": True,
+            },
+            headers=auth_headers(),
+            params=self._mobile_params(),
+            verify=VERIFY_TLS,
+        )
+        self.assertEqual(r.status_code, 200, f"POST establishment failed: {r.status_code} - {r.text}")
         cloud_id = r.json()
-        self.assertIsInstance(cloud_id, int, f"Expected cloud ID (int) in response, got: {cloud_id}")
+        self.assertIsInstance(cloud_id, int, f"Expected cloud ID (int) from POST establishment, got: {cloud_id}")
+        return est_mobile, cloud_id
+
+    def test_post_establishment_app(self):
+        _, cloud_id = self._create_establishment_and_get_cloud_id()
+        self.assertIsInstance(cloud_id, int)
+
+    def test_post_establishment_and_get_roundtrip(self):
+        est_mobile, cloud_id = self._create_establishment_and_get_cloud_id()
+        data = self._get_list(
+            "/api/gets/GetAllEstablishmentsByUser",
+            headers=auth_headers(),
+            params=self._mobile_params(),
+        )
+        found = any(
+            isinstance(e, dict) and (e.get("id") == cloud_id or e.get("mobileID") == est_mobile)
+            for e in data
+        )
+        self.assertTrue(found, f"Posted establishment (cloudId={cloud_id}) not returned by GetAllEstablishmentsByUser")
 
     def test_get_all_app_establishments(self):
-        # Prefer the user-scoped endpoint (local), but fall back to legacy app endpoint (cloud until deployed).
-        data = self._get_list_first_available(
-            ("/api/gets/GetAllEstablishmentsByUser", "/api/gets/GetAppEstablishments"),
+        data = self._get_list(
+            "/api/gets/GetAllEstablishmentsByUser",
             headers=auth_headers(),
             params=self._mobile_params(),
         )
         self.assertIsInstance(data, list)
         for item in data:
             self.assertIsInstance(item, dict)
-            if "mobileID" in item:
-                self.assertTrue(item["mobileID"] is None or isinstance(item["mobileID"], int))
+            self.assertIn("fullName", item, "Establishment missing 'fullName' field")
+            if item.get("mobileID") is not None:
+                self.assertIsInstance(item["mobileID"], int)
 
     # --- Game ---
     def test_get_all_app_games(self):
@@ -561,8 +594,9 @@ class TestMobileAppAPI(unittest.TestCase):
         self.assertIsInstance(data, list)
 
     def test_post_app_game(self):
+        _, est_cloud_id = self._create_establishment_and_get_cloud_id()
         _, event_cloud_id = self._create_event_and_get_cloud_id()
-        _, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id)
+        _, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id, est_cloud_id)
         self._create_game_and_get_cloud_id(session_cloud_id)
 
     # --- Session ---
@@ -575,8 +609,9 @@ class TestMobileAppAPI(unittest.TestCase):
         self.assertIsInstance(data, list)
 
     def test_post_app_session(self):
+        _, est_cloud_id = self._create_establishment_and_get_cloud_id()
         _, event_cloud_id = self._create_event_and_get_cloud_id()
-        self._create_session_and_get_cloud_id(event_cloud_id)
+        self._create_session_and_get_cloud_id(event_cloud_id, est_cloud_id)
 
     # --- Shot ---
     def test_get_all_app_shots(self):
@@ -588,8 +623,9 @@ class TestMobileAppAPI(unittest.TestCase):
         self.assertIsInstance(data, list)
 
     def test_post_app_shot(self):
+        _, est_cloud_id = self._create_establishment_and_get_cloud_id()
         _, event_cloud_id = self._create_event_and_get_cloud_id()
-        _, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id)
+        _, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id, est_cloud_id)
         _, game_cloud_id = self._create_game_and_get_cloud_id(session_cloud_id)
         _, frame_cloud_id = self._create_frame_and_get_cloud_id(game_cloud_id)
         self._create_shot_and_get_cloud_id(session_cloud_id, frame_cloud_id)
@@ -618,8 +654,15 @@ class TestMobileAppAPI(unittest.TestCase):
             json={
                 "mobileID": ball_mobile,
                 "name": unique_name,
-                "weight": "14",
-                "coreType": "Reactive",
+                "ballMFG": "Storm",
+                "ballMFGName": "Phaze II",
+                "serialNumber": "SN123456",
+                "weight": 14,
+                "core": "Symmetric",
+                "colorString": "#FF0000",
+                "coverstock": "Reactive",
+                "comment": "Test ball",
+                "enabled": True,
             },
             headers=auth_headers(),
             params={"mobileID": TEST_MOBILE_ID},
@@ -698,16 +741,18 @@ class TestMobileAppAPI(unittest.TestCase):
 
     # --- Frame ---
     def test_get_frames_by_game_id(self):
+        _, est_cloud_id = self._create_establishment_and_get_cloud_id()
         _, event_cloud_id = self._create_event_and_get_cloud_id()
-        _, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id)
+        _, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id, est_cloud_id)
         _, game_cloud_id = self._create_game_and_get_cloud_id(session_cloud_id)
         r = requests.get(_url("/api/gets/GetFramesByGameId"), params={**self._mobile_params(), "gameId": str(game_cloud_id)}, headers=auth_headers(), verify=VERIFY_TLS)
         self.assertEqual(r.status_code, 200, f"Expected 200, got {r.status_code}")
         self.assertIsInstance(r.json(), list)
 
     def test_post_frames(self):
+        _, est_cloud_id = self._create_establishment_and_get_cloud_id()
         _, event_cloud_id = self._create_event_and_get_cloud_id()
-        _, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id)
+        _, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id, est_cloud_id)
         _, game_cloud_id = self._create_game_and_get_cloud_id(session_cloud_id)
         self._create_frame_and_get_cloud_id(game_cloud_id)
 
@@ -785,9 +830,10 @@ class TestMobileAppAPI(unittest.TestCase):
 
     def test_delete_flow_removes_user_sessions_games_frames_and_shots(self):
         headers = auth_headers()
-        # Create a valid owned graph: event -> session -> game -> frame -> shot
+        # Create a valid owned graph: establishment -> event -> session -> game -> frame -> shot
+        _, est_cloud_id = self._create_establishment_and_get_cloud_id()
         _, event_cloud_id = self._create_event_and_get_cloud_id()
-        session_mobile_id, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id)
+        session_mobile_id, session_cloud_id = self._create_session_and_get_cloud_id(event_cloud_id, est_cloud_id)
         game_mobile_id, game_cloud_id = self._create_game_and_get_cloud_id(session_cloud_id)
         frame_mobile_id, frame_cloud_id = self._create_frame_and_get_cloud_id(game_cloud_id)
         shot_mobile_id, _ = self._create_shot_and_get_cloud_id(session_cloud_id, frame_cloud_id)
