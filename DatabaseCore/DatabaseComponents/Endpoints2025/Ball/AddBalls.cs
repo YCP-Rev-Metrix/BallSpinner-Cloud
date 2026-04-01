@@ -30,16 +30,23 @@ public partial class RevMetrixDb
             }
 
             string insertBallQuery = @"
-            INSERT INTO [combinedDB].[Balls] (userId, name, weight, coreType, mobileId)
+            INSERT INTO [combinedDB].[Balls] (userId, name, ballMFG, ballMFGName, serialNumber, weight, core, colorString, coverstock, comment, enabled, mobileId)
             OUTPUT INSERTED.id
-            VALUES (@userId, @name, @weight, @coretype, @mobileId)";
+            VALUES (@userId, @name, @ballMFG, @ballMFGName, @serialNumber, @weight, @core, @colorString, @coverstock, @comment, @enabled, @mobileId)";
 
             using var ballCommand = new SqlCommand(insertBallQuery, connection, transaction);
-            ballCommand.Parameters.AddWithValue("@name", ball.Name ?? string.Empty);
-            ballCommand.Parameters.AddWithValue("@mobileId", ball.MobileID.HasValue ? (object)ball.MobileID.Value : DBNull.Value);
-            ballCommand.Parameters.AddWithValue("@userId", userId);
-            ballCommand.Parameters.AddWithValue("@weight", ball.Weight ?? string.Empty);
-            ballCommand.Parameters.AddWithValue("@coretype", ball.CoreType ?? string.Empty);
+            ballCommand.Parameters.Add("@userId", SqlDbType.Int).Value = userId;
+            ballCommand.Parameters.Add("@name", SqlDbType.VarChar, 50).Value = ball.Name ?? string.Empty;
+            ballCommand.Parameters.Add("@ballMFG", SqlDbType.VarChar, 100).Value = ball.BallMFG ?? (object)DBNull.Value;
+            ballCommand.Parameters.Add("@ballMFGName", SqlDbType.VarChar, 100).Value = ball.BallMFGName ?? (object)DBNull.Value;
+            ballCommand.Parameters.Add("@serialNumber", SqlDbType.VarChar, 100).Value = ball.SerialNumber ?? (object)DBNull.Value;
+            ballCommand.Parameters.Add("@weight", SqlDbType.Int).Value = ball.Weight.HasValue ? (object)ball.Weight.Value : DBNull.Value;
+            ballCommand.Parameters.Add("@core", SqlDbType.VarChar, 100).Value = ball.Core ?? (object)DBNull.Value;
+            ballCommand.Parameters.Add("@colorString", SqlDbType.VarChar, 50).Value = ball.ColorString ?? (object)DBNull.Value;
+            ballCommand.Parameters.Add("@coverstock", SqlDbType.VarChar, 100).Value = ball.Coverstock ?? (object)DBNull.Value;
+            ballCommand.Parameters.Add("@comment", SqlDbType.VarChar, 500).Value = ball.Comment ?? (object)DBNull.Value;
+            ballCommand.Parameters.Add("@enabled", SqlDbType.Bit).Value = ball.Enabled;
+            ballCommand.Parameters.Add("@mobileId", SqlDbType.Int).Value = ball.MobileID.HasValue ? (object)ball.MobileID.Value : DBNull.Value;
 
             object? result = await ballCommand.ExecuteScalarAsync();
             if (result == null || result == DBNull.Value)

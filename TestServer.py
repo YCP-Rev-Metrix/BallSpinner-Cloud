@@ -309,7 +309,7 @@ class TestMobileAppAPI(unittest.TestCase):
                 "mobileID": event_mobile,
                 # userId in body is ignored by server inserts (server uses token username); keep it but do not rely on it.
                 "userId": self._high(60),
-                "name": unique_name,
+                "longName": unique_name,
                 "type": "Tournament",
                 "location": "Test City",
                 "average": self._high(61),
@@ -322,7 +322,7 @@ class TestMobileAppAPI(unittest.TestCase):
         self.assertEqual(post_r.status_code, 200, f"POST event failed: {post_r.status_code} - {post_r.text}")
 
         events = self._get_list("/api/gets/GetEventsByUsername", headers=headers, params=self._mobile_params())
-        matches = [e for e in events if isinstance(e, dict) and (e.get("mobileID") == event_mobile or e.get("name") == unique_name)]
+        matches = [e for e in events if isinstance(e, dict) and (e.get("mobileID") == event_mobile or e.get("longName") == unique_name)]
         self.assertTrue(matches, "Posted event not returned by GetEventsByUsername")
         cloud_id = matches[0].get("id")
         self.assertIsInstance(cloud_id, int, "Expected cloud 'id' for event")
@@ -528,7 +528,7 @@ class TestMobileAppAPI(unittest.TestCase):
     def test_post_establishment_app(self):
         payload = {
             "mobileID": self._high(1),
-            "name": "TestEstablishment",
+            "fullName": "TestEstablishment",
             "lanes": "1-10",
             "type": "TestType",
             "location": "TestLocation",
@@ -665,7 +665,7 @@ class TestMobileAppAPI(unittest.TestCase):
             json={
                 "mobileID": event_mobile,
                 "userId": self._high(60),
-                "name": unique_name,
+                "longName": unique_name,
                 "type": "Tournament",
                 "location": "Test City",
                 "average": self._high(61),
@@ -689,7 +689,7 @@ class TestMobileAppAPI(unittest.TestCase):
         self.assertIsInstance(events, list)
         found = any(
             isinstance(e, dict)
-            and (e.get("name") == unique_name or e.get("mobileID") == event_mobile)
+            and (e.get("longName") == unique_name or e.get("mobileID") == event_mobile)
             for e in events
         )
         self.assertTrue(found, f"Posted event not returned by GetEventsByUsername?mobileID={TEST_MOBILE_ID}")

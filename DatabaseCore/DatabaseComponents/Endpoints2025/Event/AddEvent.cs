@@ -31,19 +31,29 @@ public partial class RevMetrixDb
             }
 
             string insertEventQuery = @"
-                INSERT INTO [combinedDB].[Events] (userId, name, type, location, average, stats, standings, mobileId)
+                INSERT INTO [combinedDB].[Events]
+                    (userId, longName, nickName, type, location, startDate, endDate, weekDay, startTime, numGamesPerSession, average, schedule, stats, standings, enabled, mobileId)
                 OUTPUT INSERTED.id
-                VALUES (@userId, @name, @type, @location, @average, @stats, @standings, @mobileId)";
+                VALUES
+                    (@userId, @longName, @nickName, @type, @location, @startDate, @endDate, @weekDay, @startTime, @numGamesPerSession, @average, @schedule, @stats, @standings, @enabled, @mobileId)";
 
             using var eventCommand = new SqlCommand(insertEventQuery, connection, transaction);
-            eventCommand.Parameters.AddWithValue("@userId", userId);
-            eventCommand.Parameters.AddWithValue("@mobileId", eventObj.MobileID.HasValue ? (object)eventObj.MobileID.Value : DBNull.Value);
-            eventCommand.Parameters.AddWithValue("@name", eventObj.Name ?? string.Empty);
-            eventCommand.Parameters.AddWithValue("@type", eventObj.Type ?? string.Empty);
-            eventCommand.Parameters.AddWithValue("@location", eventObj.Location ?? string.Empty);
-            eventCommand.Parameters.AddWithValue("@average", eventObj.Average ?? 0);
-            eventCommand.Parameters.AddWithValue("@stats", eventObj.Stats ?? 0);
-            eventCommand.Parameters.AddWithValue("@standings", eventObj.Standings ?? string.Empty);
+            eventCommand.Parameters.Add("@userId", SqlDbType.Int).Value = userId;
+            eventCommand.Parameters.Add("@longName", SqlDbType.VarChar, 200).Value = eventObj.LongName ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@nickName", SqlDbType.VarChar, 100).Value = eventObj.NickName ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@type", SqlDbType.VarChar, 50).Value = eventObj.Type ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@location", SqlDbType.VarChar, 100).Value = eventObj.Location ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@startDate", SqlDbType.VarChar, 20).Value = eventObj.StartDate ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@endDate", SqlDbType.VarChar, 20).Value = eventObj.EndDate ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@weekDay", SqlDbType.VarChar, 20).Value = eventObj.WeekDay ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@startTime", SqlDbType.VarChar, 10).Value = eventObj.StartTime ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@numGamesPerSession", SqlDbType.Int).Value = eventObj.NumGamesPerSession;
+            eventCommand.Parameters.Add("@average", SqlDbType.Int).Value = eventObj.Average.HasValue ? (object)eventObj.Average.Value : DBNull.Value;
+            eventCommand.Parameters.Add("@schedule", SqlDbType.VarChar, 500).Value = eventObj.Schedule ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@stats", SqlDbType.Int).Value = eventObj.Stats.HasValue ? (object)eventObj.Stats.Value : DBNull.Value;
+            eventCommand.Parameters.Add("@standings", SqlDbType.VarChar, 500).Value = eventObj.Standings ?? (object)DBNull.Value;
+            eventCommand.Parameters.Add("@enabled", SqlDbType.Bit).Value = eventObj.Enabled;
+            eventCommand.Parameters.Add("@mobileId", SqlDbType.Int).Value = eventObj.MobileID.HasValue ? (object)eventObj.MobileID.Value : DBNull.Value;
 
             object? result = await eventCommand.ExecuteScalarAsync();
             if (result == null || result == DBNull.Value)

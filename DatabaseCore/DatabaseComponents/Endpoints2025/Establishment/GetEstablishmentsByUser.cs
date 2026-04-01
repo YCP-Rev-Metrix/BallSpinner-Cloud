@@ -16,7 +16,8 @@ public partial class RevMetrixDb
         // Return all so the client can always resolve a posted establishment's cloud ID by mobileID,
         // even before any session has linked to it.
         const string selectQuery = @"
-            SELECT ID, Name, Lanes, Type, Location, MobileID
+            SELECT ID, fullName, nickName, gpsLocation, homeHouse, reason, address, phoneNumber,
+                   lanes, type, location, enabled, MobileID
             FROM [combinedDB].[Establishments];";
 
         using var command = new SqlCommand(selectQuery, connection);
@@ -29,14 +30,20 @@ public partial class RevMetrixDb
             {
                 Id = reader["ID"] != DBNull.Value ? Convert.ToInt32(reader["ID"]) : null,
                 MobileID = reader["MobileID"] != DBNull.Value ? Convert.ToInt32(reader["MobileID"]) : null,
-                Name = reader["Name"] as string,
-                Lanes = reader["Lanes"] as string,
-                Type = reader["Type"] as string,
-                Location = reader["Location"] as string
+                FullName = reader["fullName"] as string,
+                NickName = reader["nickName"] as string,
+                GPSLocation = reader["gpsLocation"] as string,
+                HomeHouse = reader["homeHouse"] != DBNull.Value && Convert.ToBoolean(reader["homeHouse"]),
+                Reason = reader["reason"] as string,
+                Address = reader["address"] as string,
+                PhoneNumber = reader["phoneNumber"] as string,
+                Lanes = reader["lanes"] as string,
+                Type = reader["type"] as string,
+                Location = reader["location"] as string,
+                Enabled = reader["enabled"] != DBNull.Value && Convert.ToBoolean(reader["enabled"])
             });
         }
 
         return establishments;
     }
 }
-

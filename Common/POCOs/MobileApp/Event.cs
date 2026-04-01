@@ -2,34 +2,23 @@ namespace Common.POCOs.MobileApp;
 
 public class Event : Poco
 {
-    public Event() {}
+    public Event() { }
 
-    public Event(int? id, int mobileID, int userId, string name, string type, string location, int average, int? stats, string standings)
-    {
-        Id = id;
-        MobileID = mobileID;
-        UserId = userId;
-        Name = name;
-        Type = type;
-        Location = location;
-        Average = average;
-        Stats = stats;
-        Standings = standings;
-    }
-    
     public int? Id { get; set; }
     public int? MobileID { get; set; }
     public int UserId { get; set; }
-    
-    public string? Name { get; set; }
-    
+    public string? LongName { get; set; }
+    public string? NickName { get; set; }
     public string? Type { get; set; }
-    
     public string? Location { get; set; }
-    
+    public string? StartDate { get; set; }
+    public string? EndDate { get; set; }
+    public string? WeekDay { get; set; }
+    public string? StartTime { get; set; }
+    public int NumGamesPerSession { get; set; }
     public int? Average { get; set; }
-    
+    public string? Schedule { get; set; }
     public int? Stats { get; set; }
-    
     public string? Standings { get; set; }
+    public bool Enabled { get; set; }
 }
