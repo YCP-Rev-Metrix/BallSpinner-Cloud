@@ -286,3 +286,50 @@ GO
 COMMIT;
 GO
 
+-- Migration: make optional string columns nullable on Balls, Events, and Establishments.
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260403000000_NullableOptionalColumns')
+BEGIN
+    ALTER TABLE [combinedDB].[Balls] ALTER COLUMN [BallMFG]      nvarchar(100) NULL;
+    ALTER TABLE [combinedDB].[Balls] ALTER COLUMN [BallMFGName]  nvarchar(100) NULL;
+    ALTER TABLE [combinedDB].[Balls] ALTER COLUMN [SerialNumber] nvarchar(100) NULL;
+    ALTER TABLE [combinedDB].[Balls] ALTER COLUMN [Core]         nvarchar(100) NULL;
+    ALTER TABLE [combinedDB].[Balls] ALTER COLUMN [ColorString]  nvarchar(50)  NULL;
+    ALTER TABLE [combinedDB].[Balls] ALTER COLUMN [Coverstock]   nvarchar(100) NULL;
+    ALTER TABLE [combinedDB].[Balls] ALTER COLUMN [Comment]      nvarchar(500) NULL;
+
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [LongName]           nvarchar(200) NULL;
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [NickName]           nvarchar(100) NULL;
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [Type]               nvarchar(50)  NULL;
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [Location]           nvarchar(100) NULL;
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [StartDate]          nvarchar(20)  NULL;
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [EndDate]            nvarchar(20)  NULL;
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [WeekDay]            nvarchar(20)  NULL;
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [StartTime]          nvarchar(10)  NULL;
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [Schedule]           nvarchar(500) NULL;
+    ALTER TABLE [combinedDB].[Events] ALTER COLUMN [Standings]          nvarchar(500) NULL;
+
+    ALTER TABLE [combinedDB].[Establishments] ALTER COLUMN [FullName]    nvarchar(100) NULL;
+    ALTER TABLE [combinedDB].[Establishments] ALTER COLUMN [NickName]    nvarchar(100) NULL;
+    ALTER TABLE [combinedDB].[Establishments] ALTER COLUMN [GPSLocation] nvarchar(200) NULL;
+    ALTER TABLE [combinedDB].[Establishments] ALTER COLUMN [Reason]      nvarchar(200) NULL;
+    ALTER TABLE [combinedDB].[Establishments] ALTER COLUMN [Address]     nvarchar(200) NULL;
+    ALTER TABLE [combinedDB].[Establishments] ALTER COLUMN [PhoneNumber] nvarchar(20)  NULL;
+    ALTER TABLE [combinedDB].[Establishments] ALTER COLUMN [Lanes]       nvarchar(50)  NULL;
+    ALTER TABLE [combinedDB].[Establishments] ALTER COLUMN [Type]        nvarchar(50)  NULL;
+    ALTER TABLE [combinedDB].[Establishments] ALTER COLUMN [Location]    nvarchar(100) NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20260403000000_NullableOptionalColumns')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20260403000000_NullableOptionalColumns', N'7.0.20');
+END;
+GO
+
+COMMIT;
+GO
+
