@@ -31,8 +31,8 @@ public class TestArsenal: DatabaseCoreTestSetup
         var ball = new Common.POCOs.MobileApp.Ball
         {
             Name = RandomString(5),
-            Weight = "12.3",
-            CoreType = "Symmetrical"
+            Weight = 12,
+            Core = "Symmetrical"
         };
 
         bool success = await ServerState.UserStore.AddBalls(ball, TestUsername);
@@ -45,8 +45,8 @@ public class TestArsenal: DatabaseCoreTestSetup
         var ball = new Common.POCOs.MobileApp.Ball
         {
             Name = RandomString(5),
-            Weight = "12.3",
-            CoreType = "Symmetrical"
+            Weight = 12,
+            Core = "Symmetrical"
         };
         string testUserName = "nouser";
 
@@ -87,8 +87,8 @@ public class TestArsenal: DatabaseCoreTestSetup
         var ball = new Common.POCOs.MobileApp.Ball
         {
             Name = testBallName,
-            Weight = "12.3",
-            CoreType = "Symmetrical"
+            Weight = 12,
+            Core = "Symmetrical"
         };
         // Insert the ball first
         await ServerState.UserStore.AddBalls(ball, TestUsername);

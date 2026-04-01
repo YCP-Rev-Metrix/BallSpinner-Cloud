@@ -90,7 +90,7 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
         bool success = await ServerState.UserStore.InsertSimulatedShot(simulatedShot, TestUsername);
         Assert.False(success);
 
-        var mobileBall = new Common.POCOs.MobileApp.Ball { Name = ball.Name, Weight = ball.Weight?.ToString() ?? "14", CoreType = ball.CoreType };
+        var mobileBall = new Common.POCOs.MobileApp.Ball { Name = ball.Name, Weight = ball.Weight.HasValue ? (int?)((int)ball.Weight.Value) : null, Core = ball.CoreType };
         bool ballInserted = await ServerState.UserStore.AddBalls(mobileBall, TestUsername);
 
         Assert.True(ballInserted);
@@ -191,7 +191,7 @@ public class TestSimulatedShot : DatabaseCoreTestSetup
 
         string testShotName = builder.ToString();
         Common.POCOs.Ball ball = new Common.POCOs.Ball(0, builder.ToString(), 2, 2, "Pancake");
-        var mobileBall = new Common.POCOs.MobileApp.Ball { Name = ball.Name, Weight = ball.Weight?.ToString() ?? "14", CoreType = ball.CoreType };
+        var mobileBall = new Common.POCOs.MobileApp.Ball { Name = ball.Name, Weight = ball.Weight.HasValue ? (int?)((int)ball.Weight.Value) : null, Core = ball.CoreType };
         bool ballInserted = await ServerState.UserStore.AddBalls(mobileBall, TestUsername);
         ShotInfo shotInfo = new ShotInfo
         {
