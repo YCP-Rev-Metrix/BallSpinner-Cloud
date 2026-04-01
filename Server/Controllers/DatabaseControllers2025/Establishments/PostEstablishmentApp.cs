@@ -20,7 +20,7 @@ public class PostEstablishmentApp : AbstractFeaturedController
     public async Task<IActionResult> InsertEstablishmentApp([FromBody] Common.POCOs.MobileApp.Establishment request)
     {
         if (request == null) return BadRequest("Request body required.");
-        bool success = await ServerState.UserStore.AddEstablishment(request);
-        return !success ? Problem("unable to add establishment to the database") : Ok("establishment inserted successfully");
+        int? cloudId = await ServerState.UserStore.AddEstablishment(request);
+        return cloudId == null ? Problem("unable to add establishment to the database") : Ok(cloudId);
     }
 }

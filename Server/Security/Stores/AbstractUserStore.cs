@@ -55,7 +55,7 @@ public abstract class AbstractUserStore
     //-------------------------Phone App-------------------------------------
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.User> users)> GetAppUsers();
     public abstract Task<bool> AddUserCombined(string? firstname, string? lastname, string? username, byte[] hashedPassword, string? phone, string? email, string? lastLogin, string? hand, int? mobileID = null);
-    public abstract Task<bool> AddEstablishment(Common.POCOs.MobileApp.Establishment establishment);
+    public abstract Task<int?> AddEstablishment(Common.POCOs.MobileApp.Establishment establishment);
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.Establishment> establishments)> GetAppEstablishments();
     public abstract Task<bool> AddShot(Common.POCOs.MobileApp.Shot shot);
     public abstract Task<(bool success, List<Common.POCOs.MobileApp.Shot> shots)> GetAppShots();

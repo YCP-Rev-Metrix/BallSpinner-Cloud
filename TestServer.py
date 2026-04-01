@@ -535,6 +535,8 @@ class TestMobileAppAPI(unittest.TestCase):
         }
         r = requests.post(_url("/api/posts/PostEstablishmentApp"), json=payload, headers=auth_headers(), params=self._mobile_params(), verify=VERIFY_TLS)
         self.assertEqual(r.status_code, 200, f"Expected 200, got {r.status_code} - {r.text}")
+        cloud_id = r.json()
+        self.assertIsInstance(cloud_id, int, f"Expected cloud ID (int) in response, got: {cloud_id}")
 
     def test_get_all_app_establishments(self):
         # Prefer the user-scoped endpoint (local), but fall back to legacy app endpoint (cloud until deployed).

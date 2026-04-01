@@ -2,13 +2,12 @@ using Common.Logging;
 using Common.POCOs.MobileApp;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Diagnostics;
 
 namespace DatabaseCore.DatabaseComponents;
 
 public partial class RevMetrixDb
 {
-    public async Task<bool> AddEstablishment(Establishment establishment)
+    public async Task<int?> AddEstablishment(Establishment establishment)
     {
         ConnectionString = Environment.GetEnvironmentVariable("SERVERDB_CONNECTION_STRING");
         if (string.IsNullOrEmpty(ConnectionString))
@@ -17,19 +16,13 @@ public partial class RevMetrixDb
         }
 
         using var connection = new SqlConnection(ConnectionString);
-        try
-        {
-            await connection.OpenAsync();
-        }
-        catch (Exception e)
-        {
-            Debug.WriteLine(e);
-        }
+        await connection.OpenAsync();
         LogWriter.LogInfo(connection);
 
         const string insertQuery = @"
             INSERT INTO [combinedDB].[Establishments]
                 (fullName, nickName, gpsLocation, homeHouse, reason, address, phoneNumber, lanes, type, location, enabled, MobileID)
+            OUTPUT INSERTED.ID
             VALUES
                 (@fullName, @nickName, @gpsLocation, @homeHouse, @reason, @address, @phoneNumber, @lanes, @type, @location, @enabled, @MobileID)";
 
@@ -47,7 +40,7 @@ public partial class RevMetrixDb
         command.Parameters.Add("@enabled", SqlDbType.Bit).Value = establishment.Enabled;
         command.Parameters.Add("@MobileID", SqlDbType.Int).Value = establishment.MobileID.HasValue ? (object)establishment.MobileID.Value : DBNull.Value;
 
-        int i = await command.ExecuteNonQueryAsync();
-        return i > 0;
+        object? result = await command.ExecuteScalarAsync();
+        return result != null && result != DBNull.Value ? Convert.ToInt32(result) : null;
     }
 }
